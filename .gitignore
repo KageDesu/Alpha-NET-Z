@@ -1,0 +1,47 @@
+# ============ #
+# OS generated #
+# ============ #
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# =============== #
+# Project Folders #
+# =============== #
+audio/*
+css/*
+effects/*
+fonts/*
+icon/*
+img/*
+!img/ANET/*
+movies/*
+save/*
+RAW/*
+
+# =============== #
+# Plugins Files #
+# =============== #
+
+
+js/plugins/PKD_Alpha_NET_Z_Libs/_CFCompiled/
+js/plugins/debug.log
+
+
+# =============== #
+# Project Files   #
+# =============== #
+
+package.json
+Game.rmmzproject
+index.html
+webProject.bat
+package.json
+*.lnk
+*.rar
