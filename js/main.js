@@ -15,17 +15,12 @@ const scriptUrls = [
      "js/rmmz_sprites.js",
      "js/rmmz_windows.js",
      "js/plugins.js"
-,"js/plugins/PKD_Alpha_NET_Z_s.js"
-,"js/plugins/PKD_Alpha_NET_Z_Libs/0_KDCore.js"
-,"js/plugins/PKD_Alpha_NET_Z_Libs/1_ALOGs.js"
-,"js/plugins/PKD_Alpha_NET_Z_Libs/_CFCompiled/1_MainCF.js"
-,"js/plugins/PKD_Alpha_NET_Z_Libs/_CFCompiled/NetMessage.js"
-,"js/plugins/PKD_Alpha_NET_Z_Libs/_CFCompiled/NetMessagesCollection.js"
-,"js/plugins/PKD_Alpha_NET_Z_Libs/_CFCompiled/NetPlayerWorldData.js"
-,"js/plugins/PKD_Alpha_NET_Z_Libs/_CFCompiled/NetSessionData.js"
-,"js/plugins/PKD_Alpha_NET_Z_Libs/_CFCompiled/NetWaitPool.js"
-,"js/plugins/PKD_Alpha_NET_Z_Libs/_CFCompiled/Z_Scripts_PRO.js"
-,"js/plugins/PKD_Alpha_NET_Z_Libs/_CFCompiled/Z_TestScripts_TEST.js"
+,"js/plugins/Alpha_NETZ_Libs/0_@NETZ.js"
+,"js/plugins/Alpha_NETZ_Libs/0_KDCore.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETClientManager.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Network.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NetworkClient.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Boot_@.js"
 ];
 const effekseerWasmUrl = "js/libs/effekseer.wasm";
 
@@ -161,6 +156,13 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
+
+
 
 
 
