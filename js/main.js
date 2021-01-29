@@ -17,10 +17,20 @@ const scriptUrls = [
      "js/plugins.js"
 ,"js/plugins/Alpha_NETZ_Libs/0_@NETZ.js"
 ,"js/plugins/Alpha_NETZ_Libs/0_KDCore.js"
-,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETClientManager.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NetClientMethodsManager.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NetMessage.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NetMessages.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Network.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NetworkClient.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Base_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Base_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Boot_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkGameMenu_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkGameMenu_1.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Title_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Title_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkGameMenu.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_TitleCommand_@.js"
 ];
 const effekseerWasmUrl = "js/libs/effekseer.wasm";
 
@@ -156,6 +166,22 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

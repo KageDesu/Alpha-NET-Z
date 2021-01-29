@@ -12,7 +12,7 @@ do ->
     ALIAS__initialize = _.initialize
     _.initialize = ->
         ALIAS__initialize.call(@)
-        ANNetwork.initSystem()
+        
 
     return
 # ■ END Scene_Boot.coffee

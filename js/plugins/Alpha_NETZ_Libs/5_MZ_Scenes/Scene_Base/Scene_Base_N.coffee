@@ -1,26 +1,16 @@
-#@[GLOBAL]
-NETClientManager = ->
-
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ NETClientManager.coffee
+# ■ Scene_Base.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = NETClientManager
+    _ = Scene_Base::
 
-    _.onConnect = ->
-        console.log("Connected")
-
-    _.onDisconnect = ->
-        console.log("Disconnected")
-        ANNetwork.stop()
-
-    _.onConnectionError = ->
-        console.log("Can't connect to server!")
-        ANNetwork.stop()
+    #?EVENT
+    # * Когда соединение прервано, вызывается это событие
+    _.onLostConnection = ->
     
     return
-# ■ END NETClientManager.coffee
+# ■ END Scene_Base.coffee
 #---------------------------------------------------------------------------
