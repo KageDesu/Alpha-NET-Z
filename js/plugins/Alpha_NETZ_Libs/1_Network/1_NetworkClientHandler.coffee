@@ -1,34 +1,30 @@
-class NetworkClient
+class NetworkClientHandler
     constructor: (@socket) ->
         @_init()
 
     disconnect: -> @socket?.disconnect()
 
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ NetworkClient.coffee
+# ■ NetworkClientHandler.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
     _C = null #? ClientManager
-    _M = null #? NetMessage
-    _R = null #? _registerNetMessage
-    _ = NetworkClient::
+    _ = NetworkClientHandler::
 
     _._init = ->
-        _R = @_registerHandlerForCommand.bind @
-        _M = NetMessage
         _C = NetClientMethodsManager
         # * Задаём ссылку на собственный сокет в класс сообщений
         # Чтобы можно было отправлять сообщения каждый раз не передавая сокет
-        _M.SetOwnSocket @socket
+        NetMessage.SetOwnSocket @socket
         @_handleCommands()
     
     _._handleCommands = ->
         @_handleBaseSocketEvents()
         @_handleDebugEvents()
-        @_handleANETEvents()
+        @_handleANETServerEvents()
 
     _._handleBaseSocketEvents = ->
         @socket.on 'disconnect', () -> _C.onDisconnect()
@@ -38,12 +34,18 @@ do ->
     _._handleDebugEvents = ->
         @socket.on 'trace', (n) -> console.log("Trace: " + n)
 
-    _._handleANETEvents = ->
-        
+    _._handleANETServerEvents = ->
+        @socket.on 'serverPrc', (n) =>
+            @_handleServerPrcEvent(n)
 
-    _._registerHandlerForCommand = (netMessage, handler) ->
-        @socket.on netMessage.name, handler
+    _._handleServerPrcEvent = (n) ->
+        { id, flag, content } = n
+        eventHandlerMethodName = id + "_" + flag
+        if _C.isExistPrcEvent(eventHandlerMethodName)
+            _C.handlePrcEvent(eventHandlerMethodName, content)
+        else
+            console.log("Unknown Event from server " + eventHandlerMethodName)
 
     return
-# ■ END NetworkClient.coffee
+# ■ END NetworkClientHandler.coffee
 #---------------------------------------------------------------------------

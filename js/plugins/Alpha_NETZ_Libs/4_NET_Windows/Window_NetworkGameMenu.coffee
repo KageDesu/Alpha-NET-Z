@@ -9,7 +9,7 @@ class Window_NetworkGameMenu extends Window_Command
 
     makeCommandList: ->
         @addCommand("Create Room", "createRoom")
-        @addCommand("Join to Room", "joinRoom")
+        @addCommand("Join Room", "joinRoom")
         return
 
 do ->

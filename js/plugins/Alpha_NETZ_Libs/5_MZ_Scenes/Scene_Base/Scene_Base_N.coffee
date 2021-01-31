@@ -11,6 +11,16 @@ do ->
     # * Когда соединение прервано, вызывается это событие
     _.onLostConnection = ->
     
+
+    # * Когда пришло какое-либо сообщение от сервера
+    #?EVENT
+    _.onServerEvent = (name) ->
+        eventMethod = "netOn_" + name
+        if @[eventMethod]?
+            console.log("Call scene callback for event " + name)
+            @[eventMethod]()
+        return
+
     return
 # ■ END Scene_Base.coffee
 #---------------------------------------------------------------------------

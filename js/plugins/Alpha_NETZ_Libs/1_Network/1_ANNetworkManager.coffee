@@ -1,3 +1,5 @@
+# * Данный класс отвечает за подключение и хранит общие методы отправки и обработки команд
+
 #@[GLOBAL]
 ANNetwork = ->
 
@@ -15,6 +17,8 @@ do ->
     _ = ANNetwork
 
     _.isConnected = -> @socket?
+
+    _.myId = -> @socket?.id
 
     # * Ждёт ответ от сервера
     _.isWaitServer = -> @isConnected() && @_isWaitServer is true
@@ -37,7 +41,7 @@ do ->
         adr = 'http://' + ip + ":" + port
         console.log "Connect to " + adr
         @socket = io adr
-        @client = new NetworkClient(@socket)
+        @client = new NetworkClientHandler(@socket)
         return
 
     _.setConnection = (callback) ->
@@ -50,6 +54,7 @@ do ->
         unless @isConnected()
             LOG.p("You try send message, but NOT connection!")
         else
+            LOG.p("Send: " + msg.fullName())
             msg.setFrom(@socket.id).send()
         return
 
@@ -59,15 +64,19 @@ do ->
         unless @isConnected()
             LOG.p("You try get data from Server, but NOT connection!")
         else
+            msgName = msg.fullName()
             # * Ставим игру на паузу
             @_isWaitServer = true
             # * Дополняем callbacks, чтобы снять игру автоматически с паузы
             _onTimeout = (...args) ->
+                LOG.p("Timeout for: " + msgName)
                 onTimeout.apply(@, args) if onTimeout?
                 ANNetwork._isWaitServer = false
             _onData = (...args) ->
+                LOG.p("Response (get) for: " + msgName)
                 onData.apply(@, args) if onData?
                 ANNetwork._isWaitServer = false
+            LOG.p("Send, get!: " + msgName)
             msg.setFrom(@socket.id).get(_onData, _onTimeout, 1000)
         return
 
@@ -76,12 +85,17 @@ do ->
         unless @isConnected()
             LOG.p("You try send callback message, but NOT connection!")
         else
-            msg.setFrom(@socket.id).callback(method)
+            msgName = msg.fullName()
+            _method = (...args) ->
+                LOG.p("Callback for: " + msgName)
+                method.apply(@, args)
+            LOG.p("Send, callback: " + msgName)
+            msg.setFrom(@socket.id).callback(_method)
         return
 
     _.trace = (text) -> @send(NMS.Trace(text))
 
-    _.test = () -> @get(
+    _.test = () -> @callback(
         NMS.Lobby("createRoom"),
         (answer) -> console.log(answer),
         () -> console.log('fail')

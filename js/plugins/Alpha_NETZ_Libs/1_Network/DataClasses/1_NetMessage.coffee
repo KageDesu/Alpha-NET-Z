@@ -32,6 +32,12 @@ class NetMessage
         @data = data
         @
 
+    fullName: () ->
+        if @data? and @data.id
+            return @name + "_" + @data.id
+        else
+            return @name
+
     #setWait: (symbol) ->
     #    @waited = true
     #    Network.waitServerResponse @, symbol
@@ -58,6 +64,7 @@ class NetMessage
         @socket.emit @name, @_makeData(data), timeoutFunc(methodA, methodB, timeout)
         @
 
+    #TODO: наверное тут не надо
     broadcast: (data) -> @socket.broadcast.emit @name, @_makeData(data)
 
     _makeData: (data = null) ->
@@ -87,7 +94,7 @@ class NetMessage
         msg = @EmptyMessage(socket)
         msg.setData({
             id: flagName
-            data: data
+            content: data
         })
         return msg
 

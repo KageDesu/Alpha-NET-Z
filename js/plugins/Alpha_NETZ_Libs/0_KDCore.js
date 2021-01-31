@@ -7,17 +7,18 @@
 // * LIBRARY WITH MZ AND MZ SUPPORT
 //! {OUTER FILE}
 
-//?rev 12.01.21
+//?rev 30.01.21
 var KDCore;
 
 KDCore = KDCore || {};
 
-if ((KDCore.Version != null) && KDCore.Version > '2.4.6') {
-  // * ПРОПУСКАЕМ ЗАГРУЗКУ
-  console.log('XDev KDCore missed');
+KDCore._fileVersion = '2.4.7';
+
+if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
+  // * ПРОПУСКАЕМ ЗАГРУЗКУ, так как уже загруженна более новая
+  console.log('XDev KDCore ' + KDCore._fileVersion + ' skipped by new version');
 } else {
-  KDCore.Version = '2.4.6';
-  KDCore.VersionCode = 246;
+  KDCore.Version = KDCore._fileVersion;
   KDCore.LIBS = KDCore.LIBS || {};
   KDCore.register = function(library) {
     return this.LIBS[library.name] = library;
@@ -25,7 +26,7 @@ if ((KDCore.Version != null) && KDCore.Version > '2.4.6') {
   window.KDCore = KDCore;
   console.warn("XDev KDCore is loaded " + KDCore.Version);
   (function() {
-    var BitmapSrc, Color, DevLog, Point, SDK, __TMP_LOGS__, ___Sprite_alias_Move_KDCORE_2, __alias_Bitmap_fillAll, i, j, l, m;
+    var BitmapSrc, Color, DevLog, Point, SDK, __TMP_LOGS__, ___Sprite_alias_Move_KDCORE_2, __alias_Bitmap_fillAll, i, l, m, o;
     // * Array Extension
     //------------------------------------------------------------------------------
     Array.prototype.delete = function() {
@@ -202,15 +203,15 @@ if ((KDCore.Version != null) && KDCore.Version > '2.4.6') {
     //TODO: Gamepad support
     Input.KeyMapperPKD = {};
 //Numbers
-    for (i = j = 48; j <= 57; i = ++j) {
+    for (i = l = 48; l <= 57; i = ++l) {
       Input.KeyMapperPKD[i] = String.fromCharCode(i);
     }
 //Letters Upper
-    for (i = l = 65; l <= 90; i = ++l) {
+    for (i = m = 65; m <= 90; i = ++m) {
       Input.KeyMapperPKD[i] = String.fromCharCode(i).toLowerCase();
     }
 //Letters Lower (for key code events)
-    for (i = m = 97; m <= 122; i = ++m) {
+    for (i = o = 97; o <= 122; i = ++o) {
       Input.KeyMapperPKD[i] = String.fromCharCode(i).toLowerCase();
     }
     (function() {
@@ -1089,9 +1090,9 @@ if ((KDCore.Version != null) && KDCore.Version > '2.4.6') {
       var _;
       _ = KDCore.Utils;
       _.getJDataById = function(id, source) {
-        var d, len, o;
-        for (o = 0, len = source.length; o < len; o++) {
-          d = source[o];
+        var d, len, q;
+        for (q = 0, len = source.length; q < len; q++) {
+          d = source[q];
           if (d.id === id) {
             return d;
           }
@@ -1837,10 +1838,10 @@ if ((KDCore.Version != null) && KDCore.Version > '2.4.6') {
       updateComplexTextVisible() {}
 
       applyScale(mod) {
-        var img, len, o, ref;
+        var img, len, q, ref;
         ref = this._images;
-        for (o = 0, len = ref.length; o < len; o++) {
-          img = ref[o];
+        for (q = 0, len = ref.length; q < len; q++) {
+          img = ref[q];
           if (img != null) {
             img.scale.x = mod;
             img.scale.y = mod;
@@ -1980,13 +1981,13 @@ if ((KDCore.Version != null) && KDCore.Version > '2.4.6') {
         }
 
         isReady() {
-          var o, ref;
+          var q, ref;
           if (this.bitmap != null) {
             if (!this.bitmap.isReady()) {
               return false;
             }
           }
-          for (i = o = 0, ref = this.children.length; (0 <= ref ? o < ref : o > ref); i = 0 <= ref ? ++o : --o) {
+          for (i = q = 0, ref = this.children.length; (0 <= ref ? q < ref : q > ref); i = 0 <= ref ? ++q : --q) {
             if (!this.children[i].bitmap.isReady()) {
               return false;
             }
@@ -2366,6 +2367,56 @@ if ((KDCore.Version != null) && KDCore.Version > '2.4.6') {
         console.warn(error);
       }
     };
+    (function() {      //--------------------------------------------------------------------------------
+      // Word Wrapping =================================================================
+      //--------------------------------------------------------------------------------
+      //?NEW
+      Window_Base.prototype.drawTextExWithWordWrap = function(text, x, y, width, maxLines) {
+        var maxWidth, wrappedText;
+        maxWidth = this.contentsWidth();
+        wrappedText = Window_Message.prototype.pWordWrap.call(this, text, width || maxWidth, maxLines);
+        this.drawTextEx(wrappedText, x, y);
+      };
+      //?NEW
+      Window_Message.prototype.pWordWrap = function(text, maxWidth, maxLines) {
+        var j, line, lines, newLines, q, ref, ref1, result, spaceLeft, spaceWidth, u, wordWidth, wordWidthWithSpace, words;
+        lines = text.split('\n');
+        maxWidth = maxWidth;
+        spaceWidth = this.contents.measureTextWidth(' ');
+        result = '';
+        newLines = 1;
+        for (i = q = 0, ref = lines.length; (0 <= ref ? q < ref : q > ref); i = 0 <= ref ? ++q : --q) {
+          spaceLeft = maxWidth;
+          line = lines[i];
+          words = line.split(' ');
+          for (j = u = 0, ref1 = words.length; (0 <= ref1 ? u < ref1 : u > ref1); j = 0 <= ref1 ? ++u : --u) {
+            wordWidth = this.contents.measureTextWidth(words[j]);
+            wordWidthWithSpace = wordWidth + spaceWidth;
+            if (j === 0 || wordWidthWithSpace > spaceLeft) {
+              if (j > 0) {
+                if (maxLines === newLines) {
+                  return result;
+                }
+                result += '\n';
+                newLines++;
+              }
+              result += words[j];
+              spaceLeft = maxWidth - wordWidth;
+              if (j === 0 && line.match(/\\n\w*\s*<\s*\\n\[\w*\s*\]\s*>*/gi)) {
+                spaceLeft += 200;
+              }
+            } else {
+              spaceLeft -= wordWidthWithSpace;
+              result += ' ' + words[j];
+            }
+          }
+          if (i < lines.length - 1) {
+            result += '\n';
+          }
+        }
+        return result;
+      };
+    })();
     //--------------------------------------------------------------------------------
     // MV TouchInput Extension =======================================================
     //--------------------------------------------------------------------------------
@@ -2405,9 +2456,61 @@ if ((KDCore.Version != null) && KDCore.Version > '2.4.6') {
       };
       
       //?NEW, from MZ
-      return TouchInput._onHover = function(_x, _y) {
+      TouchInput._onHover = function(_x, _y) {
         this._x = _x;
         this._y = _y;
+      };
+    })();
+    (function() {      // * Right mouse pressed
+      // * Определение когда правая (вторая) кнопка мыши зажата и удерживается
+      //$[OVER]
+      //TouchInput.getMousePosition = ->
+      //    new KDCore.Point(TouchInput._x, TouchInput._y)
+      var ALIAS___onMouseUp, ALIAS___onRightButtonDown, ALIAS__clear, ALIAS__update, _;
+      //@[DEFINES]
+      _ = TouchInput;
+      //@[ALIAS]
+      ALIAS__clear = _.clear;
+      _.clear = function() {
+        ALIAS__clear.call(this);
+        this._kdMousePressed2 = false;
+        this._kdPressedTime2 = 0;
+      };
+      //@[ALIAS]
+      ALIAS___onRightButtonDown = _._onRightButtonDown;
+      _._onRightButtonDown = function(event) {
+        var check;
+        ALIAS___onRightButtonDown.call(this, event);
+        // * Это значит что ALIAS метод прошёл (верные X и Y в Canvas)
+        if (KDCore.isMZ()) {
+          check = this._newState.cancelled === true;
+        } else {
+          check = this._events.cancelled === true;
+        }
+        if (check === true) {
+          this._kdMousePressed2 = true;
+          this._kdPressedTime2 = 0;
+        }
+      };
+      //@[ALIAS]
+      ALIAS___onMouseUp = _._onMouseUp;
+      _._onMouseUp = function(event) {
+        ALIAS___onMouseUp.call(this, event);
+        if (event.button === 2) {
+          this._kdMousePressed2 = false;
+        }
+      };
+      //@[ALIAS]
+      ALIAS__update = _.update;
+      _.update = function() {
+        ALIAS__update.call(this);
+        if (this.kdIsPressed2()) {
+          return this._kdPressedTime2++;
+        }
+      };
+      //?[NEW]
+      _.kdIsPressed2 = function() {
+        return this._kdMousePressed2 === true;
       };
     })();
   })();
@@ -2415,6 +2518,4 @@ if ((KDCore.Version != null) && KDCore.Version > '2.4.6') {
 
 // ■ END KDCore.coffee
 //---------------------------------------------------------------------------
-//$[OVER]
-//TouchInput.getMousePosition = ->
-//    new KDCore.Point(TouchInput._x, TouchInput._y)
+//? КОНЕЦ KDCORE

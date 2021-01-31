@@ -16,6 +16,12 @@ class Scene_NetworkGameMenu extends Scene_MenuBase
         "LOST CONNECTION".p()
         @popScene()
 
+
+    #?EVENT
+    netOn_lobby_changePlayerName: ->
+        #TODO: обновить имя игрока (отображение)? Например
+        # * Этот метот я просто тестировал
+
 do ->
 
     #@[DEFINES]
@@ -41,7 +47,9 @@ do ->
     
     _._onConnectionRefused = -> @popScene()
 
-    _._onConnectionGood = -> @_createNetworkMenu() #1
+    _._onConnectionGood = ->
+        ANGameManager.init()
+        @_createNetworkMenu() #1
 
 
     
