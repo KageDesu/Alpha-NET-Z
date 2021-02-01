@@ -15,6 +15,14 @@ class PlayerData {
         return (this.socket == socket);
     }
 
+    // * Данные для отправки клиентам
+    getNetworkData() {
+        return {
+            "name": this.name,
+            "id": this.id()
+        };
+    }
+
 }
 
 

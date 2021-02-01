@@ -49,6 +49,19 @@ Array.prototype.count = function () {
 Array.prototype.isEmpty = function () {
     return this.length === 0;
 };
+
+/**
+ * Checks whether the array contains a given element.
+ *
+ * @memberof JsExtensions
+ * @param {any} element - The element to search for.
+ * @returns {boolean} True if the array contains a given element.
+ * @deprecated includes() should be used instead.
+ */
+Array.prototype.contains = function(element) {
+    return this.includes(element);
+};
+
 // * Number Extension
 //------------------------------------------------------------------------------
 Number.prototype.do = function (method) {

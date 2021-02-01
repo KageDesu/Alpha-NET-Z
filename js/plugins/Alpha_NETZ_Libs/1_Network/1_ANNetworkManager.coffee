@@ -35,13 +35,32 @@ do ->
         #TODO: установить флаг в NetMessage? что типо теперь send.to
 
     # * Обновить данные команты
-    _.refreshRoom = (@room) ->
+    _.onRoomDataFromServer = (@room) ->
+        # * Проблема в том что приходит структура, а надо бы хранить класс?
+
+    # * Комната была закрыта
+    _.onRoomClosed = ->
+        return unless @isConnected()
+        return unless @room?
+        @leaveRoom()
+        @_isHost = false
+        @room = null
+        SceneManager.goto(Scene_NetworkGameMenu)
+        LOG.p("Room closed, force leaving room...")
+        return
 
     # * Закрыть комнату (созданную этим клиентом)
     _.closeRoom = ->
         return unless @isMasterClient()
         return unless @room?
         @send(NMS.Lobby("closeRoom"))
+        return
+
+    # * Покинуть комнату (к которой этот клиент подключился)
+    _.leaveRoom = ->
+        return unless @room?
+        ANGameManager.onLeaveRoom()
+        @send(NMS.Lobby("leaveRoom", @room.name))
         return
 
     # * Ждёт ответ от сервера

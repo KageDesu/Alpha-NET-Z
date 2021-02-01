@@ -12,7 +12,6 @@ do ->
     LOG.setColors(KDCore.Color.MAGENTA.reAlpha(200), KDCore.Color.BLACK.getLightestColor(200))
     LOG.on()
 
-
     #@[DEFINES]
     _ = NetClientMethodsManager
 
@@ -57,6 +56,12 @@ do ->
     _.event_lobby_changePlayerName = (content) ->
         ANGameManager.onPlayerName(content.who, content.name)
 
+    _.event_lobby_refreshRoomData = (content) ->
+        ANGameManager.onRoomPlayers(content.playersData)
+        ANNetwork.onRoomDataFromServer(content.room)
+
+    _.event_lobby_roomClosed = (content) ->
+        ANNetwork.onRoomClosed()
 
     return
 # ■ END NetClientMethodsManager.coffee

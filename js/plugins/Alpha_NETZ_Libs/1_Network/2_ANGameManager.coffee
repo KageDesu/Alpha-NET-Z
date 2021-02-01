@@ -13,13 +13,17 @@ do ->
     #@[DEFINES]
     _ = ANGameManager
 
-    # * Инициализация начальнх данных (при подключении надо вызывать)
+    # * Инициализация начальных данных (при подключении надо вызывать)
     _.init = ->
+        @createMyPlayerData()
+        @sendPlayerName()
+
+    _.createMyPlayerData = ->
         # * Данные всех игроков в игре
         @playersData = []
         # * Сразу добавляем себя
         @playersData.push(NetPlayerData.CreateLocal())
-        @sendPlayerName()
+        return
 
     # * Когда происходит отключение от сервера
     _.reset  = ->
@@ -29,8 +33,12 @@ do ->
 
     _.myPlayerData = -> @getPlayerDataById(ANNetwork.myId())
 
+    _.isPlayerDataExists = (id) ->
+        data = @playersData.find (p) -> p.id == id
+        return data?
+
     _.getPlayerDataById = (id) ->
-        data = @playersData.find (p) -> p.myId == id
+        data = @playersData.find (p) -> p.id == id
         if data?
             return data
         else
@@ -38,19 +46,35 @@ do ->
             console.warn("Player data for " + id + " not finded!")
         return null
 
+    # * Когда присоединился к комнате, надо заполнить список игроков комнаты
+    #_.createPlayersFromRoomOnJoin = (room) ->
+    #    for playerId in room.playersIds
+    #        @playersData.push(new NetPlayerData())
+
     #? СОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
 
     _.sendPlayerName = ->
         ANNetwork.send(NMS.Lobby("setPlayerName", @myPlayerData().name))
 
-    #? СОБЫТИЯ (приходят от сервера)
+    #? СОБЫТИЯ (обработка событий от сервера, вызываются из NETClientMethodsManager)
     # * ===============================================================
     
     _.onPlayerName = (playerId, name) ->
-        playerData = @getPlayerDataById(playerId)
-        playerData?.name = name
+        if @isPlayerDataExists()
+            playerData = @getPlayerDataById(playerId)
+            playerData?.name = name
+        else
+            #  * Значит смена имени игрока, с которым мы не в комнате
+            # Пока ничего не делаем, так как не видим всех игроков на сервере
         return
+
+    _.onRoomPlayers = (data) ->
+        @playersData = data
+
+    _.onLeaveRoom = ->
+        # * Удаляем остальных игроков, оставляем себя
+        @createMyPlayerData()
 
     return
 

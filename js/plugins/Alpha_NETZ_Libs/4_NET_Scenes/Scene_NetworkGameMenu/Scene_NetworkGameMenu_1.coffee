@@ -31,10 +31,23 @@ do ->
         return
 
     _._onJoinRoomMenu = (roomData) ->
-        #TODO: room list window
-        #TODO: get room list
-        ANNetwork.setRoomJoin(roomData)
-        @_commandsWindow.activate()
+        #TODO: Тут надо показать сцену со списком комнат и там уже соединяться, но пропущу пока что
+        ANNetwork.get(
+            NMS.Lobby("joinToRoom", "Room_1"),
+            (result) => @_onJoinedToRoom(result),
+            () =>
+                console.log("Can't join to Room, server not response in time")
+                @_commandsWindow.activate()
+        )
+        return
+
+    _._onJoinedToRoom = (roomData) ->
+        unless roomData?
+            console.log("Can't join to Room, Room not exists anymore")
+            @_commandsWindow.activate()
+        else
+            ANNetwork.setRoomJoin(roomData)
+            SceneManager.push(Scene_NetworkRoom)
     
     _._onRoomCreated = (roomData) ->
         ANNetwork.setRoomMaster(roomData)

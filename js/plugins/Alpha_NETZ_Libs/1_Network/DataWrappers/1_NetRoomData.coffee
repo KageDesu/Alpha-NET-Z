@@ -4,3 +4,5 @@ class NetRoomData
         @name = ""
         @masterId = ""
         @playersIds = []
+
+#TODO: Не испльзуется!
