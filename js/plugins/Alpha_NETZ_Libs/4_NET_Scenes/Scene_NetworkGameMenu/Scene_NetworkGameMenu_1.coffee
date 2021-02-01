@@ -30,15 +30,15 @@ do ->
         )
         return
 
-    _._onJoinRoomMenu = ->
+    _._onJoinRoomMenu = (roomData) ->
         #TODO: room list window
         #TODO: get room list
+        ANNetwork.setRoomJoin(roomData)
         @_commandsWindow.activate()
     
     _._onRoomCreated = (roomData) ->
-        #TODO: lobby window
-        console.log("Room created " + roomData)
-        @_commandsWindow.activate()
+        ANNetwork.setRoomMaster(roomData)
+        SceneManager.push(Scene_NetworkRoom)
 
     return
 # ■ END Scene_NetworkGameMenu.coffee

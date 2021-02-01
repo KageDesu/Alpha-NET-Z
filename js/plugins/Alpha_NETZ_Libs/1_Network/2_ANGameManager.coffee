@@ -21,6 +21,12 @@ do ->
         @playersData.push(NetPlayerData.CreateLocal())
         @sendPlayerName()
 
+    # * Когда происходит отключение от сервера
+    _.reset  = ->
+        @playersData = null
+
+    _.isInited = -> @playersData?
+
     _.myPlayerData = -> @getPlayerDataById(ANNetwork.myId())
 
     _.getPlayerDataById = (id) ->

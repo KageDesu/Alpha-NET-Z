@@ -1,14 +1,14 @@
 (function () {
 
   //@[DEFINES]
-  var PlayerData =  require('./PlayerData').PlayerData;
+  var PlayerData = require('./PlayerData').PlayerData;
 
   //@[NET MESSAGES]
 
   // * Список всех главных комманд и их флагов (под команд)
   let AllCommands = [{
     command: "lobby",
-    flags: ["createRoom", "setPlayerName"]
+    flags: ["createRoom", "closeRoom", "setPlayerName"]
   }];
 
 
@@ -28,16 +28,11 @@
     }
 
     getClientById(id) {
-        return this.clientsList()[id];
+      return this.clientsList()[id];
     }
 
     clientsList() {
       return this.io.clients().sockets;
-    }
-
-    // * Вернёт сокеты клиентов, которые в комнате данной
-    clientsForRoom(roomName) {
-      return this.io.clients(roomName);
     }
 
     // * Это список всех комнат сокета, содержит и ID просто клиентов, которые подключились, но не в комнатах
@@ -51,23 +46,33 @@
     }
 
 
-    // * Вернёт имя комнаты, хостомм которой является данный клиент
-    getRoomNameHostedByClient(clientId) {
-      for(var roomData of this.gameRoomsList()) {
-        if(roomData.id == clientId) {
-          return roomData.name;
-        }
-      }
-      return null;
+    // * Вернёт каманту, хостомм которой является данный клиент
+    getRoomHostedByClient(clientId) {
+      return this.gameRoomsList().find(r => r.masterId == clientId);
+    }
+
+    // * Возвращает данные комнаты, по её имени
+    getGameRoomByRoomName(roomName) {
+      return this.gameRoomsList().find(r => r.name == roomName);
     }
 
     // * Возвращает данные игрока по его clientId
     getPlayerDataById(clientId) {
       let client = this.getClientById(clientId);
-      if(client) {
+      if (client) {
         return this.allServerPlayers.find(i => i.isMySocket(client));
       }
       return null;
+    }
+
+    // * Закрывает комнату (выгоняет всех клиентов)
+    closeRoom(roomName) {
+      "Closing room %1".p(roomName);
+      // * Всемм клиентам в этой комнате сообщить что комната закрыта
+      this.io.to(roomName).emit('roomClosed');
+      let gameRoom = this.getGameRoomByRoomName(roomName);
+      this.gameRoomsList().delete(gameRoom);
+      console.log("Rooms left: " + this.gameRoomsList().length);
     }
 
     // * PRIVATE ==============================================================
@@ -85,31 +90,21 @@
 
     // * Создаём данные на сервере для нового игрока (класс PlayerData)
     _registerNewPlayer(client) {
-        let plData = new PlayerData(client);
-        this.allServerPlayers.push(plData);
-        "Player registered on Server as %1".p(plData.name);
+      let plData = new PlayerData(client);
+      this.allServerPlayers.push(plData);
+      "Player registered on Server as %1".p(plData.name);
     }
 
     // * Когда клиент отключается от сервера
     _handleDisconnectForClient(client) {
-      //TODO: remove room, disconnect all from room
       client.on('disconnect', () => {
         console.log("Client disconnected " + client.id)
-          let roomName = this.getRoomNameHostedByClient(client.id);
-          if(roomName) {
-
-            console.log("This client hosted a room " + roomName);
-            //
-            //
-            //io.sockets.clients(someRoom).forEach(function(s){
-            //    s.leave(someRoom);
-            //});
-            //
-            // TODO: выкинуть всех в лобби
-            // TODO: удалить комнату из gameRooms
-          }
+        let room = this.getRoomHostedByClient(client.id);
+        if (room) {
+          console.log("This client hosted a room " + room.name);
+          this.closeRoom(room.name);
         }
-      );
+      });
     }
 
     // * Команда трассировки (просто сообщение)
@@ -139,7 +134,7 @@
       let log = "%1 command: %2".format(cmdName, flag);
       let cmdMethod = "cmd_%1_%2".format(cmdName, flag);
       console.log(log);
-      if(!this[cmdMethod]) {
+      if (!this[cmdMethod]) {
         console.warn(cmdMethod + " not found!");
         return;
       }
@@ -164,24 +159,42 @@
 
     // * Когда клиент создаёт новую комнату
     cmd_lobby_createRoom(d, callback) {
-      let {from: id, data} = d;
+      let {
+        from: id,
+        data
+      } = d;
       let socket = this.getClientById(id);
       let newRoomName = "Room_%1".format(this.gameRoomsList().length + 1);
       socket.join(newRoomName);
-      this.gameRooms.push({id, name: newRoomName});
+      let roomData = { //TODO: в класс?
+        name: newRoomName,
+        masterId: id,
+        playersIds: []
+      };
+      this.gameRooms.push(roomData);
       console.log("Room %1 created, owner is %2".format(newRoomName, id));
       // * Ответ клиенту, что он создал комнату
-      if(callback) {
-        callback(newRoomName);
+      if (callback) {
+        callback(roomData);
       }
       //TODO refrsh room list for all clients
     }
 
+    cmd_lobby_closeRoom(d, callback) {
+      let room = this.getRoomHostedByClient(d.from);
+      if(!room) return;
+      this.closeRoom(room.name);
+      //if (callback) callback();
+    }
+
     // * Регистрация имени игрока на сервере
     cmd_lobby_setPlayerName(d, callback) {
-      let {from: id, data} = d;
+      let {
+        from: id,
+        data
+      } = d;
       let playerData = this.getPlayerDataById(id);
-      if(!playerData) {
+      if (!playerData) {
         console.warn("Not found player data for " + id);
         return;
       }
@@ -209,7 +222,7 @@
     }
 
     // * NOT USING
-    t () {
+    t() {
       // * ОТПРАВИТЬ ВСЕМ ВСЕМ
       this.io.sockets.emit('trace', '123');
 

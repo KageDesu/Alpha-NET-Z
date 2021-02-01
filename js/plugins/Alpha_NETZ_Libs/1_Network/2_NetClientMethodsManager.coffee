@@ -24,6 +24,7 @@ do ->
 
     _.onDisconnect = ->
         LOG.p("Disconnected")
+        # * Общее событие на все сцены
         SceneManager._scene?.onLostConnection()
         ANNetwork.stop()
 

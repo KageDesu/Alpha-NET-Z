@@ -20,6 +20,30 @@ do ->
 
     _.myId = -> @socket?.id
 
+    _.isMasterClient = -> @_isHost is true
+
+    # * Этот метод вызывается когда создаём комнату
+    _.setRoomMaster = (@room) ->
+        @_isHost = true
+        LOG.p("You are Master (host) of room: " + @room.name)
+        #TODO: установить флаг в NetMessage? что типо теперь send.to
+
+    # * Когда подключаемся к комнате
+    _.setRoomJoin = (@room) ->
+        @_isHost = false
+        LOG.p("You are joined to room: " + @room.name)
+        #TODO: установить флаг в NetMessage? что типо теперь send.to
+
+    # * Обновить данные команты
+    _.refreshRoom = (@room) ->
+
+    # * Закрыть комнату (созданную этим клиентом)
+    _.closeRoom = ->
+        return unless @isMasterClient()
+        return unless @room?
+        @send(NMS.Lobby("closeRoom"))
+        return
+
     # * Ждёт ответ от сервера
     _.isWaitServer = -> @isConnected() && @_isWaitServer is true
 
@@ -27,6 +51,7 @@ do ->
         @socket = null
         @client = null
         @_isWaitServer = false
+        @_isHost = false # * Мастер клиент?
         "Network inited".p()
     
     _.stop = ->
@@ -34,6 +59,8 @@ do ->
         @client?.disconnect()
         @_isWaitServer = false
         @socket = null
+        ANGameManager.reset()
+        return
 
     _.testConnection = ->
         ip = 'localhost'
@@ -57,7 +84,6 @@ do ->
             LOG.p("Send: " + msg.fullName())
             msg.setFrom(@socket.id).send()
         return
-
 
     # * Отправить сообщение и ждать! результат (есть Timeout)
     _.get = (msg, onData, onTimeout) ->

@@ -48,7 +48,8 @@ do ->
     _._onConnectionRefused = -> @popScene()
 
     _._onConnectionGood = ->
-        ANGameManager.init()
+        unless ANGameManager.isInited()
+            ANGameManager.init()
         @_createNetworkMenu() #1
 
 
