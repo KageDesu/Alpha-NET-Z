@@ -18,10 +18,12 @@ class ServerPrc {
     }
 
     sendAll(data) {
+        console.log("PRC: send all: " + data.id + "_" + data.flag);
         this.server.io.sockets.emit('serverPrc', data);
     }
 
     sendToRoom(roomName, data) {
+        console.log("PRC: send to room " + roomName + ": " + data.id + "_" + data.flag);
         this.server.io.to(roomName).emit('serverPrc', data);
     }
 
@@ -53,6 +55,18 @@ class ServerPrc {
         };
         let data = this.buildLobbyMsg("refreshRoomData", content);
         this.sendToRoom(room.name, data);
+    }
+
+    // * Отправить команду клиентам, что коммната в которойо они находятся, закрыта
+    lobby_roomClosed(roomName) {
+        let data = this.buildLobbyMsg("roomClosed", null);
+        this.sendToRoom(roomName, data);
+    }
+
+    // * Запустить игру (всей комнате)
+    lobby_startGame(roomName) {
+        let data = this.buildLobbyMsg("startGame", null);
+        this.sendToRoom(roomName, data);
     }
 
 }

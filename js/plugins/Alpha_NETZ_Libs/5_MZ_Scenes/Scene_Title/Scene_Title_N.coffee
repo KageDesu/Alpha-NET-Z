@@ -7,6 +7,10 @@ do ->
     #@[DEFINES]
     _ = Scene_Title::
 
+    #?EVENT
+    # * Когда соединение прервано, вызывается это событие
+    _.onLostConnection = -> # * NOTHING
+
     _.commandNetwork = ->
         @_commandWindow.close()
         SceneManager.push(Scene_NetworkGameMenu)

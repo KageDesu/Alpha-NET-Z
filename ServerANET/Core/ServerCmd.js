@@ -9,8 +9,21 @@ class ServerCmd {
         return this.server.getClientById(id);
     }
 
+    getClientRoom(id) {
+        return this.server.getRoomForClient(id);
+    }
+
     prc() {
         return this.server.prc;
+    }
+
+    createNewRoomData(name, masterId) {
+        return { //TODO: в класс?
+            name: name,
+            masterId: masterId,
+            inGame: false,
+            playersIds: [masterId] // * Этого игрока тоже помещаем в список игроков
+        };
     }
 
     // ? КОМАНДЫ ОТ КЛИЕНТОВ
@@ -34,18 +47,11 @@ class ServerCmd {
 
     // * Когда клиент создаёт новую комнату
     lobby_createRoom(d, callback) {
-        let {
-            from: id,
-            data
-        } = d;
+        let id = d.from;
         let socket = this.getClientById(id);
         let newRoomName = "Room_%1".format(this.server.gameRoomsList().length + 1);
         socket.join(newRoomName);
-        let roomData = { //TODO: в класс?
-            name: newRoomName,
-            masterId: id,
-            playersIds: [id] // * Этого игрока тоже помещаем в список игроков
-        };
+        let roomData = this.createNewRoomData(newRoomName, id);
         this.server.gameRooms.push(roomData);
         console.log("Room %1 created, owner is %2".format(newRoomName, id));
         // * Ответ клиенту, что он создал комнату
@@ -97,6 +103,32 @@ class ServerCmd {
             this.prc().lobby_roomPlayersChanged(room);
         }
 
+    }
+
+    // * Когда клиент (мастер комнаты) запускает игру (Старт игры)
+    // * Любой участник комнаты может запустить игру, надо уже в клиенте давать право только хосту это делать
+    lobby_startGame(d, callback) {
+        let room = this.getClientRoom(d.from);
+        if(!room) {
+            "Client %1 try start game, but not joined any room".p(d.from);
+            if (callback) callback(false);
+            return;
+        }
+        "Starting game for room %1".p(room.name);
+        //TODO: Задать статус комнате - что комната в игре! (игра запущена)
+        // Чтобы другие игроки не могли соединиться к комнате и не видели её в списке
+        // Или видели, но с запущенной игрой
+        if (callback) callback(true);
+        this.prc().lobby_startGame(room.name);
+    }
+
+    // TODO: ТУТ ОСТАНОВИЛСЯ
+    map_loaded(d, callback) {
+        // * Сервер устанавливает ID игроку данному в номер карты
+        // * Затем отправляем всем игроках статусы всех игроков
+        // * Игроки должны на клиенте поймать обновлённые статусы
+        // * и уже в зависимости от режима, либо продолжить игру
+        // * либо проверить все ли игроки на данной карте, чтобы продолжить
     }
 }
 

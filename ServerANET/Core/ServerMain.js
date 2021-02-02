@@ -9,9 +9,14 @@
 
   // * Список всех главных комманд и их флагов (под команд)
   let AllCommands = [{
-    command: "lobby",
-    flags: ["createRoom", "closeRoom", "joinToRoom", "setPlayerName"]
-  }];
+      command: "lobby",
+      flags: ["createRoom", "closeRoom", "joinToRoom", "setPlayerName", "startGame"]
+    },
+    {
+      command: "map",
+      flags: ["loaded"]
+    }
+  ];
 
 
   class ServerMain {
@@ -86,14 +91,8 @@
     // * Закрывает комнату (выгоняет всех клиентов)
     closeRoom(roomName) {
       "Closing room %1".p(roomName);
-      //TODO: вынести prc команду
       // * Всемм клиентам в этой комнате сообщить что комната закрыта
-      let data = {
-        id: "lobby",
-        flag: "roomClosed",
-        content: null
-      };
-      this.io.to(roomName).emit('serverPrc', data);
+      this.prc.lobby_roomClosed(roomName);
       let gameRoom = this.getGameRoomByRoomName(roomName);
       this.gameRoomsList().delete(gameRoom);
       console.log("Rooms left: " + this.gameRoomsList().length);
@@ -129,7 +128,7 @@
           this.closeRoom(room.name);
         } else {
           room = this.getRoomForClient(client.id);
-          if(room) {
+          if (room) {
             this.cmd.lobby_leaveRoom({
               from: client.id,
               data: {

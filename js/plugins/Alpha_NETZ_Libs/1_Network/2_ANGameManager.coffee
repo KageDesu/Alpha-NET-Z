@@ -13,10 +13,18 @@ do ->
     #@[DEFINES]
     _ = ANGameManager
 
+    _.isShouldWaitPlayers = -> @_isWaitPlayers is true
+
     # * Инициализация начальных данных (при подключении надо вызывать)
     _.init = ->
+        @reset()
         @createMyPlayerData()
         @sendPlayerName()
+
+    # * Когда происходит отключение от сервера
+    _.reset  = ->
+        @_isWaitPlayers = false
+        @playersData = null
 
     _.createMyPlayerData = ->
         # * Данные всех игроков в игре
@@ -24,10 +32,6 @@ do ->
         # * Сразу добавляем себя
         @playersData.push(NetPlayerData.CreateLocal())
         return
-
-    # * Когда происходит отключение от сервера
-    _.reset  = ->
-        @playersData = null
 
     _.isInited = -> @playersData?
 
@@ -46,12 +50,25 @@ do ->
             console.warn("Player data for " + id + " not finded!")
         return null
 
+    _.setupNewNetworkGame = ->
+        $gameTemp.networkGameStarted = true
+        $gameParty.setupNetworkGame()
+
+    # * Когда на клиенте загрузилась карта
+    _.onMapLoaded = ->
+        # * Отправляем что мы на карте (загрузились)
+        ANNetwork.send(NMS.Map("loaded", $gameMap.mapId()))
+        if ANNetwork.isCoopMode() || $gameTemp.networkGameStarted is true
+            @_isWaitPlayers = true # * Ждём игроков
+        $gameTemp.networkGameStarted = false
+        return
+
     # * Когда присоединился к комнате, надо заполнить список игроков комнаты
     #_.createPlayersFromRoomOnJoin = (room) ->
     #    for playerId in room.playersIds
     #        @playersData.push(new NetPlayerData())
 
-    #? СОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
+    #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
 
     _.sendPlayerName = ->

@@ -5,6 +5,10 @@ class PlayerData {
         this.socket = socket;
         // * Присваеваем случайное имя
         this.name = "Player " + Math.randomInt(1000);
+        this.mapId = 0;
+        this.actorId = 0;
+        this.index = 0;
+        this.currentScene = "";
     }
 
     id () {
@@ -19,7 +23,10 @@ class PlayerData {
     getNetworkData() {
         return {
             "name": this.name,
-            "id": this.id()
+            "id": this.id(),
+            "index": this.index,
+            "currentScene": this.currentScene,
+            "actorId": this.actorId
         };
     }
 

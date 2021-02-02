@@ -1,26 +1,26 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ NetMessages.coffee
+# ■ Scene_Map.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
+#TODO: Может просто не подключать эти методы? Если не сетевой режим
 do ->
 
     #@[DEFINES]
-    _M = NetMessage
-    _CM = (name, flag, data, socket) ->
-        _M.EmptyMessageWithFlag(flag, data, socket).setName(name)
+    _ = Scene_Map::
 
-    # * Обозначения
-    # f - имя комманды (флага)
-    # d - данные
-    # s - сокет (либо ничего)
-
-    #?LOBBY COMMANDS
-    _M.Lobby = (f, d, s) -> _CM 'lobby', f, d, s
-
-
-    #?MAP COMMANDS
-    _M.Map = (f, d, s) -> _CM 'map', f, d, s
-
+    #@[ALIAS]
+    ALIAS__onMapLoaded = _.onMapLoaded
+    _.onMapLoaded = ->
+        ALIAS__onMapLoaded.call(@)
+        if ANNetwork.isConnected()
+            ANGameManager.onMapLoaded()
+        return
+        
+    #@[ALIAS]
+    ALIAS__update = _.update
+    _.update = ->
+        ALIAS__update.call(@)
+    
     return
-# ■ END NetMessages.coffee
+# ■ END Scene_Map.coffee
 #---------------------------------------------------------------------------

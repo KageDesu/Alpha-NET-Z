@@ -12,12 +12,6 @@ class Scene_NetworkGameMenu extends Scene_MenuBase
         @_initNetwork()
 
     #?EVENT
-    onLostConnection: ->
-        "LOST CONNECTION".p()
-        @popScene()
-
-
-    #?EVENT
     netOn_lobby_changePlayerName: ->
         #TODO: обновить имя игрока (отображение)? Например
         # * Этот метот я просто тестировал
@@ -30,12 +24,13 @@ do ->
 
     _._initNetwork = ->
         unless ANNetwork.isConnected()
-            #TODO: connection spinner
+            #TODO: connection spinner and hide button back until connection
             ANNetwork.initSystem()
             ANNetwork.setConnection(@_onConnectionStatus.bind(@))
         else
             @_onConnectionStatus(1)
 
+    #?EVENT
     # * 0 - error, 1 - connect
     _._onConnectionStatus = (statusCode) ->
         switch statusCode

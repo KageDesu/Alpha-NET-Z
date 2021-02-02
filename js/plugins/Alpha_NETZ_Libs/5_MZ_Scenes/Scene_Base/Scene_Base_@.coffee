@@ -10,8 +10,8 @@ do ->
     #@[ALIAS]
     ALIAS__update = _.update
     _.update = ->
-        if ANNetwork.isWaitServer()
-            console.log("wait response...")
+        if ANNetwork.isBusy()
+            console.log("wait network...")
         else
             ALIAS__update.call(@)
     

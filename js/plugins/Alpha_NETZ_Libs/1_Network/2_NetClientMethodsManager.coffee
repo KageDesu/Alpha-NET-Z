@@ -63,6 +63,10 @@ do ->
     _.event_lobby_roomClosed = (content) ->
         ANNetwork.onRoomClosed()
 
+    _.event_lobby_startGame = () ->
+        ANGameManager.setupNewNetworkGame()
+        "STARTING GAME".p()
+
     return
 # ■ END NetClientMethodsManager.coffee
 #---------------------------------------------------------------------------

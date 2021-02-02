@@ -10,7 +10,14 @@ do ->
     #?EVENT
     # * Когда соединение прервано, вызывается это событие
     _.onLostConnection = ->
+        SceneManager.goto(Scene_Title)
     
+    #?EVENT
+    # * Когда закрывается комната, вызывается это событие
+    _.netOn_lobby_roomClosed = ->
+        # * По умолчанию из любой сцены выходит в главное меню
+        SceneManager.goto(Scene_Title)
+
     # * Когда пришло какое-либо сообщение от сервера
     #?EVENT
     _.onServerEvent = (name) ->

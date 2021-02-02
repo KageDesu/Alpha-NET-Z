@@ -16,11 +16,11 @@ do ->
         rect = new Rectangle(wx, wy, ww, wh)
         @_commandsWindow = new Window_NetworkGameMenu(rect)
         @_commandsWindow.setHandler 'cancel', @popScene.bind(@)
-        @_commandsWindow.setHandler 'createRoom', @_onCreateRoomMenu.bind(@)
-        @_commandsWindow.setHandler 'joinRoom', @_onJoinRoomMenu.bind(@)
+        @_commandsWindow.setHandler 'createRoom', @commandCreateRoomMenu.bind(@)
+        @_commandsWindow.setHandler 'joinRoom', @commandJoinRoomMenu.bind(@)
         @addWindow @_commandsWindow
 
-    _._onCreateRoomMenu = ->
+    _.commandCreateRoomMenu = ->
         ANNetwork.get(
             NMS.Lobby("createRoom"),
             (result) => @_onRoomCreated(result),
@@ -30,7 +30,7 @@ do ->
         )
         return
 
-    _._onJoinRoomMenu = (roomData) ->
+    _.commandJoinRoomMenu = (roomData) ->
         #TODO: Тут надо показать сцену со списком комнат и там уже соединяться, но пропущу пока что
         ANNetwork.get(
             NMS.Lobby("joinToRoom", "Room_1"),
@@ -41,6 +41,8 @@ do ->
         )
         return
 
+
+    #?EVENT
     _._onJoinedToRoom = (roomData) ->
         unless roomData?
             console.log("Can't join to Room, Room not exists anymore")
@@ -49,6 +51,7 @@ do ->
             ANNetwork.setRoomJoin(roomData)
             SceneManager.push(Scene_NetworkRoom)
     
+    #?EVENT
     _._onRoomCreated = (roomData) ->
         ANNetwork.setRoomMaster(roomData)
         SceneManager.push(Scene_NetworkRoom)

@@ -22,6 +22,11 @@ do ->
 
     _.isMasterClient = -> @_isHost is true
 
+    #TODO: Пока симулируем режим кооператива
+    _.isCoopMode = -> true
+
+    _.isMultiMode = -> !@isCoopMode()
+
     # * Этот метод вызывается когда создаём комнату
     _.setRoomMaster = (@room) ->
         @_isHost = true
@@ -45,8 +50,6 @@ do ->
         @leaveRoom()
         @_isHost = false
         @room = null
-        SceneManager.goto(Scene_NetworkGameMenu)
-        LOG.p("Room closed, force leaving room...")
         return
 
     # * Закрыть комнату (созданную этим клиентом)
@@ -63,8 +66,14 @@ do ->
         @send(NMS.Lobby("leaveRoom", @room.name))
         return
 
+    # * Надо ждать сеть
+    _.isBusy = -> @isWaitServer() || @isWaitPlayers()
+
     # * Ждёт ответ от сервера
     _.isWaitServer = -> @isConnected() && @_isWaitServer is true
+
+    # * Ждёт игроков
+    _.isWaitPlayers = -> ANGameManager.isShouldWaitPlayers()
 
     _.initSystem = ->
         @socket = null

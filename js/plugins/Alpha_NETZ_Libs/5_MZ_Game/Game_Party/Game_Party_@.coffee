@@ -1,26 +1,22 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ NetMessages.coffee
+# ■ Game_Party.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _M = NetMessage
-    _CM = (name, flag, data, socket) ->
-        _M.EmptyMessageWithFlag(flag, data, socket).setName(name)
+    _ = Game_Party::
 
-    # * Обозначения
-    # f - имя комманды (флага)
-    # d - данные
-    # s - сокет (либо ничего)
-
-    #?LOBBY COMMANDS
-    _M.Lobby = (f, d, s) -> _CM 'lobby', f, d, s
-
-
-    #?MAP COMMANDS
-    _M.Map = (f, d, s) -> _CM 'map', f, d, s
-
+    #@[ALIAS]
+    ALIAS__setupStartingMembers = _.setupStartingMembers
+    _.setupStartingMembers = ->
+        if ANNetwork.isConnected()
+            # * Нет начальной группы
+            @_actors = []
+        else
+            ALIAS__setupStartingMembers.call(@)
+        return
+    
     return
-# ■ END NetMessages.coffee
+# ■ END Game_Party.coffee
 #---------------------------------------------------------------------------
