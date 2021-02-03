@@ -67,6 +67,17 @@ do ->
         ANGameManager.setupNewNetworkGame()
         "STARTING GAME".p()
 
+    _.event_game_playersData = (content) ->
+        ANGameManager.onGamePlayers(content)
+        "GAME PLAYERS DATA REFRESHED".p()
+
+    _.event_game_refreshParty = () ->
+        ANGameManager.onRefreshGameParty()
+        "REFRESH PARTY".p()
+        #TODO:
+        #1) Создание своего персонажа
+        #2) Создание фантомов (для новых)
+
     return
 # ■ END NetClientMethodsManager.coffee
 #---------------------------------------------------------------------------

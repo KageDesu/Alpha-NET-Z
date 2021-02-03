@@ -1,21 +1,21 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Scene_Base.coffee
+# ■ Game_Player.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Scene_Base::
+    _ = Game_Player::
 
     #@[ALIAS]
-    ALIAS__update = _.update
-    _.update = ->
-        if ANNetwork.isBusy()
-            ANGameManager.updateWaiting()
-            console.log("wait network...")
+    ALIAS__setupForNewGame = _.setupForNewGame
+    _.setupForNewGame = ->
+        if ANGameManager.networkGameStarted is true
+            # * Телепортируемся на начальную карту мультиплеера
+            @reserveTransfer(1, 6, 5, 2, 0)
         else
-            ALIAS__update.call(@)
+            ALIAS__setupForNewGame.call(@)
     
     return
-# ■ END Scene_Base.coffee
+# ■ END Game_Player.coffee
 #---------------------------------------------------------------------------

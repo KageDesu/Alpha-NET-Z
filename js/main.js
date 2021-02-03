@@ -25,13 +25,16 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_Tests_TEST.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_ANGameManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_NetClientMethodsManager.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Followers_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Party_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Party_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Player_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NetMessages.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Base_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Base_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Boot_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Map_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Map_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkGameMenu_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkGameMenu_1.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkRoom.js"
@@ -174,6 +177,12 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
+
 
 
 

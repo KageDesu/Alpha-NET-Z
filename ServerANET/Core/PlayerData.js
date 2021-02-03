@@ -8,7 +8,8 @@ class PlayerData {
         this.mapId = 0;
         this.actorId = 0;
         this.index = 0;
-        this.currentScene = "";
+        this.scene = "";
+        this.characterReady = false;
     }
 
     id () {
@@ -25,8 +26,10 @@ class PlayerData {
             "name": this.name,
             "id": this.id(),
             "index": this.index,
-            "currentScene": this.currentScene,
-            "actorId": this.actorId
+            "scene": this.scene,
+            "actorId": this.actorId,
+            "mapId": this.mapId,
+            "characterReady": this.characterReady
         };
     }
 

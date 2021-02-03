@@ -13,6 +13,10 @@ class ServerCmd {
         return this.server.getRoomForClient(id);
     }
 
+    getPlayerData(id) {
+        return  this.server.getPlayerDataById(id);
+    }
+
     prc() {
         return this.server.prc;
     }
@@ -26,6 +30,19 @@ class ServerCmd {
         };
     }
 
+    parsePlayerInfo(data) {
+        let result = {
+            id: data.from,
+            room: this.getClientRoom(data.from),
+            playerData: this.getPlayerData(data.from)
+        };
+        return result;
+    }
+
+    parseData(data) {
+        return data.data.content;
+    }
+
     // ? КОМАНДЫ ОТ КЛИЕНТОВ
     // * COMMANDS FROM CLIENT ================================================================
 
@@ -35,7 +52,7 @@ class ServerCmd {
             from: id,
             data
         } = d;
-        let playerData = this.server.getPlayerDataById(id);
+        let playerData = this.getPlayerData(id);
         if (!playerData) {
             console.warn("Not found player data for " + id);
             return;
@@ -115,20 +132,63 @@ class ServerCmd {
             return;
         }
         "Starting game for room %1".p(room.name);
-        //TODO: Задать статус комнате - что комната в игре! (игра запущена)
+        // * Комната имеет статус теперь "в игре"
         // Чтобы другие игроки не могли соединиться к комнате и не видели её в списке
         // Или видели, но с запущенной игрой
+        room.inGame = true;
+        var i = 0;
+        // * Задаём индексы всем игрокам (начиня от 1 - хост)
+        room.playersIds.forEach((plId) => {
+            var plData = this.getPlayerData(plId);
+            plData.index = ++i;
+        });
         if (callback) callback(true);
         this.prc().lobby_startGame(room.name);
     }
 
-    // TODO: ТУТ ОСТАНОВИЛСЯ
+    // * Когда клиент перешёл на сцену карты (выполнился метод onMapLoaded)
     map_loaded(d, callback) {
-        // * Сервер устанавливает ID игроку данному в номер карты
-        // * Затем отправляем всем игроках статусы всех игроков
-        // * Игроки должны на клиенте поймать обновлённые статусы
-        // * и уже в зависимости от режима, либо продолжить игру
-        // * либо проверить все ли игроки на данной карте, чтобы продолжить
+        let id = d.from;
+        let playerData = this.getPlayerData(id);
+        if(!playerData) {
+            console.log("Not find Player Data for %1".format(id));
+        } else {
+            //TODO: проверки
+            let mapId = d.data.content;
+            playerData.mapId = mapId;
+            playerData.scene = "map";
+            "Player %1 now on Map ID %2".p(playerData.name, mapId);
+        }
+        let room = this.getClientRoom(id);
+        this.prc().game_playersData(room);
+        if (callback) callback();
+    }
+
+    // * Когда клиент просит установить себе персонажа
+    game_bindActor(d, callback) {
+        //TODO: Проверка, не занят ли персонаж, если занят то callback(false)
+        let id = d.from;
+        let actorId = d.data.content;
+        let playerData = this.getPlayerData(id);
+        "Try binding Actor %1 for Player %2".p(actorId, playerData.name);
+        //TODO: проверки
+        playerData.actorId = actorId;
+        let room = this.getClientRoom(id);
+        this.prc().game_playersData(room);
+        "Binding Actor %1 for Player %2 - Good".p(actorId, playerData.name);
+        if (callback) callback(true);
+    }
+
+    // * Игрок настроил своего персонажа (готов к игре)
+    game_actorReady(d, callback) {
+        let {id, playerData, room} = this.parsePlayerInfo(d);
+        let actorData = this.parseData(d);
+        playerData.characterReady = true;
+        this.prc().game_playersData(room);
+        //TODO: Надо реализовать передачу настроенных игроком параметров Game_Actor
+        //this.prc().game_refreshActorData(); // * Отправить всем данные Game_Actor
+        this.prc().game_refreshParty(room.name);
+        if (callback) callback();
     }
 }
 

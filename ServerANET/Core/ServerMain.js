@@ -15,6 +15,10 @@
     {
       command: "map",
       flags: ["loaded"]
+    },
+    {
+      command: "game",
+      flags: ["bindActor", "actorReady"]
     }
   ];
 

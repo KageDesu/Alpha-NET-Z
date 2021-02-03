@@ -2,7 +2,12 @@
 class NetPlayerData
     constructor: (@id) ->
         # * Присваеваем случайное имя
-        @name = "Player " + Math.randomInt(1000)
+        @name = "NoName"
+        @mapId = 0
+        @actorId = 0
+        @index = 0
+        @scene = ""
+        @characterReady = false
         
     @CreateLocal: () ->
         #return new NetPlayerData(ANNetwork.myId())

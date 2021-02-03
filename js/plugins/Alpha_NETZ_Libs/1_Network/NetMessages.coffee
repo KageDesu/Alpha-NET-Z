@@ -21,6 +21,9 @@ do ->
     #?MAP COMMANDS
     _M.Map = (f, d, s) -> _CM 'map', f, d, s
 
+    #?GAME COMMANDS
+    _M.Game = (f, d, s) -> _CM 'game', f, d, s
+
     return
 # ■ END NetMessages.coffee
 #---------------------------------------------------------------------------

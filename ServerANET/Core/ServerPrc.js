@@ -17,6 +17,21 @@ class ServerPrc {
         return this.buildMsg("lobby", flag, content);
     }
 
+    buildGameMsg(flag, content) {
+        return this.buildMsg("game", flag, content);
+    }
+
+    collectPlayersData(room) {
+        var playersData = this.server.getRoomPlayersData(room);
+
+        var playersDataForNetwork = [];
+        playersData.forEach(pl => {
+            playersDataForNetwork.push(pl.getNetworkData());
+        });
+
+        return playersDataForNetwork;
+    }
+
     sendAll(data) {
         console.log("PRC: send all: " + data.id + "_" + data.flag);
         this.server.io.sockets.emit('serverPrc', data);
@@ -42,13 +57,7 @@ class ServerPrc {
 
     // * Отправить что были изменены данные игроков в комнате (имя, кто-то подключился или что-то ещё)
     lobby_roomPlayersChanged(room) {
-        var playersData = this.server.getRoomPlayersData(room);
-
-        var playersDataForNetwork = [];
-        playersData.forEach(pl => {
-            playersDataForNetwork.push(pl.getNetworkData());
-        });
-
+        var playersDataForNetwork = this.collectPlayersData(room);
         let content = {
             room: room,
             playersData: playersDataForNetwork
@@ -69,6 +78,17 @@ class ServerPrc {
         this.sendToRoom(roomName, data);
     }
 
+    // * Отправить данные всех игроков комнаты
+    game_playersData(room) {
+        let data = this.buildGameMsg("playersData", this.collectPlayersData(room));
+        this.sendToRoom(room.name, data);
+    }
+
+    // * Отправить команду на обновление группы (добавление персонажей, выбранных игроками)
+    game_refreshParty(roomName) {
+        let data = this.buildGameMsg("refreshParty");
+        this.sendToRoom(roomName, data);
+    }
 }
 
 

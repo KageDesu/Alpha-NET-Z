@@ -1,21 +1,23 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Scene_Base.coffee
+# ■ Game_Followers.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Scene_Base::
+    _ = Game_Followers::
 
     #@[ALIAS]
-    ALIAS__update = _.update
-    _.update = ->
-        if ANNetwork.isBusy()
-            ANGameManager.updateWaiting()
-            console.log("wait network...")
+    ALIAS__setup = _.setup
+    _.setup = ->
+        if ANNetwork.isConnected()
+            @_data = []
+            # * Нет последователей! Используется другой класс
         else
-            ALIAS__update.call(@)
+            ALIAS__setup.call(@)
     
+    #TODO: Тут остановился, надо создать класс NetCharacter, чтобы было видно игроков на карте
+
     return
-# ■ END Scene_Base.coffee
+# ■ END Game_Followers.coffee
 #---------------------------------------------------------------------------

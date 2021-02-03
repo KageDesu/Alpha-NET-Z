@@ -67,13 +67,11 @@ do ->
         return
 
     # * Надо ждать сеть
-    _.isBusy = -> @isWaitServer() || @isWaitPlayers()
+    _.isBusy = -> @isConnected() && (@isWaitServer() || ANGameManager.isShouldWaitServer())
 
     # * Ждёт ответ от сервера
     _.isWaitServer = -> @isConnected() && @_isWaitServer is true
 
-    # * Ждёт игроков
-    _.isWaitPlayers = -> ANGameManager.isShouldWaitPlayers()
 
     _.initSystem = ->
         @socket = null
