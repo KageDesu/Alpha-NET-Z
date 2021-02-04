@@ -17,10 +17,10 @@ do ->
         return
         
     #@[ALIAS]
-    ALIAS__update = _.update
-    _.update = ->
-        ALIAS__update.call(@)
-    
+    #ALIAS__update = _.update
+    #_.update = ->
+    #    ALIAS__update.call(@)
+
     return
 # ■ END Scene_Map.coffee
 #---------------------------------------------------------------------------

@@ -21,6 +21,10 @@ class ServerPrc {
         return this.buildMsg("game", flag, content);
     }
 
+    buildMapMsg(flag, content) {
+        return this.buildMsg("map", flag, content);
+    }
+
     collectPlayersData(room) {
         var playersData = this.server.getRoomPlayersData(room);
 
@@ -88,6 +92,23 @@ class ServerPrc {
     game_refreshParty(roomName) {
         let data = this.buildGameMsg("refreshParty");
         this.sendToRoom(roomName, data);
+    }
+
+    // * Отправить всем (кроме отправителя) синхронизацию данных
+    game_observer(id, roomName, observerData) {
+        let client = this.server.getClientById(id);
+        let data = this.buildGameMsg("observerData", observerData);
+        //TODO: Тут надо будет проверить что точно в комнату отправлять
+        client.to(roomName).broadcast.emit('serverPrc', data);
+        //let data = this.buildGameMsg("observerData", observerData);
+        //this.sendToRoom(roomName, data);
+        //TODO: Попробую отправлять и на того у кого данные были измененны?
+    }
+
+    map_playerMove(id, roomName, moveData) {
+        let client = this.server.getClientById(id);
+        let data = this.buildMapMsg("playerMove", moveData);
+        client.to(roomName).broadcast.emit('serverPrc', data);
     }
 }
 

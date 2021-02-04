@@ -17,6 +17,15 @@ do ->
             ALIAS__setupStartingMembers.call(@)
         return
     
+    #@[ALIAS]
+    ALIAS__leader = _.leader
+    _.leader = ->
+        if ANNetwork.isConnected()
+            return @networkLeader()
+        else
+            return ALIAS__leader.call(@)
+        
+
     return
 # ■ END Game_Party.coffee
 #---------------------------------------------------------------------------

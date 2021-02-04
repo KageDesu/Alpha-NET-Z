@@ -19,16 +19,24 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/0_KDCore.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_ANNetwork.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetMessage.js"
-,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetPlayerData.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetPlayerDataWrapper.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetRoomData.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetworkClientHandler.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_Tests_TEST.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_ANGameManager.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_DataObserver.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_NetClientMethodsManager.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_CharacterBase_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_CharacterBase_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Followers_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Map_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Map_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Party_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Party_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Player_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Player_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETCharacter.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETCharactersGroup.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NetMessages.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Base_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Base_N.js"
@@ -40,6 +48,8 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkRoom.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Title_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Title_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkGameMenu.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_TitleCommand_@.js"
 ];
@@ -177,6 +187,21 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

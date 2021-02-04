@@ -1,19 +1,23 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Party.coffee
+# ■ Game_Map.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Party::
+    _ = Game_Map::
 
-    _.setupNetworkGame = ->
+    _.netChars = -> @_networkCharacters.characters()
 
-    #TODO: как задать после выбора персонажа, чтобы каждый раз не вычислять
-    _.networkLeader = ->
-        actorId = ANGameManager.myPlayerData().actorId
-        return $gameActors.actor(actorId)
+    _.networkCharacterById = (id) -> @_networkCharacters.characterById(id)
+
+    # * Инициализация персонажей отображаемых на карте
+    _.setupNetworkCharacters = ->
+        @_networkCharacters.setup()
     
+    _.updateNetwork = ->
+        @_networkCharacters.update()
+
     return
-# ■ END Game_Party.coffee
+# ■ END Game_Map.coffee
 #---------------------------------------------------------------------------

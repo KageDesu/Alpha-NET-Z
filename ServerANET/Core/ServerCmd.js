@@ -17,6 +17,10 @@ class ServerCmd {
         return  this.server.getPlayerDataById(id);
     }
 
+    getMapMasterFor(room, mapId) {
+        return this.server.getMapMasterFor(room, mapId);
+    }
+
     prc() {
         return this.server.prc;
     }
@@ -150,6 +154,7 @@ class ServerCmd {
     map_loaded(d, callback) {
         let id = d.from;
         let playerData = this.getPlayerData(id);
+        let room = this.getClientRoom(id);
         if(!playerData) {
             console.log("Not find Player Data for %1".format(id));
         } else {
@@ -158,8 +163,13 @@ class ServerCmd {
             playerData.mapId = mapId;
             playerData.scene = "map";
             "Player %1 now on Map ID %2".p(playerData.name, mapId);
+            // * Если мастера карты нету, то теперь этот игрок мастер карты
+            let mapMaster = this.getMapMasterFor(room, mapId);
+            if(!mapMaster) {
+                playerData.isMapMaster = true;
+                "Player %1 now Map ID %2 Master!".p(playerData.name, mapId);
+            }
         }
-        let room = this.getClientRoom(id);
         this.prc().game_playersData(room);
         if (callback) callback();
     }
@@ -188,6 +198,22 @@ class ServerCmd {
         //TODO: Надо реализовать передачу настроенных игроком параметров Game_Actor
         //this.prc().game_refreshActorData(); // * Отправить всем данные Game_Actor
         this.prc().game_refreshParty(room.name);
+        if (callback) callback();
+    }
+
+    // * Пришли данные которые надо синхронизировать
+    game_observer(d, callback) {
+        let {id, playerData, room} = this.parsePlayerInfo(d);
+        let content = this.parseData(d);
+        this.prc().game_observer(id, room.name, content);
+        if (callback) callback();
+    }
+
+    // * VARIANT 1
+    map_playerMove(d, callback) {
+        let {id, playerData, room} = this.parsePlayerInfo(d);
+        let content = this.parseData(d);
+        this.prc().map_playerMove(id, room.name, content);
         if (callback) callback();
     }
 }

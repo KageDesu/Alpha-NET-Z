@@ -1,19 +1,18 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Party.coffee
+# ■ Spriteset_Map.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Party::
+    _ = Spriteset_Map::
 
-    _.setupNetworkGame = ->
+    #@[ALIAS]
+    ALIAS__createCharacters = _.createCharacters
+    _.createCharacters = ->
+        ALIAS__createCharacters.call(@)
+        @_createNetworkCharacters() if ANNetwork.isConnected()
 
-    #TODO: как задать после выбора персонажа, чтобы каждый раз не вычислять
-    _.networkLeader = ->
-        actorId = ANGameManager.myPlayerData().actorId
-        return $gameActors.actor(actorId)
-    
     return
-# ■ END Game_Party.coffee
+# ■ END Spriteset_Map.coffee
 #---------------------------------------------------------------------------

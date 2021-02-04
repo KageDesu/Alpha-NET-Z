@@ -1,19 +1,26 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Party.coffee
+# ■ Game_Player.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Party::
+    _ = Game_Player::
 
-    _.setupNetworkGame = ->
+    _._fillNetworkObserver = ->
+        super()
+        #TODO: check Dashing
+        @netDataObserver.addFields(@, [
+            "_dashing"
+        ])
+        return
 
-    #TODO: как задать после выбора персонажа, чтобы каждый раз не вычислять
-    _.networkLeader = ->
-        actorId = ANGameManager.myPlayerData().actorId
-        return $gameActors.actor(actorId)
-    
+    _.dataOserverHaveChanges = ->
+        "SEND OBSERVER TO NETWORK".p()
+        ANGameManager.sendPlayerObserver()
+
+    _.updateNetwork = ->
+
     return
-# ■ END Game_Party.coffee
+# ■ END Game_Player.coffee
 #---------------------------------------------------------------------------

@@ -78,6 +78,20 @@ do ->
         #1) Создание своего персонажа
         #2) Создание фантомов (для новых)
 
+    _.event_game_observerData = (content) ->
+        #TODO: Тут остановился
+        "OBSERVER DATA IN".p()
+        #console.info content
+        # content.id
+        # content.type
+        # content.data
+        ANGameManager.onObserverData(content.id, content.type, content.data)
+
+    _.event_map_playerMove = (content) ->
+        "PLAYER MOVE".p()
+        #console.info content
+        ANGameManager.onPlayerMove(content.id, content.data)
+
     return
 # ■ END NetClientMethodsManager.coffee
 #---------------------------------------------------------------------------

@@ -1,19 +1,34 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Party.coffee
+# ■ Game_Map.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Party::
+    _ = Game_Map::
 
-    _.setupNetworkGame = ->
+    #@[ALIAS]
+    ALIAS__initialize = _.initialize
+    _.initialize = ->
+        ALIAS__initialize.call(@)
+        @_networkCharacters = new NETCharactersGroup()
+        return
 
-    #TODO: как задать после выбора персонажа, чтобы каждый раз не вычислять
-    _.networkLeader = ->
-        actorId = ANGameManager.myPlayerData().actorId
-        return $gameActors.actor(actorId)
+    #@[ALIAS]
+    ALIAS__setup = _.setup
+    _.setup = (mapId) ->
+        ALIAS__setup.call(@, mapId)
+        if ANNetwork.isConnected()
+            @setupNetworkCharacters()
+        return
+
+    #@[ALIAS]
+    ALIAS__update = _.update
+    _.update = ->
+        ALIAS__update.call(@)
+        if ANNetwork.isConnected()
+            @updateNetwork()
     
     return
-# ■ END Game_Party.coffee
+# ■ END Game_Map.coffee
 #---------------------------------------------------------------------------

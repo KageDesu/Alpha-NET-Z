@@ -10,6 +10,7 @@ class PlayerData {
         this.index = 0;
         this.scene = "";
         this.characterReady = false;
+        this.isMapMaster = false;
     }
 
     id () {
@@ -29,7 +30,8 @@ class PlayerData {
             "scene": this.scene,
             "actorId": this.actorId,
             "mapId": this.mapId,
-            "characterReady": this.characterReady
+            "characterReady": this.characterReady,
+            "isMapMaster": this.isMapMaster
         };
     }
 

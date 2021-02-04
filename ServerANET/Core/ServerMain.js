@@ -14,11 +14,11 @@
     },
     {
       command: "map",
-      flags: ["loaded"]
+      flags: ["loaded", "playerMove"]
     },
     {
       command: "game",
-      flags: ["bindActor", "actorReady"]
+      flags: ["bindActor", "actorReady", "observer"]
     }
   ];
 
@@ -65,6 +65,18 @@
         playersData.push(this.getPlayerDataById(pl));
       });
       return playersData;
+    }
+
+    // * список игроков на карте ID
+    getPlayerOnMapId(gameRoom, mapId) {
+      var players = this.getRoomPlayersData(gameRoom);
+      return players.filter(p => p.mapId == mapId);
+    }
+
+    // * Данные игрока, который мастер карты ID
+    getMapMasterFor(gameRoom, mapId) {
+      var players = this.getPlayerOnMapId(gameRoom, mapId);
+      return players.find(p => p.isMapMaster == true);
     }
 
     // * Вернёт каманту, хостомм которой является данный клиент

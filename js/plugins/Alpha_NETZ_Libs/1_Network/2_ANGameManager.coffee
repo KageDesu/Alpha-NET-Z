@@ -35,7 +35,7 @@ do ->
         # * Данные всех игроков в игре
         @playersData = []
         # * Сразу добавляем себя
-        @playersData.push(NetPlayerData.CreateLocal())
+        @playersData.push(NetPlayerDataWrapper.createLocal())
         return
 
     _.isInited = -> @playersData?
@@ -43,6 +43,8 @@ do ->
     _.myPlayerData = -> @getPlayerDataById(ANNetwork.myId())
 
     _.myIndex = -> @myPlayerData().index
+
+    _.isMapMaster = -> @myPlayerData().isMapMaster is true
 
     _.isPlayerDataExists = (id) ->
         data = @playersData.find (p) -> p.id == id
@@ -77,6 +79,15 @@ do ->
     _.isAllPlayerOnSameMap = ->
         #TODO: проверка что на сцене отдельно
         return @playersData.every (p) -> p.mapId == $gameMap.mapId()
+
+    # * Другие игроки (кроме этого клиента)
+    _.anotherPlayers = ->
+        myIndex = @myIndex()
+        return @playersData.filter (p) -> p.index isnt myIndex
+
+    # * Все игроки (кроме клиента) на текущей карте
+    _.anotherPlayersOnMap = ->
+        return @anotherPlayers().filter (p) -> NetPlayerDataWrapper.isCharOnMap(p)
 
     # * Все ли игроки настроили персонажей
     _.isAllPlayersActorsReady = ->
@@ -119,6 +130,7 @@ do ->
     # * ===============================================================
 
     _.sendMapLoaded = ->
+        #TODO: callback and get events and characters positions
         ANNetwork.send(NMS.Map("loaded", $gameMap.mapId()))
 
     _.sendBindActor = (actorId) ->
@@ -131,6 +143,30 @@ do ->
         actorData = $gameActors.actor(@myPlayerData().actorId)
         ANNetwork.send(NMS.Game("actorReady", actorData))
         @setWait('playersActors')
+
+    _.sendPlayerMove = (d) ->
+        data = {
+            id: ANNetwork.myId(),
+            data: $gamePlayer.getMoveDataForNetwork(d)
+        }
+        ANNetwork.send(NMS.Map("playerMove", data))
+
+    #TODO: Отправить принудительно после загрузки карты? onMapLoaded
+    _.sendPlayerObserver = () ->
+        @sendObserverData(
+            'playerChar',
+            ANNetwork.myId(),
+            $gamePlayer.getObserverDataForNetwork()
+        )
+
+    _.sendObserverData = (type, id, observerData) ->
+        data = {
+            type: type,
+            id: id,
+            data: observerData
+        }
+        ANNetwork.send(NMS.Game("observer", data))
+        return
 
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
@@ -175,6 +211,25 @@ do ->
     _.onLeaveRoom = ->
         # * Удаляем остальных игроков, оставляем себя
         @createMyPlayerData()
+
+    _.onObserverData = (id, type, content) ->
+        switch type
+            when 'playerChar'
+                @_onPlayerCharObserverData(id, content)
+            else
+                LOG.p("From server: unknown observer data type: " + type)
+                return
+
+    _._onPlayerCharObserverData = (id, content) ->
+        char = $gameMap.networkCharacterById(id)
+        char?.applyObserverData(content)
+        #console.info content
+        #find chara by ID
+        #push new observer data
+
+    _.onPlayerMove = (id, moveData) ->
+        char = $gameMap.networkCharacterById(id)
+        char?.moveFromNetwork(moveData)
 
     return
 
