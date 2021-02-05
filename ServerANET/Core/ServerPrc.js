@@ -46,6 +46,14 @@ class ServerPrc {
         this.server.io.to(roomName).emit('serverPrc', data);
     }
 
+    //TODO: Тут надо будет проверить что точно в комнату отправлять
+    // Можно если что отправлять всем, но тот не должен принимать 
+    // Это уже реализуется на стороне клиента (фильтр по ID)
+    broadcastToRoom(client, roomName, data) {
+        console.log("PRC: broadcast to room " + roomName + ": " + data.id + "_" + data.flag + " from " + client.id);
+        client.to(roomName).broadcast.emit('serverPrc', data);
+    }
+
     // ? КОМАНДЫ ОТ СЕРВЕРА КЛИЕНТАМ
     // * RPC TO CLIENTS ======================================================================
 
@@ -97,18 +105,34 @@ class ServerPrc {
     // * Отправить всем (кроме отправителя) синхронизацию данных
     game_observer(id, roomName, observerData) {
         let client = this.server.getClientById(id);
+        if(!client) {
+            "Client with ID %1 not found!".p(id);
+            return;
+        }
         let data = this.buildGameMsg("observerData", observerData);
-        //TODO: Тут надо будет проверить что точно в комнату отправлять
-        client.to(roomName).broadcast.emit('serverPrc', data);
-        //let data = this.buildGameMsg("observerData", observerData);
-        //this.sendToRoom(roomName, data);
-        //TODO: Попробую отправлять и на того у кого данные были измененны?
+        this.broadcastToRoom(client, roomName, data);
     }
 
     map_playerMove(id, roomName, moveData) {
         let client = this.server.getClientById(id);
+        if(!client) {
+            "Client with ID %1 not found!".p(id);
+            return;
+        }
         let data = this.buildMapMsg("playerMove", moveData);
-        client.to(roomName).broadcast.emit('serverPrc', data);
+        this.broadcastToRoom(client, roomName, data);
+    }
+
+    map_eventMove(id, roomName, moveData) {
+        let client = this.server.getClientById(id);
+        if(!client) {
+            "Client with ID %1 not found!".p(id);
+            return;
+        }
+        // * Отправляется всем в комнате, фильтр карты на клиенте обрабатывается
+        // чтобы уменьшить нагрузку на сервер
+        let data = this.buildMapMsg("eventMove", moveData);
+        this.broadcastToRoom(client, roomName, data);
     }
 }
 

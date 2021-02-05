@@ -14,7 +14,7 @@
     },
     {
       command: "map",
-      flags: ["loaded", "playerMove"]
+      flags: ["loaded", "playerMove", "eventMove"]
     },
     {
       command: "game",

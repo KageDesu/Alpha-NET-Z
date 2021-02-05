@@ -79,18 +79,22 @@ do ->
         #2) Создание фантомов (для новых)
 
     _.event_game_observerData = (content) ->
-        #TODO: Тут остановился
-        "OBSERVER DATA IN".p()
-        #console.info content
-        # content.id
-        # content.type
-        # content.data
-        ANGameManager.onObserverData(content.id, content.type, content.data)
+        try
+            ANGameManager.onObserverData(content.id, content.type, content.data)
+        catch e
+            console.warn("event_game_observerData", e)
 
     _.event_map_playerMove = (content) ->
-        "PLAYER MOVE".p()
-        #console.info content
-        ANGameManager.onPlayerMove(content.id, content.data)
+        try
+            ANGameManager.onPlayerMove(content.id, content.data)
+        catch e
+            console.warn("event_map_playerMove", e)
+
+    _.event_map_eventMove = (content) ->
+        try
+            ANGameManager.onEventMove(content.mapId, content.id, content.data)
+        catch e
+            console.warn("event_map_eventMove", e)
 
     return
 # ■ END NetClientMethodsManager.coffee

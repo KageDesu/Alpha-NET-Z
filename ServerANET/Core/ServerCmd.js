@@ -203,17 +203,25 @@ class ServerCmd {
 
     // * Пришли данные которые надо синхронизировать
     game_observer(d, callback) {
-        let {id, playerData, room} = this.parsePlayerInfo(d);
+        let {id, room} = this.parsePlayerInfo(d);
         let content = this.parseData(d);
         this.prc().game_observer(id, room.name, content);
         if (callback) callback();
     }
 
-    // * VARIANT 1
+    // * Пришли данные о движении игрока
     map_playerMove(d, callback) {
-        let {id, playerData, room} = this.parsePlayerInfo(d);
+        let {id, room} = this.parsePlayerInfo(d);
         let content = this.parseData(d);
         this.prc().map_playerMove(id, room.name, content);
+        if (callback) callback();
+    }
+
+    // * Пришли данные о движении события на карте
+    map_eventMove(d, callback) {
+        let {id, room} = this.parsePlayerInfo(d);
+        let content = this.parseData(d);
+        this.prc().map_eventMove(id, room.name, content);
         if (callback) callback();
     }
 }

@@ -67,6 +67,8 @@ do ->
     _.onMapLoaded = ->
         # * Отправляем что мы на карте (загрузились)
         @sendMapLoaded()
+        # * Отправляем начальные данные (позиция игрока)
+        @sendInitialMapData()
         if ANNetwork.isCoopMode() || @networkGameStarted is true
             @setWait('playersOnMap') # * Ждём игроков
         return
@@ -133,6 +135,12 @@ do ->
         #TODO: callback and get events and characters positions
         ANNetwork.send(NMS.Map("loaded", $gameMap.mapId()))
 
+    _.sendInitialMapData = ->
+        # * Отправляем принудительно свои данные всем игрокам на карте
+        @sendPlayerObserver()
+        @sendPlayerMove()
+        return
+
     _.sendBindActor = (actorId) ->
         ANNetwork.callback(NMS.Game("bindActor", actorId), @bindActorResult.bind(@))
 
@@ -144,22 +152,41 @@ do ->
         ANNetwork.send(NMS.Game("actorReady", actorData))
         @setWait('playersActors')
 
-    _.sendPlayerMove = (d) ->
+    _.sendPlayerMove = () ->
         data = {
             id: ANNetwork.myId(),
-            data: $gamePlayer.getMoveDataForNetwork(d)
+            data: $gamePlayer.getMoveDataForNetwork()
         }
         ANNetwork.send(NMS.Map("playerMove", data))
 
-    #TODO: Отправить принудительно после загрузки карты? onMapLoaded
+    _.sendEventMove = (eventId) ->
+        data = {
+            id: eventId,
+            mapId: $gameMap.mapId(),
+            data: $gameMap.event(eventId).getMoveDataForNetwork()
+        }
+        ANNetwork.send(NMS.Map("eventMove", data))
+        return
+
     _.sendPlayerObserver = () ->
-        @sendObserverData(
+        @_sendObserverData(
             'playerChar',
             ANNetwork.myId(),
             $gamePlayer.getObserverDataForNetwork()
         )
 
-    _.sendObserverData = (type, id, observerData) ->
+    _.sendEventObserver = (eventId) ->
+        @_sendObserverData(
+            'eventChar',
+            {
+                mapId: $gameMap.mapId()
+                eventId: eventId
+            },
+            $gameMap.event(eventId).getObserverDataForNetwork()
+        )
+        return
+
+    _._sendObserverData = (type, id, observerData) ->
         data = {
             type: type,
             id: id,
@@ -167,6 +194,8 @@ do ->
         }
         ANNetwork.send(NMS.Game("observer", data))
         return
+
+    #TODO: Разделить этот класс, добавить ANSyncDataManager, ANMapManager, ANPlayersManager
 
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
@@ -216,20 +245,46 @@ do ->
         switch type
             when 'playerChar'
                 @_onPlayerCharObserverData(id, content)
+            when 'eventChar'
+                @_onEventCharObserverData(id, content)
             else
                 LOG.p("From server: unknown observer data type: " + type)
                 return
 
     _._onPlayerCharObserverData = (id, content) ->
-        char = $gameMap.networkCharacterById(id)
-        char?.applyObserverData(content)
-        #console.info content
-        #find chara by ID
-        #push new observer data
+        try
+            char = $gameMap.networkCharacterById(id)
+            char?.applyObserverData(content)
+        catch e
+            ANET.w e
+        return
+
+    _._onEventCharObserverData = (id, content) ->
+        try
+            { mapId, eventId } = id
+            return if $gameMap.mapId() != mapId
+            event = $gameMap.event(eventId)
+            event?.applyObserverData(content)
+        catch e
+            ANET.w e
+        return
 
     _.onPlayerMove = (id, moveData) ->
-        char = $gameMap.networkCharacterById(id)
-        char?.moveFromNetwork(moveData)
+        try
+            char = $gameMap.networkCharacterById(id)
+            char?.moveStraightFromServer(moveData)
+        catch e
+            ANET.w e
+        return
+
+    _.onEventMove = (mapId, eventId, moveData) ->
+        try
+            return if $gameMap.mapId() != mapId
+            event = $gameMap.event(eventId)
+            event?.moveStraightFromServer(moveData)
+        catch e
+            ANET.w e
+        return
 
     return
 

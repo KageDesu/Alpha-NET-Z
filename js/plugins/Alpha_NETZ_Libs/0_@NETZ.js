@@ -17,3 +17,10 @@ ANET.isDEV = function () {
     return ANET._define == 'dev';
 };
 
+ANET.isPro = function() {
+    return true;
+};
+
+ANET.w = function(e) {
+    KDCore.warning(e);
+};

@@ -1,17 +1,19 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Player.coffee
+# ■ Game_Event.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Player::
+    _ = Game_Event::
 
     _.dataOserverHaveChanges = ->
-        ANGameManager.sendPlayerObserver()
-
-    #_.updateNetwork = ->
-
+        if ANGameManager.isMapMaster()
+            ANGameManager.sendEventObserver(@eventId())
+        # * Если мы не отправляем данные Observer,
+        # то check не будет работать, пока не сбросить флаг
+        return
+    
     return
-# ■ END Game_Player.coffee
+# ■ END Game_Event.coffee
 #---------------------------------------------------------------------------

@@ -2,11 +2,18 @@
 #?[STORABLE]
 
 class DataObserver
-    constructor: () ->
+    constructor: (@_checkTime = 0, @_instante = false) ->
         @_fields = {}
         @_isDataChanged = false
         @_isShouldSkipCheck = false
-        #TODO: Добавить режим каждый кадр, без проверки на изменение
+        @_timer = 0
+        return
+
+    # * таймер проверки изменений (отправки)
+    setInstanteMode: -> @_instante = true
+
+    # * не проверять изменения, устанавливать флаг _isDataChanged сразу (по истечению таймера)
+    setCheckInterval: (@_checkTime) ->
 
     # * Пропустить проверку данных, например когда данные пришли от сервера
     skip: -> @_isShouldSkipCheck = true
@@ -28,16 +35,23 @@ class DataObserver
         # * Если данные изменены, но зачем снова проверять?
         # * Всё равно не отслеживается какое именно поле было изменнено
         return if @isDataChanged()
-        #TODO: Добавить таймер, чтобы не каждый кадр проверять
+        @_timer--
+        # * Если таймер, то ждём, не проверяем
+        return if @_timer > 0
+        @_timer = @_checkTime
+        # * Если надо пропустить проверку, то пропускаем
         if @_isShouldSkipCheck is true
             @_isShouldSkipCheck = false
+            return
+        # * Если постоянное обновление, то сразу флаг и пропускаем проверку
+        if @_instante is true
+            @_isDataChanged = true
             return
         for f of @_fields
             if obj[f] != @_fields[f]
                 @_isDataChanged = true
                 break
-
-    isTimeOut: -> true
+        return
 
     isDataChanged: -> @_isDataChanged == true
 

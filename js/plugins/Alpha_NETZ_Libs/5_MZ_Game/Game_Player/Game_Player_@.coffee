@@ -11,11 +11,15 @@ do ->
     ALIAS__moveStraight = _.moveStraight
     _.moveStraight = (d) ->
         if ANNetwork.isConnected()
-            #TODO: три варианта попробовать,  прямой (NET), через Callback и через Response
-            #TODO: может не отправлять если не может пройти?
-            # VARIANT 1
+            # * Запоминаем предыдующие координаты (перед движением)
+            @___x = @x
+            @___y = @y
+            # * Движение
             ALIAS__moveStraight.call(@, d)
-            ANGameManager.sendPlayerMove()
+            # * Если координаты сменились, значит персонаж
+            # совершил движение, можно отправить на сервер
+            if @___x isnt @x || @___y isnt @y
+                ANGameManager.sendPlayerMove()
         else
             ALIAS__moveStraight.call(@, d)
 
@@ -31,11 +35,11 @@ do ->
             ALIAS__setupForNewGame.call(@)
     
     #@[ALIAS]
-    ALIAS__update = _.update
-    _.update = (sceneActive) ->
-        ALIAS__update.call(@, sceneActive)
-        if ANNetwork.isConnected()
-            @updateNetwork()
+    #ALIAS__update = _.update
+    #_.update = (sceneActive) ->
+        #ALIAS__update.call(@, sceneActive)
+        #if ANNetwork.isConnected()
+        #    @updateNetwork()
 
     return
 # ■ END Game_Player.coffee
