@@ -24,12 +24,19 @@ img/*
 movies/*
 save/*
 RAW/*
+js/libs/*
 
 # =============== #
 # Plugins Files #
 # =============== #
 
-
+js/rmmz_core.js
+js/rmmz_managers.js
+js/rmmz_objects.js
+js/rmmz_scenes.js
+js/rmmz_sprites.js
+js/rmmz_windows.js
+js/main.js
 js/plugins/Alpha_NETZ_Libs/_CFCompiled/
 js/plugins/debug.log
 js/plugins/NO_USED/
