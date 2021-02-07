@@ -84,6 +84,12 @@ do ->
         catch e
             console.warn("event_game_observerData", e)
 
+    _.event_game_variable = (content) ->
+        try
+            ANGameManager.onVariableValue(content.id, content.data)
+        catch e
+            console.warn("event_game_variable", e)
+
     _.event_map_playerMove = (content) ->
         try
             ANGameManager.onPlayerMove(content.id, content.data)

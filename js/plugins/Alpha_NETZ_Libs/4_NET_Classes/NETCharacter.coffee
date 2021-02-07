@@ -8,6 +8,8 @@ class NETCharacter extends Game_Character
         # * Пока не получит позицию, не видимый
         #@setTransparent(!@_isHaveInitialPosition)
         #TODO: refresh visibility if not on this map? or delete?
+        #* Иконка сетеввого состояния игрока (меню, карта, торговля, чат и т.д.)
+        @networkStateIcon = null
         @refresh()
 
 
@@ -23,6 +25,19 @@ class NETCharacter extends Game_Character
         charName = @actor().characterName()
         charIndex = @actor().characterIndex()
         @setImage charName, charIndex
+
+
+    # * Сетевое состояние игрока
+    # * =====================================================================
+
+    requestNetworkStateIcon: (@networkStateIcon) ->
+
+    isNetworkStateIconRequested: -> @networkStateIcon?
+
+    clearNetworkStateIcon: -> @networkStateIcon = null
+    
+    # * =====================================================================
+
 
 #╒═════════════════════════════════════════════════════════════════════════╛
 # ■ NETCharacter.coffee

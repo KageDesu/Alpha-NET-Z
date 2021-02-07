@@ -95,6 +95,15 @@ do ->
     _.isAllPlayersActorsReady = ->
         return @playersData.every (p) -> p.characterReady == true
 
+    # * Обновить иконку состояния игроков
+    _.refreshNetworkStates = ->
+        players = @anotherPlayersOnMap()
+        for p in players
+            stateId = NetPlayerDataWrapper.getRequestedNetworkState(p)
+            char = NetPlayerDataWrapper.getNetCharacterForPlayer(p)
+            char?.requestNetworkStateIcon(stateId) if stateId?
+        return
+
     # * Задаём игрового персонажа
     _.bindingActors = ->
         "START BINDING ACTORS".p()
@@ -139,6 +148,9 @@ do ->
         # * Отправляем принудительно свои данные всем игрокам на карте
         @sendPlayerObserver()
         @sendPlayerMove()
+        #TODO: Надо это или нет? (пока не реализовано)
+        #if ANNetwork.isMasterClient()
+        #    @sendSyncGlobalVariables()
         return
 
     _.sendBindActor = (actorId) ->
@@ -195,6 +207,27 @@ do ->
         ANNetwork.send(NMS.Game("observer", data))
         return
 
+    #TODO: Может отправлять изменение на мастера, он уже все глобальные переменные всем отправляет
+    _.sendGlobalVariableChange = (varId, newValue) ->
+        data = {
+            id: varId,
+            data: newValue
+        }
+        ANNetwork.send(NMS.Game("variable", data))
+        return
+
+    _.sendSyncGlobalVariables = () ->
+        #TODO: Синхронизация всех глобальных переменных
+        #см. $gameVariables.getAllGlobalVariablesData()
+
+    _.sendMapSceneChanging = () ->
+        sceneType = "unknown"
+        # * Тут не учитывается наследовательность, определяется точный класс через ===
+        if SceneManager.isNextScene(Scene_Menu)
+            sceneType = "menu"
+        ANNetwork.send(NMS.Game("sceneChange", sceneType))
+        return
+
     #TODO: Разделить этот класс, добавить ANSyncDataManager, ANMapManager, ANPlayersManager
 
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
@@ -227,6 +260,8 @@ do ->
 
     _.onGamePlayers = (data) ->
         @onRoomPlayers(data)
+        # * Проверить состояние для всех игроков
+        @refreshNetworkStates()
 
     _.onRefreshGameParty = () ->
         $gameParty._actors = []
@@ -282,6 +317,13 @@ do ->
             return if $gameMap.mapId() != mapId
             event = $gameMap.event(eventId)
             event?.moveStraightFromServer(moveData)
+        catch e
+            ANET.w e
+        return
+
+    _.onVariableValue = (varId, value) ->
+        try
+            $gameVariables.onVariableFromServer(varId, value)
         catch e
             ANET.w e
         return

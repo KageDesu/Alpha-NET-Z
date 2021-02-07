@@ -1,13 +1,28 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Scene_Map.coffee
+# ■ Game_Variables.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Scene_Map::
+    _ = Game_Variables::
 
+    #TODO: Список глобальных переменных указывается в параметрах плагина
+    _.isGlobalVariable = (varId) ->
+        [1, 2, 3, 4, 5, 6, 7, 8].contains(varId)
 
+    _.getAllGlobalVariablesData = ->
+        variables = []
+        for i in [1..8]
+            variables.push([i, @value[i]])
+        return variables
+
+    
+    _.onVariableFromServer = (varId, value) ->
+        @_data[varId] = value
+        @onChange()
+        
+    
     return
-# ■ END Scene_Map.coffee
+# ■ END Game_Variables.coffee
 #---------------------------------------------------------------------------

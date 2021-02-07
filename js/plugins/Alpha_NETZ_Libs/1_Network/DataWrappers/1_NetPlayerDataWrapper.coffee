@@ -27,6 +27,14 @@ do ->
 
     _.isCharOnMap = (p) -> p.mapId == $gameMap.mapId() && p.characterReady is true
 
+    _.getRequestedNetworkState = (p) ->
+        if p.scene == "menu"
+            return 2
+        return -1
+
+    _.getNetCharacterForPlayer = (p) ->
+        return $gameMap.networkCharacterById(p.id)
+
     
     return
 # ■ END NetPlayerDataWrapper.coffee
