@@ -1,7 +1,11 @@
 // * INITIAL S FILE
 
 var Imported = Imported || {};
-Imported.AlphaNETZ = true;
+Imported.Alpha_NETZ = true;
+
+if(!Imported.Alpha_Core) {
+    alert("Alpha NETZ require Alpha_@Core plugin!");
+}
 
 var ANET = {};
 ANET.Version = 0.1;
@@ -21,6 +25,4 @@ ANET.isPro = function() {
     return true;
 };
 
-ANET.w = function(e) {
-    KDCore.warning(e);
-};
+ANET.w = (e) => AA.w(e);

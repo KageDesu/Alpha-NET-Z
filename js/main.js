@@ -15,8 +15,8 @@ const scriptUrls = [
      "js/rmmz_sprites.js",
      "js/rmmz_windows.js",
      "js/plugins.js"
+,"js/plugins/Alpha_NETZ_Libs/@@_Alpha_@Core_TEST.js"
 ,"js/plugins/Alpha_NETZ_Libs/0_@NETZ.js"
-,"js/plugins/Alpha_NETZ_Libs/0_KDCore.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_ANNetwork.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetMessage.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetPlayerDataWrapper.js"
@@ -39,7 +39,6 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Player_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Variables_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Variables_N.js"
-,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/ImageManager_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETCharacter.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETCharactersGroup.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NetMessages.js"
@@ -195,6 +194,7 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
 
 
 

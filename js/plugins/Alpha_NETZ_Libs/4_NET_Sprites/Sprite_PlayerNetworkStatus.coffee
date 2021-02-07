@@ -14,7 +14,7 @@ do ->
             @_checkStateThread = new KDCore.TimedUpdate(10, @_updateStateCheck.bind(@))
 
         loadBitmap: ->
-            @bitmap = ImageManager.loadANET("PlayerStateIcons")
+            @bitmap = ImageManager.loadAA("PlayerStateIcons")
             @setFrame 0, 0, 0, 0
 
         setup: (iconId) ->
