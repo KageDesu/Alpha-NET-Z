@@ -18,10 +18,12 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/@@_Alpha_@Core_TEST.js"
 ,"js/plugins/Alpha_NETZ_Libs/0_@NETZ.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_ANNetwork.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_HUIManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetMessage.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetPlayerDataWrapper.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetRoomData.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetworkClientHandler.js"
+,"js/plugins/Alpha_NETZ_Libs/2_HUIEngine/1_Notyf.min.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_Tests_TEST.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_ANGameManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_DataObserver.js"
@@ -194,6 +196,10 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
 
 
 

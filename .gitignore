@@ -15,7 +15,6 @@ desktop.ini
 # Project Folders #
 # =============== #
 audio/*
-css/*
 effects/*
 fonts/*
 icon/*
@@ -51,5 +50,6 @@ Game.rmmzproject
 index.html
 webProject.bat
 package.json
+css/game.css
 *.lnk
 *.rar

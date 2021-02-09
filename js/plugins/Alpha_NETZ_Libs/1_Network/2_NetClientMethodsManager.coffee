@@ -25,6 +25,7 @@ do ->
         LOG.p("Disconnected")
         # * Общее событие на все сцены
         SceneManager._scene?.onLostConnection()
+        HUIManager.notifyError("Disconnected from server")
         ANNetwork.stop()
 
     _.onConnectionError = ->
