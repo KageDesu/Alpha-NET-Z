@@ -19,6 +19,7 @@ do ->
     _.init = ->
         @_isMouseHoverHtmlElement = false
         @_loadCSS()
+        @_createRelativeParent()
         @_createLoadSpinner()
         @_createNotify()
         return
@@ -55,13 +56,21 @@ do ->
 
     _.removeInput = () ->
         return unless @_input?
-        document.body.removeChild(@_input)
+        document.getElementById("anetCanvasElements").removeChild(@_input)
         @_input = null
         return
 
     _.getInputValue = () ->
         return "" unless @_input?
         return document.getElementById("anetInputName")?.value
+
+    _.updateCanvasHtmlElements = ->
+        return unless @_canvasRelativeElements?
+        @_canvasRelativeElements.style.zIndex = 2
+        @_canvasRelativeElements.width = Graphics.width
+        @_canvasRelativeElements.height = Graphics.height
+        Graphics._centerElement(@_canvasRelativeElements)
+        return
 
     # * PRIVATE  ======================================================
 
@@ -92,24 +101,28 @@ do ->
         )
         return
 
+    # * Элемент родитель, который будет изменяться вместе с размерами Canvas
+    # * Это позволит сохранять фиксированные позиции HTML элементов не зависимо от размера окна игры
+    _._createRelativeParent = ->
+        @_canvasRelativeElements = document.createElement("div")
+        @_canvasRelativeElements.id = "anetCanvasElements"
+        @updateCanvasHtmlElements()
+        document.body.appendChild(@_canvasRelativeElements)
+        return
+
     _._createInputField = (placeholder) ->
+
         @_input = document.createElement("div")
         @_input.id = "anetInput"
         @_input.addEventListener("mouseenter", () -> HUIManager._isMouseHoverHtmlElement = true)
         @_input.addEventListener("mouseleave", () -> HUIManager._isMouseHoverHtmlElement = false)
         @_input.classList.add("form__group")
         @_input.classList.add("field")
-        #@_input.style.width = "200px"
-        #@_input.style.margin = "auto"
-        #@_input.style.position = "absolute"
-        #@_input.style.left = "400px"
-        #@_input.style.top = "300px"
-        #@_input.style.zIndex = 2
         htmlCode =
             "<input type=\"input\" class=\"form__field\" placeholder=\"" + placeholder + "\" name=\"anetInputName\" id='anetInputName' required />
             <label for=\"anetInputName\" class=\"form__label\">" + placeholder + "</label>"
         @_input.insertAdjacentHTML('beforeend', htmlCode)
-        document.body.appendChild(@_input)
+        @_canvasRelativeElements.appendChild(@_input)
         return
 
     return
@@ -156,4 +169,23 @@ do ->
     
     return
 # ■ END Input.coffee
+#---------------------------------------------------------------------------
+
+#╒═════════════════════════════════════════════════════════════════════════╛
+# ■ Graphics.coffee
+#╒═════════════════════════════════════════════════════════════════════════╛
+#---------------------------------------------------------------------------
+do ->
+
+    #@[DEFINES]
+    _ = Graphics
+
+    #@[ALIAS]
+    ALIAS___updateCanvas = _._updateCanvas
+    _._updateCanvas = ->
+        ALIAS___updateCanvas.call(@)
+        HUIManager.updateCanvasHtmlElements()
+    
+    return
+# ■ END Graphics.coffee
 #---------------------------------------------------------------------------

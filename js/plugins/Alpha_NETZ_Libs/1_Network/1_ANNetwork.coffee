@@ -66,6 +66,7 @@ do ->
         @send(NMS.Lobby("leaveRoom", @room.name))
         return
 
+
     # * Надо ждать сеть
     _.isBusy = -> @isConnected() && (@isWaitServer() || ANGameManager.isShouldWaitServer())
 
@@ -119,15 +120,18 @@ do ->
             msgName = msg.fullName()
             # * Ставим игру на паузу
             @_isWaitServer = true
+            HUIManager.showLoader()
             # * Дополняем callbacks, чтобы снять игру автоматически с паузы
             _onTimeout = (...args) ->
                 LOG.p("Timeout for: " + msgName)
                 onTimeout.apply(@, args) if onTimeout?
                 ANNetwork._isWaitServer = false
+                HUIManager.hideLoader()
             _onData = (...args) ->
                 LOG.p("Response (get) for: " + msgName)
                 onData.apply(@, args) if onData?
                 ANNetwork._isWaitServer = false
+                HUIManager.hideLoader()
             LOG.p("Send, get!: " + msgName)
             msg.setFrom(@socket.id).get(_onData, _onTimeout, 1000)
         return

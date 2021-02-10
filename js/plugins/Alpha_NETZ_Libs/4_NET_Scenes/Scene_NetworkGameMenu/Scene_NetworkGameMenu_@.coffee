@@ -6,6 +6,7 @@
 class Scene_NetworkGameMenu extends Scene_MenuBase
     constructor: () ->
         super()
+        return
 
     create: ->
         super()
@@ -20,6 +21,7 @@ class Scene_NetworkGameMenu extends Scene_MenuBase
     update: ->
         super()
         @_updateBackButton()
+        @_updateRandomJoin() #2
 
     stop: ->
         HUIManager.removeInput()

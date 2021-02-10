@@ -74,8 +74,11 @@ do ->
         return
 
     _.setWait = (@_waitMode) ->
+        HUIManager.showLoader(500)
 
-    _.resetWait = -> @setWait(null)
+    _.resetWait = ->
+        @setWait(null)
+        HUIManager.hideLoader()
 
     #  * Все ли игроки на данной карте (и сцене)
     _.isAllPlayerOnSameMap = ->
