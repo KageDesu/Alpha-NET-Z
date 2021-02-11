@@ -66,6 +66,16 @@ do ->
         @send(NMS.Lobby("leaveRoom", @room.name))
         return
 
+    # * Получить общие данные о игре для сети (комнаты)
+    # * (используется при создании комнаты)
+    _.getNetworkGameInfoData = ->
+        {
+            id: $dataSystem.advanced.gameId,
+            title: $dataSystem.gameTitle,
+            version: if KDCore.isMZ() then 0 else 1,
+            maxPlayers: 4,
+            mode: if @isCoopMode() then 0 else 1
+        }
 
     # * Надо ждать сеть
     _.isBusy = -> @isConnected() && (@isWaitServer() || ANGameManager.isShouldWaitServer())
@@ -151,10 +161,5 @@ do ->
 
     _.trace = (text) -> @send(NMS.Trace(text))
 
-    _.test = () -> @callback(
-        NMS.Lobby("createRoom"),
-        (answer) -> console.log(answer),
-        () -> console.log('fail')
-    )
 
     return

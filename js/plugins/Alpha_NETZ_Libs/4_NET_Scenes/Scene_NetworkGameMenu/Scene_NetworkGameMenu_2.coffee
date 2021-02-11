@@ -54,20 +54,9 @@ do ->
         @roomsList = @roomsList.filter (r) => @isProperRoomToJoin(r)
         return
 
-    # * Тоже общий метод ?
     _.isProperRoomToJoin = (roomData) ->
-        return false unless roomData?
-        try
-            #TODO: Через Wrapper!
-            myGameId = $dataSystem.advanced.gameId
-            if roomData.gameId == myGameId
-                return true
-        catch e
-            ANET.w e
-        return false
+        NetRoomDataWrapper.isRoomProperToJoin(roomData)
         
-
-    #TODO: вынести в общий класс? Так как будет использоваться ещё в списке комнат
     _.joinToRoomRequest = (roomName) ->
         ANNetwork.get(
             NMS.Lobby("joinToRoom", roomName),

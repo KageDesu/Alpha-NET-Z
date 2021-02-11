@@ -34,10 +34,10 @@ do ->
         unless String.any(@_lastRoomName)
             @_lastRoomName = "Room_" + Math.randomInt(1000)
 
-        # * Отправляем также gameId
+        # * Отправляем данные об текущей игре (клиенте)
         newRoomData = {
             name: @_lastRoomName
-            gameId: $dataSystem.advanced.gameId
+            gameInfo: ANNetwork.getNetworkGameInfoData()
         }
 
         ANNetwork.get(

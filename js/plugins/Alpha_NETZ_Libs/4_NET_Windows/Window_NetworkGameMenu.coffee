@@ -3,6 +3,8 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 
+#TODO: Version for MV (rect!)
+
 class Window_NetworkGameMenu extends Window_Command
     constructor: (rect) ->
         super(rect)
