@@ -14,9 +14,14 @@ do ->
 
     # * Все поля структуры
     _.createLocal = ->
-        {
+        # * Загружаем с настроек, если нету, то случайное
+        if String.any(ConfigManager.netPlayerName)
+            plName = ConfigManager.netPlayerName
+        else
+            plName =  "Player " + Math.randomInt(1000)
+        return {
             id: ANNetwork.myId()
-            name: "Player " + Math.randomInt(1000)
+            name: plName
             mapId: 0
             actorId: 0
             index: 0

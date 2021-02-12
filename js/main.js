@@ -28,6 +28,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_ANGameManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_DataObserver.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_NetClientMethodsManager.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/ConfigManager_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_CharacterBase_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_CharacterBase_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Event_@.js"
@@ -54,6 +55,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkGameMenu_2.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkRoom.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkRoomsList.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkSettings.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Title_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Title_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Character_@.js"
@@ -62,6 +64,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkGameMenu.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomCommands.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomsList.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_TitleCommand_@.js"
 ];
@@ -199,6 +202,10 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
 
 
 

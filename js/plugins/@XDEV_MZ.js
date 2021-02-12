@@ -22,12 +22,12 @@ window.DEV = {};
 (function () {
 
     //$[OVER]
-    Scene_Boot.prototype.startNormalGame = function () {
+    /*Scene_Boot.prototype.startNormalGame = function () {
         this.checkPlayerLocation();
         DataManager.setupNewGame();
         SceneManager.goto(Scene_Map);
         "PROJECT USE XDEV".p();
-    };
+    };*/
 
 })();
 

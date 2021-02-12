@@ -64,6 +64,11 @@ do ->
         return "" unless @_input?
         return document.getElementById("anetInputName")?.value
 
+    _.setInputValue = (value) ->
+        return unless @_input?
+        document.getElementById("anetInputName")?.value = value
+        return
+
     _.updateCanvasHtmlElements = ->
         return unless @_canvasRelativeElements?
         @_canvasRelativeElements.style.zIndex = 2

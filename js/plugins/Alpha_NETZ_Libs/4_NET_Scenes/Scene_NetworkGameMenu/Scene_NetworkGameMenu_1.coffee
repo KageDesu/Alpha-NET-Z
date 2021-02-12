@@ -27,6 +27,7 @@ do ->
         @_commandsWindow.setHandler 'createRoom', @commandCreateRoomMenu.bind(@)
         @_commandsWindow.setHandler 'joinRoom', @commandJoinRoomMenu.bind(@)
         @_commandsWindow.setHandler 'joinRandRoom', @commandJoinRandRoomMenu.bind(@) #2
+        @_commandsWindow.setHandler 'settings', @commandSettings.bind(@)
         @addWindow @_commandsWindow
 
     _.commandCreateRoomMenu = ->
@@ -61,10 +62,10 @@ do ->
         return
 
     _.commandJoinRoomMenu = () ->
-        @_commandsWindow.activate()
-        #TODO: Остановился тут, сцена комнат
-        #TODO: Тут надо показать сцену со списком комнат и там уже соединяться, но пропущу пока что
+        SceneManager.push(Scene_NetworkRoomsList)
 
+    _.commandSettings = ->
+        SceneManager.push(Scene_NetworkSettings)
 
     return
 # ■ END Scene_NetworkGameMenu.coffee

@@ -20,6 +20,7 @@ do ->
             masterName: ""
             inGame: false
             playersIds: []
+            readyPlayersIds: []
             gameId: 0
             gameTitle: ""
             rpgVersion: 0

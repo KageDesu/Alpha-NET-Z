@@ -5,7 +5,6 @@ class Scene_NetworkRoom extends Scene_MenuBase
 
     create: ->
         super()
-        @_cancelButton.setClickHandler(@popScene.bind(@))
         @createRoomTitle()
         @createCommands()
         @createPlayersList()
@@ -71,7 +70,7 @@ do ->
     
     _._refreshRoomTitle = ->
         if ANNetwork.isMasterClient()
-            roomHostName = "\\C[1]" + ANGameManager.myPlayerData().name
+            roomHostName = "\\C[1]" + ANGameManager.myPlayerData().name + " (you)"
         else
             unless @room?
                 roomHostName = "Fetching..."
@@ -86,6 +85,28 @@ do ->
         "--- --- --- ".p()
 
     _.createCommands = ->
+        @_windowCommands = new Window_NetworkRoomCommands(new Rectangle(0, @_helpWindow.y + @_helpWindow.height, 400, 100))
+        @_windowCommands.setHandler 'cancel', @popScene.bind(@)
+        @_windowCommands.setHandler 'leave', @popScene.bind(@)
+        @_windowCommands.setHandler 'start', @_onStartRoomCommand.bind(@)
+        @_windowCommands.setHandler 'ready', @_onReadyInRoomCommand.bind(@)
+        @addWindow @_windowCommands
+        @_windowCommands.activate()
+        return
+
+    _._onStartRoomCommand = ->
+        if @_isAllInRoomReady() # TODO: В Wrapper, так как окно тоже проверяет
+            ANNetwork.send(NMS.Lobby("startGame")) if ANNetwork.isMasterClient()
+        else
+            @_windowCommands.activate()
+        return
+
+    _._onReadyInRoomCommand = ->
+        #TODO: Ничего пока нет
+
+    #TODO: Флаги готовности
+    # * См. readyPlayersIds у данных комнаты
+    _._isAllInRoomReady = -> true
 
     _.createPlayersList = ->
         @_refreshPlayerList()

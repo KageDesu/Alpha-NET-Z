@@ -21,11 +21,22 @@ class Window_NetworkRoomsList extends Window_Selectable
 
     isEnabled: (index) -> NetRoomDataWrapper.isRoomProperToJoin(@roomData(index))
 
-    refreshRooms: (@roomsList) ->
-        @_noRoomsTextSpr.visible = !@isHaveAnyRoom()
-        @refresh()
+    isCurrentRoomEnabled: () -> @isEnabled(@index())
 
-    isHaveAnyRoom: -> @roomsList.length > 0
+    getSelectedRoom: -> @roomData(@index())
+
+    refreshRooms: (@roomsList) ->
+        #TODO: @_noRoomsTextSpr мелькает
+        @_noRoomsTextSpr.visible = !@isHaveAnyRoom()
+        @select(-1) if @_noRoomsTextSpr.visible is true
+        @refresh()
+        return
+
+    isHaveAnyRoom: ->
+        if @roomsList?
+            return @roomsList.length > 0
+        else
+            return false
 
     roomData: (index) -> @roomsList[index]
 
@@ -49,18 +60,17 @@ do ->
         @_noRoomsTextSpr.drawText("There are no rooms on server")
         @addChild @_noRoomsTextSpr
 
-    #[GAME]{VER}[MODE] Master 0\X (inGame, inLobby)
-
     _._drawRoomInfo = (rect, roomData) ->
         @_ddX = 0
         rpgVersion = if roomData.rpgVersion is 0 then 'MZ' else 'MV'
         gameMode = if roomData.gameMode is 0 then  'Coop' else 'Mult'
         state = if roomData.inGame is true then 'In Game'  else 'In Lobby'
+        # * [VER]{GAME MODE}(GAME NAME) RoomName 0\X (inGame|inLobby)
         roomText = "\\}\\C[1][%1]\\C[6]{%2}\\C[3](%3)\\{\\C[0]   %4   \\C[4]%5/%6 \\}\\C[5](%7)".format(
             rpgVersion,
             gameMode,
             roomData.gameTitle,
-            roomData.masterName,
+            roomData.name,
             roomData.playersIds.length,
             roomData.maxPlayers,
             state

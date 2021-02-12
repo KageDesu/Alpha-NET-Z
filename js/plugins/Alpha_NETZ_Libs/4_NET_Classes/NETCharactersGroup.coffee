@@ -6,6 +6,7 @@ class NETCharactersGroup
         @_data = []
 
     setup: () ->
+        #TODO: Тут баг и краш игры! (actorId = 0)
         "SETUP NETWORK CHARS".p()
         @_data = []
         x = ANGameManager.anotherPlayers()
