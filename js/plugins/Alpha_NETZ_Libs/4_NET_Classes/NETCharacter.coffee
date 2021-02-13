@@ -22,6 +22,7 @@ class NETCharacter extends Game_Character
     actor: -> $gameActors.actor(@playerData().actorId)
 
     refresh: ->
+        return unless @actor()?
         charName = @actor().characterName()
         charIndex = @actor().characterIndex()
         @setImage charName, charIndex
