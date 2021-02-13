@@ -8,7 +8,7 @@ do ->
     _ = Game_Player::
 
     _.dataOserverHaveChanges = ->
-        ANGameManager.sendPlayerObserver()
+        ANSyncDataManager.sendPlayerObserver()
 
     #_.updateNetwork = ->
 

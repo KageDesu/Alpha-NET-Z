@@ -82,13 +82,13 @@ do ->
 
     _.event_game_observerData = (content) ->
         try
-            ANGameManager.onObserverData(content.id, content.type, content.data)
+            ANSyncDataManager.onObserverData(content.id, content.type, content.data)
         catch e
             console.warn("event_game_observerData", e)
 
     _.event_game_variable = (content) ->
         try
-            ANGameManager.onVariableValue(content.id, content.data)
+            ANSyncDataManager.onVariableValue(content.id, content.data)
         catch e
             console.warn("event_game_variable", e)
 

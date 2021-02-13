@@ -9,7 +9,7 @@ do ->
 
     _.dataOserverHaveChanges = ->
         if ANGameManager.isMapMaster()
-            ANGameManager.sendEventObserver(@eventId())
+            ANSyncDataManager.sendEventObserver(@eventId())
         # * Если мы не отправляем данные Observer,
         # то check не будет работать, пока не сбросить флаг
         return

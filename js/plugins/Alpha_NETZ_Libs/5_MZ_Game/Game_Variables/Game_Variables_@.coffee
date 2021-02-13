@@ -16,7 +16,7 @@ do ->
             # * Если были изменения
             if @__variableChangedOk is true
                 if @isGlobalVariable(variableId)
-                    ANGameManager.sendGlobalVariableChange(variableId, @value(variableId))
+                    ANSyncDataManager.sendGlobalVariableChange(variableId, @value(variableId))
             @__variableChangedOk = false
         else
             ALIAS__setValue.call(@, variableId, value)

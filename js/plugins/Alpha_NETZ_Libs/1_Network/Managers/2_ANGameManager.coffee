@@ -149,11 +149,11 @@ do ->
 
     _.sendInitialMapData = ->
         # * Отправляем принудительно свои данные всем игрокам на карте
-        @sendPlayerObserver()
+        ANSyncDataManager.sendPlayerObserver()
         @sendPlayerMove()
         #TODO: Надо это или нет? (пока не реализовано)
         #if ANNetwork.isMasterClient()
-        #    @sendSyncGlobalVariables()
+        #    ANSyncDataManager.sendSyncGlobalVariables()
         return
 
     _.sendBindActor = (actorId) ->
@@ -183,45 +183,6 @@ do ->
         ANNetwork.send(NMS.Map("eventMove", data))
         return
 
-    _.sendPlayerObserver = () ->
-        @_sendObserverData(
-            'playerChar',
-            ANNetwork.myId(),
-            $gamePlayer.getObserverDataForNetwork()
-        )
-
-    _.sendEventObserver = (eventId) ->
-        @_sendObserverData(
-            'eventChar',
-            {
-                mapId: $gameMap.mapId()
-                eventId: eventId
-            },
-            $gameMap.event(eventId).getObserverDataForNetwork()
-        )
-        return
-
-    _._sendObserverData = (type, id, observerData) ->
-        data = {
-            type: type,
-            id: id,
-            data: observerData
-        }
-        ANNetwork.send(NMS.Game("observer", data))
-        return
-
-    #TODO: Может отправлять изменение на мастера, он уже все глобальные переменные всем отправляет
-    _.sendGlobalVariableChange = (varId, newValue) ->
-        data = {
-            id: varId,
-            data: newValue
-        }
-        ANNetwork.send(NMS.Game("variable", data))
-        return
-
-    _.sendSyncGlobalVariables = () ->
-        #TODO: Синхронизация всех глобальных переменных
-        #см. $gameVariables.getAllGlobalVariablesData()
 
     _.sendMapSceneChanging = () ->
         sceneType = "unknown"
@@ -231,7 +192,7 @@ do ->
         ANNetwork.send(NMS.Game("sceneChange", sceneType))
         return
 
-    #TODO: Разделить этот класс, добавить ANSyncDataManager, ANMapManager, ANPlayersManager
+    #TODO: Разделить этот класс, добавить ANMapManager, ANPlayersManager
 
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
@@ -279,34 +240,6 @@ do ->
         # * Удаляем остальных игроков, оставляем себя
         @createMyPlayerData()
 
-    _.onObserverData = (id, type, content) ->
-        switch type
-            when 'playerChar'
-                @_onPlayerCharObserverData(id, content)
-            when 'eventChar'
-                @_onEventCharObserverData(id, content)
-            else
-                LOG.p("From server: unknown observer data type: " + type)
-                return
-
-    _._onPlayerCharObserverData = (id, content) ->
-        try
-            char = $gameMap.networkCharacterById(id)
-            char?.applyObserverData(content)
-        catch e
-            ANET.w e
-        return
-
-    _._onEventCharObserverData = (id, content) ->
-        try
-            { mapId, eventId } = id
-            return if $gameMap.mapId() != mapId
-            event = $gameMap.event(eventId)
-            event?.applyObserverData(content)
-        catch e
-            ANET.w e
-        return
-
     _.onPlayerMove = (id, moveData) ->
         try
             char = $gameMap.networkCharacterById(id)
@@ -320,13 +253,6 @@ do ->
             return if $gameMap.mapId() != mapId
             event = $gameMap.event(eventId)
             event?.moveStraightFromServer(moveData)
-        catch e
-            ANET.w e
-        return
-
-    _.onVariableValue = (varId, value) ->
-        try
-            $gameVariables.onVariableFromServer(varId, value)
         catch e
             ANET.w e
         return
