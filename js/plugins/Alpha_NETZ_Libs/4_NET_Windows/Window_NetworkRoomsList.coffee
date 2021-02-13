@@ -61,7 +61,6 @@ do ->
         @addChild @_noRoomsTextSpr
 
     _._drawRoomInfo = (rect, roomData) ->
-        @_ddX = 0
         rpgVersion = if roomData.rpgVersion is 0 then 'MZ' else 'MV'
         gameMode = if roomData.gameMode is 0 then  'Coop' else 'Mult'
         state = if roomData.inGame is true then 'In Game'  else 'In Lobby'

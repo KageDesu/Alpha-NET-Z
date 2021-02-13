@@ -79,10 +79,8 @@ do ->
         @_helpWindow.setText("Room: %1, Host: %2".format(ANNetwork.room.name, roomHostName))
 
     _._refreshPlayerList = ->
-        "--- PLAYERS IN ROOM: ".p()
-        for pl in ANGameManager.playersData
-            console.log(pl.name)
-        "--- --- --- ".p()
+        @_playersListWindow.refresh()
+        return
 
     _.createCommands = ->
         @_windowCommands = new Window_NetworkRoomCommands(new Rectangle(0, @_helpWindow.y + @_helpWindow.height, 400, 100))
@@ -109,8 +107,14 @@ do ->
     _._isAllInRoomReady = -> true
 
     _.createPlayersList = ->
+        ww = Graphics.width - 100
+        wh = Graphics.height - 260
+        wx = 50
+        wy = 240
+        @_playersListWindow = new Window_NetworkRoomPlayersList(new Rectangle(wx, wy, ww, wh))
+        @addWindow @_playersListWindow
         @_refreshPlayerList()
-
+        return
 
     return
 # ■ END Scene_NetworkRoom.coffee
