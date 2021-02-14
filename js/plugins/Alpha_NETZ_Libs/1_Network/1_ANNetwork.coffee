@@ -52,7 +52,8 @@ do ->
             return
 
         _.testConnection = ->
-            ip = 'localhost'
+            #ip = 'localhost'
+            ip = '195.161.41.20'
             port = '3034'
             adr = 'http://' + ip + ":" + port
             console.log "Connect to " + adr

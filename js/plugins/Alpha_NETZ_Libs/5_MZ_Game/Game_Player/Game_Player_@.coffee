@@ -19,7 +19,7 @@ do ->
             # * Если координаты сменились, значит персонаж
             # совершил движение, можно отправить на сервер
             if @___x isnt @x || @___y isnt @y
-                ANGameManager.sendPlayerMove()
+                ANPlayersManager.sendPlayerMove()
         else
             ALIAS__moveStraight.call(@, d)
 

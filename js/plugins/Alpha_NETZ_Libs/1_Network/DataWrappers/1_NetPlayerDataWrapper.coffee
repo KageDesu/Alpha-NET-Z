@@ -28,6 +28,7 @@ do ->
             scene: ""
             characterReady: false
             isMapMaster: false
+            onEvent: 0
         }
 
     _.isCharOnMap = (p) -> p.mapId == $gameMap.mapId() && p.characterReady is true

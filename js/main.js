@@ -29,6 +29,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_DataObserver.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_NetClientMethodsManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANMapManager.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANPlayersManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANSyncDataManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/ConfigManager_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_CharacterBase_@.js"
@@ -42,6 +43,8 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Party_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Player_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Player_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Switches_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Switches_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Variables_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Variables_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETCharacter.js"
@@ -205,6 +208,10 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
 
 
 

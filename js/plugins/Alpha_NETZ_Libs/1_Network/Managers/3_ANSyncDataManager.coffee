@@ -53,6 +53,14 @@ do ->
         ANNetwork.send(NMS.Game("variable", data))
         return
 
+    _.sendGlobalSwitchChange = (switchId, newValue) ->
+        data = {
+            id: switchId,
+            data: newValue
+        }
+        ANNetwork.send(NMS.Game("switch", data))
+        return
+
     _.sendSyncGlobalVariables = () ->
         #TODO: Синхронизация всех глобальных переменных
         #см. $gameVariables.getAllGlobalVariablesData()
@@ -91,6 +99,13 @@ do ->
     _.onVariableValue = (varId, value) ->
         try
             $gameVariables.onVariableFromServer(varId, value)
+        catch e
+            ANET.w e
+        return
+
+    _.onSwitchValue = (varId, value) ->
+        try
+            $gameSwitches.onSwitchFromServer(varId, value)
         catch e
             ANET.w e
         return

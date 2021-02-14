@@ -92,15 +92,21 @@ do ->
         catch e
             console.warn("event_game_variable", e)
 
+    _.event_game_switch = (content) ->
+        try
+            ANSyncDataManager.onSwitchValue(content.id, content.data)
+        catch e
+            console.warn("event_game_switch", e)
+
     _.event_map_playerMove = (content) ->
         try
-            ANGameManager.onPlayerMove(content.id, content.data)
+            ANPlayersManager.onPlayerMove(content.id, content.data)
         catch e
             console.warn("event_map_playerMove", e)
 
     _.event_map_eventMove = (content) ->
         try
-            ANGameManager.onEventMove(content.mapId, content.id, content.data)
+            ANMapManager.onEventMove(content.mapId, content.id, content.data)
         catch e
             console.warn("event_map_eventMove", e)
 

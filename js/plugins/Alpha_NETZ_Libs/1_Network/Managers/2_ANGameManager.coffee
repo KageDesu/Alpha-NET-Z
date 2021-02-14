@@ -22,7 +22,7 @@ do ->
     _.init = ->
         @reset()
         @createMyPlayerData()
-        @sendPlayerName()
+        ANPlayersManager.sendPlayerName()
 
     # * Когда происходит отключение от сервера
     _.reset  = ->
@@ -66,9 +66,9 @@ do ->
     # * Когда на клиенте загрузилась карта
     _.onMapLoaded = ->
         # * Отправляем что мы на карте (загрузились)
-        @sendMapLoaded()
+        ANMapManager.sendMapLoaded()
         # * Отправляем начальные данные (позиция игрока)
-        @sendInitialMapData()
+        ANMapManager.sendInitialMapData()
         if ANNetwork.isCoopMode() || @networkGameStarted is true
             @setWait('playersOnMap') # * Ждём игроков
         return
@@ -117,7 +117,7 @@ do ->
         #TODO: Пока только кооператив - static binding
         actorId = @startingActorsIds[@myIndex()]
         #  * Пытаемся зарезервировать персонажа
-        @sendBindActor(actorId)
+        ANPlayersManager.sendBindActor(actorId)
         return
 
     # * Ожидание данных (игроков) от сервера
@@ -143,69 +143,12 @@ do ->
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
 
-    _.sendMapLoaded = ->
-        #TODO: callback and get events and characters positions
-        ANNetwork.send(NMS.Map("loaded", $gameMap.mapId()))
-
-    _.sendInitialMapData = ->
-        # * Отправляем принудительно свои данные всем игрокам на карте
-        ANSyncDataManager.sendPlayerObserver()
-        @sendPlayerMove()
-        #TODO: Надо это или нет? (пока не реализовано)
-        #if ANNetwork.isMasterClient()
-        #    ANSyncDataManager.sendSyncGlobalVariables()
-        return
-
-    _.sendBindActor = (actorId) ->
-        ANNetwork.callback(NMS.Game("bindActor", actorId), @bindActorResult.bind(@))
-
-    _.sendPlayerName = ->
-        ANNetwork.send(NMS.Lobby("setPlayerName", @myPlayerData().name))
-
-    _.sendActorReady = ->
-        actorData = $gameActors.actor(@myPlayerData().actorId)
-        ANNetwork.send(NMS.Game("actorReady", actorData))
-        @setWait('playersActors')
-
-    _.sendPlayerMove = () ->
-        data = {
-            id: ANNetwork.myId(),
-            data: $gamePlayer.getMoveDataForNetwork()
-        }
-        ANNetwork.send(NMS.Map("playerMove", data))
-
-    _.sendEventMove = (eventId) ->
-        data = {
-            id: eventId,
-            mapId: $gameMap.mapId(),
-            data: $gameMap.event(eventId).getMoveDataForNetwork()
-        }
-        ANNetwork.send(NMS.Map("eventMove", data))
-        return
-
-
-    _.sendMapSceneChanging = () ->
-        sceneType = "unknown"
-        # * Тут не учитывается наследовательность, определяется точный класс через ===
-        if SceneManager.isNextScene(Scene_Menu)
-            sceneType = "menu"
-        ANNetwork.send(NMS.Game("sceneChange", sceneType))
-        return
-
-    #TODO: Разделить этот класс, добавить ANMapManager, ANPlayersManager
+    
 
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
 
-    _.bindActorResult = (result) ->
-        #TODO: Если true - зарезервировали,  дальше либо кастомизация, либо отправка
-        # клиент готов начинать игру (и ожидание игроков включается)
-        # false - значит данный персонаж занят, надо обрабатыватЬ!
-        if result is true
-            "BINDING GOOD, send ActorReady".p()
-            #TODO: Сейчас без кастомизации
-            @sendActorReady()
-        return
+    
 
     #? СОБЫТИЯ (обработка событий от сервера, вызываются из NETClientMethodsManager)
     # * ===============================================================
@@ -240,22 +183,6 @@ do ->
         # * Удаляем остальных игроков, оставляем себя
         @createMyPlayerData()
 
-    _.onPlayerMove = (id, moveData) ->
-        try
-            char = $gameMap.networkCharacterById(id)
-            char?.moveStraightFromServer(moveData)
-        catch e
-            ANET.w e
-        return
-
-    _.onEventMove = (mapId, eventId, moveData) ->
-        try
-            return if $gameMap.mapId() != mapId
-            event = $gameMap.event(eventId)
-            event?.moveStraightFromServer(moveData)
-        catch e
-            ANET.w e
-        return
 
     return
 

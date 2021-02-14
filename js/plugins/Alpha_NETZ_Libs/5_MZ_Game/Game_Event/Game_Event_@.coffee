@@ -20,7 +20,7 @@ do ->
                 # * Если координаты сменились, значит персонаж
                 # совершил движение, можно отправить на сервер
                 if @___x isnt @x || @___y isnt @y
-                    ANGameManager.sendEventMove(@eventId())
+                    ANMapManager.sendEventMove(@eventId())
             else
                 # * SKIP MOVEMENT
                 # * Движение событий выполняется только на мастере карты

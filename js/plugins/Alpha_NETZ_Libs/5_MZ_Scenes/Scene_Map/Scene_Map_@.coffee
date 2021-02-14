@@ -22,7 +22,7 @@ do ->
         ALIAS__updateScene.call(@)
         if ANNetwork.isConnected()
             if SceneManager.isSceneChanging()
-                ANGameManager.sendMapSceneChanging()
+                ANMapManager.sendMapSceneChanging()
 
     #@[ALIAS]
     #ALIAS__update = _.update
