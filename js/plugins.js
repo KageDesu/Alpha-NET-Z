@@ -3,5 +3,6 @@
 var $plugins =
 [
 {"name":"@XDEV_MZ","status":true,"description":"Developer Tools","parameters":{}},
-{"name":"SocketIO","status":true,"description":"v2.3.0 - Socket.IO (for Alpha NET Z plugin)","parameters":{}}
+{"name":"SocketIO","status":true,"description":"v2.3.0 - Socket.IO (for Alpha NET Z plugin)","parameters":{}},
+{"name":"Alpha_NETZ","status":true,"description":"(v.0.1)[PRO] X","parameters":{"ANETZ":""}}
 ];

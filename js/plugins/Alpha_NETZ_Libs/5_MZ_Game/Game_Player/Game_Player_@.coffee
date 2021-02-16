@@ -28,9 +28,13 @@ do ->
     _.setupForNewGame = ->
         if ANGameManager.networkGameStarted is true
             #@_createNetworkObserver()
-            # * Телепортируемся на начальную карту мультиплеера
-            #mapId, x, y, dir, fadeType
-            @reserveTransfer(1, 6, 5, 2, 0)
+            if ANET.PP.networkGameStartMap() != 0
+                # * Телепортируемся на начальную карту мультиплеера
+                #(mapId, x, y, dir, fadeType)
+                @reserveTransfer(1, 6, 5, 2, 0)
+            else
+                # * Телепортируемся на стартовую карту
+                ALIAS__setupForNewGame.call(@)
         else
             ALIAS__setupForNewGame.call(@)
     

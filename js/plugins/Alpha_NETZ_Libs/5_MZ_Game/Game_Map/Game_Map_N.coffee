@@ -18,6 +18,9 @@ do ->
     _.updateNetwork = ->
         @_networkCharacters.update()
 
+    _.refreshNetworkCharacters = ->
+        @_networkCharacters.refresh()
+
     return
 # ■ END Game_Map.coffee
 #---------------------------------------------------------------------------

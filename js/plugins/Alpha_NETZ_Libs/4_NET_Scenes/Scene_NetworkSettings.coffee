@@ -38,7 +38,7 @@ do ->
         if String.any(newName)
             ANGameManager.myPlayerData().name = newName
             # * Отправим на сервер
-            ANGameManager.sendPlayerName()
+            ANPlayersManager.sendPlayerName()
             ConfigManager.netPlayerName = newName
             ConfigManager.save()
         return

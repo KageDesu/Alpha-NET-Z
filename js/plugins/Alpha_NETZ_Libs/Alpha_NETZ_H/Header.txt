@@ -1,0 +1,8 @@
+/*:
+ * @plugindesc (v.0.1)%TYPE% X
+ * @author Pheonix KageDesu
+ * @target MZ
+ * @url https://kagedesuworkshop.blogspot.com
+ *
+ * @help
+ *

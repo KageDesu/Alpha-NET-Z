@@ -15,10 +15,11 @@ do ->
         @_networkCharactersLayer = new Sprite()
         @_networkCharactersLayer.z = 3
         @_tilemap.addChild @_networkCharactersLayer
-        @_refreshNetworkCharacters()
+        @refreshNetworkCharacters()
         return
 
-    _._refreshNetworkCharacters = ->
+    _.refreshNetworkCharacters = ->
+        return unless @_networkCharactersLayer?
         for char in @_networkCharacterSprites
             @_networkCharactersLayer.removeChild char
             @_characterSprites.delete char

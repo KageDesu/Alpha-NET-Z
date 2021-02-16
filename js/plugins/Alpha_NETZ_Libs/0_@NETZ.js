@@ -8,7 +8,8 @@ if(!Imported.Alpha_Core) {
 }
 
 var ANET = {};
-ANET.Version = 0.1;
+ANET.Version = 10; // 0.1.0
+ANET.ServerRev = 100; // * Необходимая ревизия сервера
 
 // * Данный символ переопределяется в Z_TestScripts_TEST как dev
 ANET._define = 'build'; // * По умолчанию -> сборка

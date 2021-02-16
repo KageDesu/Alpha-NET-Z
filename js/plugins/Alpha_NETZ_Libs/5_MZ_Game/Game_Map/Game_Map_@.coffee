@@ -29,6 +29,13 @@ do ->
         if ANNetwork.isConnected()
             @updateNetwork()
     
+    #@[ALIAS]
+    ALIAS__refresh = _.refresh
+    _.refresh = ->
+        ALIAS__refresh.call(@)
+        if ANNetwork.isConnected()
+            @refreshNetworkCharacters()
+
     return
 # ■ END Game_Map.coffee
 #---------------------------------------------------------------------------

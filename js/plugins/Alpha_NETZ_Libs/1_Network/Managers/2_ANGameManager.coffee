@@ -13,9 +13,6 @@ do ->
     #@[DEFINES]
     _ = ANGameManager
 
-    #TODO: TEMP COOP STATIC ACTORS
-    _.startingActorsIds = [null, 1, 2, 3, 4]
-
     _.isShouldWaitServer = -> @_waitMode?
 
     # * Инициализация начальных данных (при подключении надо вызывать)
@@ -90,7 +87,7 @@ do ->
         myIndex = @myIndex()
         return @playersData.filter (p) -> p.index isnt myIndex
 
-    # * Все игроки (кроме клиента) на текущей карте
+    # * Все игроки (кроме клиента) на текущей карте (именно на карте, не обязательно на Сцене карты)
     _.anotherPlayersOnMap = ->
         return @anotherPlayers().filter (p) -> NetPlayerDataWrapper.isCharOnMap(p)
 
@@ -115,7 +112,8 @@ do ->
         @networkGameStarted = false
         #TODO: ТУТ РЕЖИМ ВЫБОРА ПЕРСОНАЖА (если actorId нету)
         #TODO: Пока только кооператив - static binding
-        actorId = @startingActorsIds[@myIndex()]
+        # * -1, так как myIndex начинается с 1, а массив с 0
+        actorId = ANET.PP.actorsForNetwork()[@myIndex() - 1]
         #  * Пытаемся зарезервировать персонажа
         ANPlayersManager.sendBindActor(actorId)
         return
@@ -132,12 +130,18 @@ do ->
             when 'playersActors'
                 if @isAllPlayersActorsReady()
                     @resetWait()
-                    "READY TO GO TO THE GAME MAP".p()
-                    # * Отправляем на начальную карту игры
-                    $gamePlayer.setupForNewGame()
+                    @startGame()
             else
                 # * just wait manul reset
                 # * Ждёт когда ожидание будет сброшено вручную
+        return
+
+    # * Начать игру (когда все уже определились с персонажами)
+    _.startGame = ->
+        "READY TO START GAME".p()
+        # * Отправляем на начальную карту игры (если были на начальной карты для сети)
+        if ANET.PP.networkGameStartMap() != 0
+            $gamePlayer.setupForNewGame()
         return
 
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)

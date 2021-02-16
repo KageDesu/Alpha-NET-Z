@@ -12,7 +12,8 @@ do ->
     ALIAS__initialize = _.initialize
     _.initialize = ->
         ALIAS__initialize.call(@)
-        HUIManager.init()
+        ANET.System.initSystem()
+        return
 
     return
 # ■ END Scene_Boot.coffee

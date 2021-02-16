@@ -49,7 +49,6 @@ do ->
     #?EVENT
     # * 0 - error, 1 - connect
     _._onConnectionStatus = (statusCode) ->
-        HUIManager.hideLoader()
         switch statusCode
             when 0
                 @_onConnectionRefused()
@@ -58,10 +57,13 @@ do ->
         return
     
     _._onConnectionRefused = ->
+        HUIManager.hideLoader()
         HUIManager.notifyError("Server not response in time")
         @popScene()
 
     _._onConnectionGood = ->
+        #TODO: Server version check
+        HUIManager.hideLoader()
         unless ANGameManager.isInited()
             ANGameManager.init()
         HUIManager.notifySucess("Connected to server")

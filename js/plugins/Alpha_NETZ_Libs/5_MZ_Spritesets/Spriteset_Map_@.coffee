@@ -13,6 +13,7 @@ do ->
         ALIAS__createCharacters.call(@)
         @_createNetworkCharacters() if ANNetwork.isConnected()
 
+
     return
 # ■ END Spriteset_Map.coffee
 #---------------------------------------------------------------------------
