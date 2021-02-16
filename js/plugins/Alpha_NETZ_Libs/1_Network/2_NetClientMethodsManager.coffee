@@ -76,9 +76,7 @@ do ->
     _.event_game_refreshParty = () ->
         ANGameManager.onRefreshGameParty()
         "REFRESH PARTY".p()
-        #TODO:
-        #1) Создание своего персонажа
-        #2) Создание фантомов (для новых)
+
 
     _.event_game_observerData = (content) ->
         try

@@ -34,6 +34,7 @@ do ->
 
     _._drawPlayerInfo = (rect, playerData) ->
         text = playerData.name
+        #TODO: Добавить имя Персонажа!
         #TODO: Другое форматирование?
         if playerData.id == ANNetwork.room.masterId
             text = "\\C[1]" + text

@@ -12,10 +12,14 @@ do ->
         # * Можно ли выбирать персонажа себе
         isActorSelectionAllowed: -> true
 
+        # * Начальная карта для сетевого режима
         networkGameStartMap: -> 1
-        #TODO: Также нужны параметры X,Y,Direction
 
-        
+        # * Автоматически перемещает с начальной сетевой карты на игровую
+        isNetworkGameAutoStart: -> true
+
+        #TODO: Нужна комманда плагина, которая работает только на начальной карте
+        # и перемещает на начальную игровую карту (не Transfer, а on game start)
 
     ANET.link ParamsManager
     return

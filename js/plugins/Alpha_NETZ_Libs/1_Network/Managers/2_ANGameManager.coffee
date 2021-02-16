@@ -107,11 +107,21 @@ do ->
     # * Задаём игрового персонажа
     _.bindingActors = ->
         "START BINDING ACTORS".p()
-        #TODO: проверка, что actorId уже есть, тогда команда не нужна на сервер
-        # Например если можно будет в лобби выбирать персонажа
         @networkGameStarted = false
-        #TODO: ТУТ РЕЖИМ ВЫБОРА ПЕРСОНАЖА (если actorId нету)
-        #TODO: Пока только кооператив - static binding
+        if ANET.PP.isActorSelectionAllowed()
+            @actorBingingFromSelection()
+        else
+            @staticActorBinging()
+        return
+
+    # * Персонаж, выбранный из списка
+    _.actorBingingFromSelection = ->
+        #TODO: выбор персонажа из списка в комнате
+        #actorId уже задан, надо сразу дальше
+        #@staticActorBinging()
+
+    # * Статический режимм присвоения персонажа
+    _.staticActorBinging = ->
         # * -1, так как myIndex начинается с 1, а массив с 0
         actorId = ANET.PP.actorsForNetwork()[@myIndex() - 1]
         #  * Пытаемся зарезервировать персонажа
@@ -140,7 +150,7 @@ do ->
     _.startGame = ->
         "READY TO START GAME".p()
         # * Отправляем на начальную карту игры (если были на начальной карты для сети)
-        if ANET.PP.networkGameStartMap() != 0
+        if ANET.PP.networkGameStartMap() != 0 and ANET.PP.isNetworkGameAutoStart()
             $gamePlayer.setupForNewGame()
         return
 
@@ -166,14 +176,17 @@ do ->
             # Пока ничего не делаем, так как не видим всех игроков на сервере
         return
 
+    # * Данные об игроках в комнате (подключился, ушёл и т.д.)
     _.onRoomPlayers = (data) ->
         @playersData = data
 
+    # * Данные (состояния) об игроках (NetPlayer Data новые)
     _.onGamePlayers = (data) ->
         @onRoomPlayers(data)
-        # * Проверить состояние для всех игроков
+        # * Проверить состояние для всех игроков (иконки)
         @refreshNetworkStates()
 
+    # * Когда кто-то из игроков выбрал своего персонажа (готов к игре)
     _.onRefreshGameParty = () ->
         $gameParty._actors = []
         for plData in @playersData

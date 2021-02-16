@@ -7,6 +7,8 @@ class Scene_NetworkRoom extends Scene_MenuBase
         super()
         @createRoomTitle()
         @createCommands()
+        if ANET.PP.isActorSelectionAllowed()
+            @createActorSelectWindow()
         @createPlayersList()
         @refreshRoom()
 
@@ -16,6 +18,7 @@ class Scene_NetworkRoom extends Scene_MenuBase
         @room = ANNetwork.room
         @_refreshRoomTitle()
         @_refreshPlayerList()
+        @_refreshActorSelector()
 
     #?EVENT
     netOn_lobby_refreshRoomData: ->
@@ -83,11 +86,12 @@ do ->
         return
 
     _.createCommands = ->
-        @_windowCommands = new Window_NetworkRoomCommands(new Rectangle(0, @_helpWindow.y + @_helpWindow.height, 400, 100))
+        @_windowCommands = new Window_NetworkRoomCommands(new Rectangle(0, @_helpWindow.y + @_helpWindow.height, 600, 100))
         @_windowCommands.setHandler 'cancel', @popScene.bind(@)
         @_windowCommands.setHandler 'leave', @popScene.bind(@)
         @_windowCommands.setHandler 'start', @_onStartRoomCommand.bind(@)
         @_windowCommands.setHandler 'ready', @_onReadyInRoomCommand.bind(@)
+        @_windowCommands.setHandler 'character', @_onCharacterSelectCommand.bind(@)
         @addWindow @_windowCommands
         @_windowCommands.activate()
         return
@@ -102,9 +106,17 @@ do ->
     _._onReadyInRoomCommand = ->
         #TODO: Ничего пока нет
 
+    _._onCharacterSelectCommand = ->
+
+
     #TODO: Флаги готовности
     # * См. readyPlayersIds у данных комнаты
     _._isAllInRoomReady = -> true
+
+    _.createActorSelectWindow = ->
+        #TODO: Тут остановился, окно выбора персонажа из ANET, тестировать и разрабатывать на обычной сцене, не в сети
+
+    _._refreshActorSelector = ->
 
     _.createPlayersList = ->
         ww = Graphics.width - 100
