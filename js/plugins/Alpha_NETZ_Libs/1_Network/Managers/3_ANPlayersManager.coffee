@@ -16,8 +16,11 @@ do ->
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
 
-    _.sendBindActor = (actorId) ->
+    _.sendBindActorFromGame = (actorId) ->
         ANNetwork.callback(NMS.Game("bindActor", actorId), @bindActorResult.bind(@))
+
+    _.sendBindActorFromLobby = (actorId, callback) ->
+        ANNetwork.callback(NMS.Game("bindActor", actorId), callback)
 
     _.sendPlayerName = ->
         ANNetwork.send(NMS.Lobby("setPlayerName", ANGameManager.myPlayerData().name))

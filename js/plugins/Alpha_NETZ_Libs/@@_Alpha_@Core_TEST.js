@@ -47,12 +47,12 @@ AA.link = function (library) {
 // * LIBRARY WITH MZ AND MZ SUPPORT
 //! {OUTER FILE}
 
-//?rev 30.01.21
+//?rev 17.02.21
 var KDCore;
 
 KDCore = KDCore || {};
 
-KDCore._fileVersion = '2.4.7';
+KDCore._fileVersion = '2.4.9';
 
 if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
   // * ПРОПУСКАЕМ ЗАГРУЗКУ, так как уже загруженна более новая
@@ -66,7 +66,7 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
   window.KDCore = KDCore;
   console.warn("XDev KDCore is loaded " + KDCore.Version);
   (function() {
-    var BitmapSrc, Color, DevLog, Point, SDK, __TMP_LOGS__, ___Sprite_alias_Move_KDCORE_2, __alias_Bitmap_fillAll, i, l, m, o;
+    var BitmapSrc, Color, DevLog, Point, SDK, __TMP_LOGS__, ___Sprite_alias_Move_KDCORE_2, __alias_Bitmap_blt_kdCore, __alias_Bitmap_fillAll, i, l, m, o;
     // * Array Extension
     //------------------------------------------------------------------------------
     Array.prototype.delete = function() {
@@ -146,6 +146,11 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
     String.any = function(str) {
       return !String.isNullOrEmpty(str);
     };
+    String.prototype.replaceAll = function(search, replacement) {
+      var target;
+      target = this;
+      return target.split(search).join(replacement);
+    };
     // * Sprite Extension
     //------------------------------------------------------------------------------
     Sprite.prototype.moveToCenter = function(dx = 0, dy = 0) {
@@ -180,8 +185,23 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       }
       rx = KDCore.SDK.toGlobalCoord(this, 'x');
       ry = KDCore.SDK.toGlobalCoord(this, 'y');
-      rect = new PIXI.Rectangle(rx, ry, this.width, this.height);
+      rect = this._getProperFullRect(rx, ry);
       return rect.contains(point.x, point.y);
+    };
+    // * Возвращает Rect с учётом Scale и Anchor спрайта
+    Sprite.prototype._getProperFullRect = function(rx, ry) {
+      var height, width, x, y;
+      width = this.width * Math.abs(this.scale.x);
+      height = this.width * Math.abs(this.scale.y);
+      x = rx - this.anchor.x * width;
+      y = ry - this.anchor.y * height;
+      if (this.anchor.x === 0 && this.scale.x < 0) {
+        x += this.width * this.scale.x;
+      }
+      if (this.anchor.y === 0 && this.scale.y < 0) {
+        y += this.height * this.scale.y;
+      }
+      return new PIXI.Rectangle(x, y, width, height);
     };
     Sprite.prototype.fillAll = function(color) {
       if (color != null) {
@@ -203,6 +223,16 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
         return this.fillRect(0, 0, this.width, this.height, color.CSS);
       } else {
         return __alias_Bitmap_fillAll.call(this, color);
+      }
+    };
+    __alias_Bitmap_blt_kdCore = Bitmap.prototype.blt;
+    Bitmap.prototype.blt = function(source, sx, sy, sw, sh, dx, dy, dw, dh) {
+      if (this._needModBltDWH > 0) {
+        dh = dw = this._needModBltDWH;
+        __alias_Bitmap_blt_kdCore.call(this, source, sx, sy, sw, sh, dx, dy, dw, dh);
+        this._needModBltDWH = null;
+      } else {
+        __alias_Bitmap_blt_kdCore.call(this, ...arguments);
       }
     };
     Bitmap.prototype.drawIcon = function(x, y, icon, size = 32) {
@@ -229,13 +259,6 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
     };
     Bitmap.prototype.drawTextFull = function(text, position = 'center') {
       return this.drawText(text, 0, 0, this.width, this.height, position);
-    };
-    // * String Extenstion
-    //------------------------------------------------------------------------------
-    String.prototype.replaceAll = function(search, replacement) {
-      var target;
-      target = this;
-      return target.split(search).join(replacement);
     };
     // * Input Extension
     //------------------------------------------------------------------------------
@@ -292,6 +315,12 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
         return new KDCore.Point(TouchInput.x, TouchInput.y);
       };
     })();
+    // * Window_Base Extension
+    //------------------------------------------------------------------------------
+    Window_Base.prototype.drawFaceWithCustomSize = function(faceName, faceIndex, x, y, finalSize) {
+      this.contents._needModBltDWH = finalSize;
+      this.drawFace(faceName, faceIndex, x, y);
+    };
     // * SDK
     //------------------------------------------------------------------------------
     SDK = function() {
@@ -4526,4 +4555,4 @@ AA.Utils.Parser = function() {};
 // ■ END Sprite_TilingFrame.coffee
 //---------------------------------------------------------------------------
 
-//Plugin Alpha_@Core automatic build by PKD PluginBuilder 1.9.1 07.02.2021
+//Plugin Alpha_@Core automatic build by PKD PluginBuilder 1.9.2 17.02.2021

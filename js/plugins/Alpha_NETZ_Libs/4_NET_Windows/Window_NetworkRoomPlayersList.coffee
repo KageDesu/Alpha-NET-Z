@@ -34,15 +34,21 @@ do ->
 
     _._drawPlayerInfo = (rect, playerData) ->
         text = playerData.name
-        #TODO: Добавить имя Персонажа!
-        #TODO: Другое форматирование?
         if playerData.id == ANNetwork.room.masterId
             text = "\\C[1]" + text
         else if playerData.id == ANNetwork.myId()
             text = "\\C[3]" + text
+        if ANET.PP.isActorSelectionAllowed()
+            text += @_getActorName(playerData)
         @drawTextEx(text, rect.x, rect.y, rect.width, 'left')
         return
     
+    _._getActorName = (playerData) ->
+        actorName = "..."
+        if playerData.actorId > 0
+            actorName = $dataActors[playerData.actorId].name
+        return "\\C[0] [%1]".format(actorName)
+
     return
 # ■ END Window_NetworkRoomPlayersList.coffee
 #---------------------------------------------------------------------------

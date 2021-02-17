@@ -116,16 +116,16 @@ do ->
 
     # * Персонаж, выбранный из списка
     _.actorBingingFromSelection = ->
-        #TODO: выбор персонажа из списка в комнате
-        #actorId уже задан, надо сразу дальше
-        #@staticActorBinging()
+        # * Так как персонаж уже был выбран в лобби, то сразу отправляем готовнотсть
+        ANPlayersManager.sendActorReady()
+        return
 
     # * Статический режимм присвоения персонажа
     _.staticActorBinging = ->
         # * -1, так как myIndex начинается с 1, а массив с 0
         actorId = ANET.PP.actorsForNetwork()[@myIndex() - 1]
         #  * Пытаемся зарезервировать персонажа
-        ANPlayersManager.sendBindActor(actorId)
+        ANPlayersManager.sendBindActorFromGame(actorId)
         return
 
     # * Ожидание данных (игроков) от сервера
@@ -197,6 +197,9 @@ do ->
         return
 
     _.onLeaveRoom = ->
+
+        #TODO: Сбросить ActorId (на сервере)
+
         # * Удаляем остальных игроков, оставляем себя
         @createMyPlayerData()
 

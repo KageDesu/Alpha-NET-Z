@@ -20,6 +20,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_ANNetwork.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_ANSystem.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_HUIManager.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_KCoreExt.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetMessage.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetPlayerDataWrapper.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetRoomDataWrapper.js"
@@ -70,6 +71,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_PlayerNetworkStatus.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkActorsList.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkGameMenu.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomCommands.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomPlayersList.js"
@@ -210,6 +212,12 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
+
 
 
 

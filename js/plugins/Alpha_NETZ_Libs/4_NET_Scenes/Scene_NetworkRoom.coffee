@@ -7,9 +7,9 @@ class Scene_NetworkRoom extends Scene_MenuBase
         super()
         @createRoomTitle()
         @createCommands()
+        @createPlayersList()
         if ANET.PP.isActorSelectionAllowed()
             @createActorSelectWindow()
-        @createPlayersList()
         @refreshRoom()
 
     isBottomHelpMode: -> false
@@ -18,10 +18,18 @@ class Scene_NetworkRoom extends Scene_MenuBase
         @room = ANNetwork.room
         @_refreshRoomTitle()
         @_refreshPlayerList()
-        @_refreshActorSelector()
+        @_refreshActorsList()
+        @_windowCommands.refresh()
 
     #?EVENT
+    # * Когда игрок выходит или входит в комнату
     netOn_lobby_refreshRoomData: ->
+        # * Пришли данные о комнате (и игроках), надо обновить
+        @refreshRoom()
+
+    #?EVENT
+    # * Когда игрок выбирает персонажа
+    netOn_game_playersData: ->
         # * Пришли данные о комнате (и игроках), надо обновить
         @refreshRoom()
 
@@ -107,16 +115,54 @@ do ->
         #TODO: Ничего пока нет
 
     _._onCharacterSelectCommand = ->
+        @_windowActorsList.show()
+        @_windowActorsList.open()
+        @_windowActorsList.activate()
+        @_playersListWindow.close()
 
 
-    #TODO: Флаги готовности
+    #TODO: Флаги готовности, сбрасывать при нажатии Character
     # * См. readyPlayersIds у данных комнаты
     _._isAllInRoomReady = -> true
 
     _.createActorSelectWindow = ->
-        #TODO: Тут остановился, окно выбора персонажа из ANET, тестировать и разрабатывать на обычной сцене, не в сети
+        ww = Graphics.width - 100
+        wh = Graphics.height - 260
+        wx = 50
+        wy = 240
+        @_windowActorsList = new Window_NetworkActorsList(new Rectangle(wx, wy, ww, wh))
+        @_windowActorsList.setHandler 'cancel', @_onActorSelectCancel.bind(@)
+        @_windowActorsList.setHandler 'ok', @_onActorSelectOk.bind(@)
+        @_windowActorsList.hide()
+        @addWindow @_windowActorsList
 
-    _._refreshActorSelector = ->
+    _._onActorSelectCancel = -> @_cancelActorSelection()
+        
+    _._cancelActorSelection = ->
+        @_windowActorsList.close()
+        @_windowCommands.activate()
+        @_playersListWindow.open()
+
+    _._onActorSelectOk = ->
+        selectedActorId = @_windowActorsList.selectedActorId()
+        if selectedActorId <= 0
+            SoundManager.playBuzzer()
+            @_windowActorsList.activate()
+        else
+            ANPlayersManager.sendBindActorFromLobby(selectedActorId, @_onBindActorResult.bind(@))
+        return
+
+    _._onBindActorResult = (resultFlag) ->
+        if resultFlag is true
+            @_cancelActorSelection()
+        else
+            SoundManager.playBuzzer()
+            @_windowActorsList.activate()
+        @refreshRoom()
+        return
+
+    _._refreshActorsList = ->
+        @_windowActorsList.refresh()
 
     _.createPlayersList = ->
         ww = Graphics.width - 100
