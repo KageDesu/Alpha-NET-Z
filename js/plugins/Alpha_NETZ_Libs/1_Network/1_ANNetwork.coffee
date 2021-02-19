@@ -52,9 +52,8 @@ do ->
             return
 
         _.testConnection = ->
-            ip = 'localhost'
-            #ip = '195.161.41.20'
-            port = '3034'
+            ip = ANET.PP.serverIp()
+            port = ANET.PP.serverPort()
             adr = 'http://' + ip + ":" + port
             console.log "Connect to " + adr
             @socket = io adr

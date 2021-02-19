@@ -19,12 +19,15 @@ do ->
         _.initSystem = ->
             "INIT ANET SYSTEM".p()
             @loadParameters()
+            @applyParameters()
             HUIManager.init()
             return
 
         _.loadParameters = ->
             ANET.PP = new ANET.ParamsManager()
 
+        _.applyParameters = ->
+            
         
         return
     # -----------------------------------------------------------------------

@@ -1,1 +1,44 @@
-@param ANETZ
+@param ANETZ @text @desc
+
+
+@param connection:s
+@text Connection
+@type struct<LConnectionSettings>
+@default {"serverIp":"195.161.41.20","serverPort":"3034"}
+@desc If you don't have own server, don't change this settings
+
+
+@param spacer|gamesettings @text‏‏‎ ‎@desc ===============================================
+
+@param gameMode
+@type combo
+@text Game Mode
+@option Cooperative
+@option Multiplayer
+@default Cooperative
+@desc ! In current version only cooperative !
+
+@param actorsForNetwork:intA
+@type actor[]
+@text Actors
+@default ["1","2","3","4"]
+@desc Available actors for network game players
+
+@param isActorSelectionAllowed:b
+@text Actor selection?
+@type boolean
+@default true
+@desc Can player select actor in lobby?
+
+@param networkStartMap:s
+@text Network Start
+@type struct<LNetworkMap>
+@default {"gameStartMap:i":"0","isNetworkGameAutoStart:b":"true"}
+@desc Network game start map settings
+
+
+@param globalData:s
+@text Global Data
+@type struct<LGlobalData>
+@default {"globalVariablesIds:intA":"[]","globalSwitchesIds:intA":"[]"}
+@desc All this data will be automatically synchronized between all players

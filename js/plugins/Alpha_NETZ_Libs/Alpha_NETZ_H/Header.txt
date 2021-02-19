@@ -1,8 +1,10 @@
 /*:
- * @plugindesc (v.0.1)%TYPE% X
+ * @plugindesc (v.0.1)%TYPE% Network System
  * @author Pheonix KageDesu
  * @target MZ
- * @url https://kagedesuworkshop.blogspot.com
+ * @url http://kdworkshop.net/
  *
  * @help
+ *
+ * This plugin version only for test purposes
  *

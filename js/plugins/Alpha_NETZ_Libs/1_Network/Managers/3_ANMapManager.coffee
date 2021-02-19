@@ -17,7 +17,6 @@ do ->
     # * ===============================================================
 
     _.sendMapLoaded = ->
-        #TODO: callback and get events and characters positions
         ANNetwork.send(NMS.Map("loaded", $gameMap.mapId()))
 
     _.sendInitialMapData = ->
@@ -46,6 +45,10 @@ do ->
         ANNetwork.send(NMS.Map("eventMove", data))
         return
 
+    # * Данную команду выполняет только мастер карты, когда кто-то подключается к карте
+    _.sendMapEventsInitialPositions = () ->
+        #TODO: events for each sendEventMove(ID)
+
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
 
@@ -57,5 +60,15 @@ do ->
         catch e
             ANET.w e
         return
+
+    _.onInitialMapSync = ->
+        try
+            @sendInitialMapData()
+            if ANNetwork.isMasterClient()
+                @sendMapEventsInitialPositions()
+        catch e
+            ANET.w e
+        return
+
 
     return

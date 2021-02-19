@@ -108,6 +108,14 @@ do ->
         catch e
             console.warn("event_map_eventMove", e)
 
+    # * Если пришёл этот метод, то надо отправить данные свои на карте, для синхронизации
+    _.event_map_initialMapSynchronization = (content) ->
+        try
+            if $gameMap.mapId() == content
+                ANMapManager.onInitialMapSync()
+        catch e
+            console.warn("event_map_eventMove", e)
+
     return
 # ■ END NetClientMethodsManager.coffee
 #---------------------------------------------------------------------------

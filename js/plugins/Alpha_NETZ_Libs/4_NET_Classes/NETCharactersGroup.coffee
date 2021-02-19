@@ -44,7 +44,6 @@ do ->
         return
 
     # * Удаляем (отключился или ушёл на другую карту)
-    #TODO: Надо проверять!
     _._removeNotExistsCharacters = ->
         x = ANGameManager.anotherPlayersOnMap()
         for char in @characters()

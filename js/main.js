@@ -19,6 +19,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/0_@NETZ.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_ANNetwork.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_ANSystem.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_DevSymbol_TEST.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_HUIManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_KCoreExt.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/1_NetMessage.js"
@@ -212,6 +213,14 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 
 
 

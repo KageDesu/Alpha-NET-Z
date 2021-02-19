@@ -3,10 +3,6 @@
 var Imported = Imported || {};
 Imported.Alpha_NETZ = true;
 
-if(!Imported.Alpha_Core) {
-    alert("Alpha NETZ require Alpha_@Core plugin!");
-}
-
 var ANET = {};
 ANET.Version = 10; // 0.1.0
 ANET.ServerRev = 100; // * Необходимая ревизия сервера
@@ -27,3 +23,11 @@ ANET.isPro = function() {
 };
 
 ANET.w = (e) => AA.w(e);
+
+if(!Imported.Alpha_Core) {
+
+    if(ANET.isDEV()) {
+        console.warn("Alpha NETZ require Alpha_@Core plugin!");
+    } else
+        alert("Alpha NETZ require Alpha_@Core plugin!");
+}

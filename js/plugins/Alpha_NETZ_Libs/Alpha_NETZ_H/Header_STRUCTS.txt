@@ -1,0 +1,48 @@
+/*~struct~LConnectionSettings:
+
+@param serverIp
+@text IP
+@type combo
+@option localhost
+@option 195.161.41.20
+@desc Server IP address (ip4)
+@default 195.161.41.20
+
+@param serverPort
+@text Port
+@default 3034
+
+*/
+
+/*~struct~LNetworkMap:
+
+@param gameStartMap:i
+@text Map ID
+@type number
+@min 0
+@default 0
+@desc Special start map ID for network game. 0 - default start map
+
+@param isNetworkGameAutoStart:b
+@text Auto Transfer?
+@type boolean
+@default true
+@desc Automatically transfer all players (when all ready) from network start map to default start map
+
+*/
+
+/*~struct~LGlobalData:
+
+@param globalVariablesIds:intA
+@type variable[]
+@text Variables
+@default []
+@desc Variables for auto synchronizaton
+
+@param globalSwitchesIds:intA
+@type switch[]
+@text Switches
+@default []
+@desc Switches for auto synchronizaton
+
+*/

@@ -184,7 +184,12 @@ do ->
     _.onGamePlayers = (data) ->
         @onRoomPlayers(data)
         # * Проверить состояние для всех игроков (иконки)
+        #TODO: Тут остановился
+        #TODO: Надо переделывать Network states, пускать на поток
+        # Т.е. класс, который постоянно проверяет статусы игроков
         @refreshNetworkStates()
+        $gameMap.refresh()
+        return
 
     # * Когда кто-то из игроков выбрал своего персонажа (готов к игре)
     _.onRefreshGameParty = () ->
@@ -197,9 +202,6 @@ do ->
         return
 
     _.onLeaveRoom = ->
-
-        #TODO: Сбросить ActorId (на сервере)
-
         # * Удаляем остальных игроков, оставляем себя
         @createMyPlayerData()
 

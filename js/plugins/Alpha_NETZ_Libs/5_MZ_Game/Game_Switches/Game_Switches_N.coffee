@@ -7,9 +7,8 @@ do ->
     #@[DEFINES]
     _ = Game_Switches::
 
-    #TODO: Список глобальных переменных указывается в параметрах плагина
     _.isGlobalSwitch = (switchId) ->
-        [1, 2, 3, 4, 5, 6, 7, 8].contains(switchId)
+        ANET.PP.globalSwitchesIds().contains(switchId)
 
     _.onSwitchFromServer = (switchId, value) ->
         @_data[switchId] = value

@@ -162,7 +162,7 @@ do ->
         return
 
     _._refreshActorsList = ->
-        @_windowActorsList.refresh()
+        @_windowActorsList?.refresh()
 
     _.createPlayersList = ->
         ww = Graphics.width - 100
