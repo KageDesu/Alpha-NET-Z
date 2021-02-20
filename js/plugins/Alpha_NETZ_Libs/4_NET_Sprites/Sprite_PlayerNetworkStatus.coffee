@@ -18,13 +18,17 @@ do ->
             @setFrame 0, 0, 0, 0
 
         setup: (iconId) ->
-            if iconId < 0
-                @reset()
+            unless iconId?
+                @reset() if @visible is true
             else
+                return if @_balloonId == iconId
                 @_balloonId = iconId
                 @visible = true
-                @_duration = 5 * @speed() + @waitTime()
+                @restart()
             return
+
+        restart: ->
+            @_duration = 5 * @speed() + @waitTime()
 
         reset: () ->
             @_duration = 0
@@ -40,7 +44,7 @@ do ->
             # * Начинается снова
             if @_balloonId >= 0 && @_duration <= 0
                 @_firstStep = true
-                @setup(@_balloonId)
+                @restart()
 
         frameIndex: ->
             index = (this._duration - this.waitTime()) / this.speed()
@@ -55,9 +59,7 @@ do ->
 
         _updateStateCheck: ->
             return unless @_character?
-            if @_character.isNetworkStateIconRequested()
-                @setup(@_character.networkStateIcon)
-                @_character.clearNetworkStateIcon()
+            @setup(@_character.networkStateIcon)
             return
 
     ANET.link Sprite_PlayerNetworkStatus

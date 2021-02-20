@@ -13,6 +13,13 @@ do ->
         ALIAS__start.call(@)
         ANNetwork.stop() if ANNetwork.isConnected()
 
+    #@[ALIAS]
+    ALIAS__update = _.update
+    _.update = ->
+        ALIAS__update.call(@)
+        #TODO: Добавить потом параметр плагина, чтобы люди могли тестить быстро
+        @nUpdateDebugStart() if ANET.isDEV()
+
     # * Добавляем команду сетевой игры в главное меню
     do ->
         

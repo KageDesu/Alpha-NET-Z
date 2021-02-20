@@ -22,10 +22,7 @@ do ->
     _.sendInitialMapData = ->
         # * Отправляем принудительно свои данные всем игрокам на карте
         ANSyncDataManager.sendPlayerObserver()
-        ANPlayersManager.sendPlayerMove()
-        #TODO: Надо это или нет? (пока не реализовано)
-        #if ANNetwork.isMasterClient()
-        #    ANSyncDataManager.sendSyncGlobalVariables()
+        ANPlayersManager.sendPlayerLocation()
         return
 
     _.sendMapSceneChanging = () ->

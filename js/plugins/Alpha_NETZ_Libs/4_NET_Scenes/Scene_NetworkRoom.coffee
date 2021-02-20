@@ -54,8 +54,8 @@ class Scene_NetworkRoom extends Scene_MenuBase
     update: ->
         super()
         #TODO: Готов клиент или нет
-        if ANNetwork.isMasterClient() and Input.isTriggered('ok')
-            ANNetwork.send(NMS.Lobby("startGame"))
+        #if ANNetwork.isMasterClient() and Input.isTriggered('ok')
+        #    ANNetwork.send(NMS.Lobby("startGame"))
 
     stop: ->
         super()
