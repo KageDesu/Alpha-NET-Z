@@ -52,6 +52,7 @@ do ->
     _.onEventMove = (mapId, eventId, moveData) ->
         try
             return if $gameMap.mapId() != mapId
+            return if SceneManager.isSceneChanging()
             event = $gameMap.event(eventId)
             event?.moveStraightFromServer(moveData)
         catch e

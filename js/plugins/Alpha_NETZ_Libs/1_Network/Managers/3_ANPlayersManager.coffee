@@ -59,6 +59,7 @@ do ->
 
     _.onPlayerMove = (id, moveData) ->
         try
+            return if SceneManager.isSceneChanging()
             char = $gameMap.networkCharacterById(id)
             char?.moveStraightFromServer(moveData)
         catch e
@@ -67,9 +68,8 @@ do ->
 
     _.onPlayerLocation = (id, positionData) ->
         try
-            #TODO: убрать белеберду с nSetInitialLocation
             char = $gameMap.networkCharacterById(id)
-            char?.nSetInitialLocation(positionData[0], positionData[1])
+            char?.setPosition(positionData[0], positionData[1])
         catch e
             ANET.w e
         return

@@ -12,6 +12,7 @@ do ->
     _.start = ->
         ALIAS__start.call(@)
         ANNetwork.stop() if ANNetwork.isConnected()
+        "Precc C for fast connect".p() if ANET.isDEV()
 
     #@[ALIAS]
     ALIAS__update = _.update
