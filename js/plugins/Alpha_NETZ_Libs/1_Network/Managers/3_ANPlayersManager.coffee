@@ -37,6 +37,13 @@ do ->
         }
         ANNetwork.send(NMS.Map("playerMove", data))
 
+    _.sendPlayerLocation = () ->
+        data = {
+            id: ANNetwork.myId(),
+            data: [$gamePlayer.x, $gamePlayer.y]
+        }
+        ANNetwork.send(NMS.Map("playerLocation", data))
+
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
 
@@ -54,6 +61,15 @@ do ->
         try
             char = $gameMap.networkCharacterById(id)
             char?.moveStraightFromServer(moveData)
+        catch e
+            ANET.w e
+        return
+
+    _.onPlayerLocation = (id, positionData) ->
+        try
+            #TODO: убрать белеберду с nSetInitialLocation
+            char = $gameMap.networkCharacterById(id)
+            char?.nSetInitialLocation(positionData[0], positionData[1])
         catch e
             ANET.w e
         return

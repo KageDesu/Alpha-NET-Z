@@ -102,6 +102,12 @@ do ->
         catch e
             console.warn("event_map_playerMove", e)
 
+    _.event_map_playerLocation = (content) ->
+        try
+            ANPlayersManager.onPlayerLocation(content.id, content.data)
+        catch e
+            console.warn("event_map_playerLocation", e)
+
     _.event_map_eventMove = (content) ->
         try
             ANMapManager.onEventMove(content.mapId, content.id, content.data)

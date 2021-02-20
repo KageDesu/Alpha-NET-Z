@@ -3,17 +3,11 @@
 class NETCharacter extends Game_Character
     constructor: (@id) ->
         super()
-        # * Получил ли начальную позицию?
-        #@_isHaveInitialPosition = false
-        # * Пока не получит позицию, не видимый
-        #@setTransparent(!@_isHaveInitialPosition)
-        #TODO: refresh visibility if not on this map? or delete?
-        #* Иконка сетеввого состояния игрока (меню, карта, торговля, чат и т.д.)
+        #* Иконка сетевого состояния игрока (меню, карта, торговля, чат и т.д.)
         @networkStateIcon = null
+        # * Персонаж получил начальную позицию от сервера
+        @nIsGetInitialLocation = false
         @refresh()
-
-
-    #TODO: Тут остановился, получение координат когда игрок загружается на карту
 
     # * Синхронизация движения
 
@@ -23,22 +17,25 @@ class NETCharacter extends Game_Character
 
     refresh: ->
         return unless @actor()?
-        charName = @actor().characterName()
-        charIndex = @actor().characterIndex()
-        @setImage charName, charIndex
-
-
-    # * Сетевое состояние игрока
-    # * =====================================================================
+        if @nIsGetInitialLocation is false
+            @setImage "", 0
+        else
+            charName = @actor().characterName()
+            charIndex = @actor().characterIndex()
+            @setImage charName, charIndex
 
     requestNetworkStateIcon: (@networkStateIcon) ->
 
-    isNetworkStateIconRequested: -> @networkStateIcon?
-
-    clearNetworkStateIcon: -> @networkStateIcon = null
-    
-    # * =====================================================================
-
+    # * Этот метод был сделан для того, чтобы когда выходишь из меню
+    # * Персонаж другого игрока не совершал "движения" в конечную точку
+    # * А совершает он движение, так как карта сперва показывается, а только затем
+    # * идёт запрос на сервер
+    # * Данные о начальной позиции на экране (от сервера)
+    nSetInitialLocation: (x, y) ->
+        @nIsGetInitialLocation = true
+        @setPosition(x, y)
+        @refresh()
+        return
 
 #╒═════════════════════════════════════════════════════════════════════════╛
 # ■ NETCharacter.coffee

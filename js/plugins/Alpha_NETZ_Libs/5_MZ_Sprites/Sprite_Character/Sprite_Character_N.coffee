@@ -17,13 +17,12 @@ do ->
         unless @netStateIcon?
             @_createNetworkStateIcon() if @parent?
         else
-            @netStateIcon.x = @x
-            @netStateIcon.y = @y - @height
+            @netStateIcon.y = -@height
 
     _._createNetworkStateIcon = ->
         @netStateIcon = new ANET.Sprite_PlayerNetworkStatus()
         @netStateIcon.setupNETCharacter(@_character)
-        @parent.addChild @netStateIcon
+        @addChild @netStateIcon
         return
     
     return

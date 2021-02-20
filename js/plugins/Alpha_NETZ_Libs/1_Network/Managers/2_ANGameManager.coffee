@@ -97,11 +97,12 @@ do ->
 
     # * Обновить иконку состояния игроков
     _.refreshNetworkStates = ->
+        # * Используется _, так как метод вызывается в отдельном потоке тоже
         players = @anotherPlayersOnMap()
         for p in players
             stateId = NetPlayerDataWrapper.getRequestedNetworkState(p)
             char = NetPlayerDataWrapper.getNetCharacterForPlayer(p)
-            char?.requestNetworkStateIcon(stateId) if stateId?
+            char?.requestNetworkStateIcon(stateId)
         return
 
     # * Задаём игрового персонажа
@@ -184,9 +185,6 @@ do ->
     _.onGamePlayers = (data) ->
         @onRoomPlayers(data)
         # * Проверить состояние для всех игроков (иконки)
-        #TODO: Тут остановился
-        #TODO: Надо переделывать Network states, пускать на поток
-        # Т.е. класс, который постоянно проверяет статусы игроков
         @refreshNetworkStates()
         $gameMap.refresh()
         return

@@ -17,6 +17,13 @@ do ->
         return
         
     #@[ALIAS]
+    ALIAS__stop = _.stop
+    _.stop = ->
+        ALIAS__stop.call(@)
+        if ANNetwork.isConnected()
+            $gameMap.resetInitialLocationsOfNetCharacters()
+
+    #@[ALIAS]
     ALIAS__updateScene = _.updateScene
     _.updateScene = ->
         ALIAS__updateScene.call(@)
@@ -25,9 +32,11 @@ do ->
                 ANMapManager.sendMapSceneChanging()
 
     #@[ALIAS]
-    #ALIAS__update = _.update
-    #_.update = ->
-    #    ALIAS__update.call(@)
+    ALIAS__update = _.update
+    _.update = ->
+        ALIAS__update.call(@)
+        if ANNetwork.isConnected()
+            @_updateNetwork()
 
     return
 # ■ END Scene_Map.coffee

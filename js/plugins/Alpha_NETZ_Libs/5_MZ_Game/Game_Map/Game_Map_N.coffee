@@ -7,6 +7,12 @@ do ->
     #@[DEFINES]
     _ = Game_Map::
 
+    # * Когда игрок покидает сцену карты, сбрасываем начальные положения других игроков
+    _.resetInitialLocationsOfNetCharacters = ->
+        for char in @netChars()
+            char.nIsGetInitialLocation = false
+        @refreshNetworkCharacters()
+
     _.netChars = -> @_networkCharacters.characters()
 
     _.networkCharacterById = (id) -> @_networkCharacters.characterById(id)

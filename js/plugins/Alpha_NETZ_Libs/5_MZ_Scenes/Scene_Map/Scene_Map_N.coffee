@@ -7,6 +7,8 @@ do ->
     #@[DEFINES]
     _ = Scene_Map::
 
+    _._updateNetwork = ->
+        
 
     return
 # ■ END Scene_Map.coffee
