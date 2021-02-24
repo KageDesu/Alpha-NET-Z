@@ -163,7 +163,7 @@ do ->
     # * (используется при создании комнаты)
     _.getNetworkGameInfoData = ->
         {
-            id: $dataSystem.advanced.gameId,
+            id: ANET.VD.getGameVersion(),
             title: $dataSystem.gameTitle,
             version: if KDCore.isMZ() then 0 else 1,
             maxPlayers: 4,

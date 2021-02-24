@@ -1,19 +1,25 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Scene_Map.coffee
+# ■ Window_Base.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
+    # * Совместимость с MZ
+
     #@[DEFINES]
-    _ = Scene_Map::
+    _ = Window_Base::
 
-    #?EVENT
-    # * Когда игрок выходит или входит в комнату (покидает игру)
-    _.netOn_lobby_refreshRoomData = ->
-        #TODO: Если игрок отключился, надо общее событие!
-        $gameMap.refreshNetworkCharacters()
+    return unless KDCore.isMV()
+
+    #@[ALIAS]
+    ALIAS__initialize = _.initialize
+    _.initialize = (x, y, width, height) ->
+        if x instanceof Rectangle
+            ALIAS__initialize.call(@, x.x, x.y, x.width, x.height)
+        else
+            ALIAS__initialize.call(@, x, y, width, height)
         return
-
+    
     return
-# ■ END Scene_Map.coffee
+# ■ END Window_Base.coffee
 #---------------------------------------------------------------------------

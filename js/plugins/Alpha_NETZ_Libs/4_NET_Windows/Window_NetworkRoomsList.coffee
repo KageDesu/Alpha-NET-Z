@@ -2,7 +2,7 @@
 class Window_NetworkRoomsList extends Window_Selectable
     constructor: (rect) ->
         super(rect)
-        @setBackgroundType 2
+        @setBackgroundType ANET.VD.getWindowBackgroundType()
         @_createNoRoomsMessage()
         @refreshRooms([])
         return

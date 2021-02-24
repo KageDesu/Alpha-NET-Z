@@ -140,15 +140,21 @@ do ->
 
     #@[DEFINES]
     _ = Scene_Map::
-
-    #TODO: MV SUPPORT
-
-    #@[ALIAS]
-    ALIAS__onMapTouch = _.onMapTouch
-    _.onMapTouch = ->
-        return if HUIManager.isUnderMouse()
-        ALIAS__onMapTouch.call(@)
-        return
+    
+    if KDCore.isMV()
+        #@[ALIAS]
+        ALIAS__processMapTouch = _.processMapTouch
+        _.processMapTouch = ->
+            return if HUIManager.isUnderMouse()
+            ALIAS__processMapTouch.call(@)
+            return
+    else
+        #@[ALIAS]
+        ALIAS__onMapTouch = _.onMapTouch
+        _.onMapTouch = ->
+            return if HUIManager.isUnderMouse()
+            ALIAS__onMapTouch.call(@)
+            return
     
     return
 # ■ END Scene_Map.coffee

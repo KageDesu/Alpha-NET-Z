@@ -1,19 +1,27 @@
+# * Данный менедреж отвечает за различие в версиях плагина для MZ и MV
+
+ANET.VD = ->
+
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Scene_Map.coffee
+# ■ IMPLEMENTATION.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Scene_Map::
+    _ = ANET.VD
 
-    #?EVENT
-    # * Когда игрок выходит или входит в комнату (покидает игру)
-    _.netOn_lobby_refreshRoomData = ->
-        #TODO: Если игрок отключился, надо общее событие!
-        $gameMap.refreshNetworkCharacters()
-        return
+    _.getGameVersion = ->
+        if KDCore.isMZ()
+            return $dataSystem.advanced.gameId
+        else
+            return $dataSystem.versionId
 
-    return
-# ■ END Scene_Map.coffee
+    _.getWindowBackgroundType = ->
+        if KDCore.isMZ()
+            return 2
+        else
+            return 0
+
+# ■ END IMPLEMENTATION.coffee
 #---------------------------------------------------------------------------

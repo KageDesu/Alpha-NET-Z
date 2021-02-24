@@ -37,7 +37,7 @@ do ->
         return false unless r?
         try
             # * Нельзя подключиться если разные игры
-            myGameId = $dataSystem.advanced.gameId
+            myGameId = ANET.VD.getGameVersion()
             if r.gameId != myGameId
                 return false
             # * Пока нельзя подключаться к уже запущенной игре

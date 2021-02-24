@@ -1,7 +1,7 @@
 class Window_NetworkRoomCommands extends Window_HorzCommand
     constructor: (rect) ->
         super(rect)
-        @setBackgroundType 2
+        @setBackgroundType ANET.VD.getWindowBackgroundType()
 
     maxCols: -> 3
 

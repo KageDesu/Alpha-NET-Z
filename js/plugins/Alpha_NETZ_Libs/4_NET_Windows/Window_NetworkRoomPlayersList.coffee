@@ -6,7 +6,7 @@
 class Window_NetworkRoomPlayersList extends Window_Selectable
     constructor: (rect) ->
         super(rect)
-        #@setBackgroundType 2
+        #@setBackgroundType ANET.VD.getWindowBackgroundType()
 
     maxItems: -> ANGameManager.playersData.length
 

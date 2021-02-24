@@ -8,7 +8,7 @@
 class Window_NetworkGameMenu extends Window_Command
     constructor: (rect) ->
         super(rect)
-        @setBackgroundType 2
+        @setBackgroundType ANET.VD.getWindowBackgroundType()
 
     makeCommandList: ->
         @addCommand("Create Room", "createRoom")

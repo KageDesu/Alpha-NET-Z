@@ -34,7 +34,7 @@ do ->
         ALIAS__commandWindowRect = _.commandWindowRect
         _.commandWindowRect = ->
             # * little trick to not overwrite method
-            @___isOneMoreCommand = true
+            @___isOneMoreCommand = !Imported.VisuMZ_0_CoreEngine
             ALIAS__commandWindowRect.call(@)
 
         #@[ALIAS]

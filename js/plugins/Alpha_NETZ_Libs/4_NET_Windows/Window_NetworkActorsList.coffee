@@ -1,7 +1,7 @@
 class Window_NetworkActorsList extends Window_Selectable
     constructor: (rect) ->
         super(rect)
-        @setBackgroundType 2
+        @setBackgroundType ANET.VD.getWindowBackgroundType()
 
     maxItems: -> @actorsForNetwork().length
 
