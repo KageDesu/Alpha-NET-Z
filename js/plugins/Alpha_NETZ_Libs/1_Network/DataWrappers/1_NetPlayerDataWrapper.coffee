@@ -33,6 +33,8 @@ do ->
 
     _.isCharOnMap = (p) -> p.mapId == $gameMap.mapId() && p.characterReady is true
 
+    _.isCurrentPlayerActor = (actor, p) -> actor.actorId() == p.actorId
+
     _.getRequestedNetworkState = (p) ->
         if p.scene == "menu"
             return 2

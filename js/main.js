@@ -36,6 +36,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANPlayersManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANSyncDataManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/ConfigManager_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actor_AN.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_CharacterBase_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_CharacterBase_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Event_@.js"
@@ -73,6 +74,9 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_PlayerNetworkStatus.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuCommand_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuStatus_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuStatus_AN.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkActorsList.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkGameMenu.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomCommands.js"
@@ -214,6 +218,10 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
 
 
 
