@@ -76,6 +76,9 @@ do ->
         #@[DEFINES]
         _ = Graphics
     
+
+        #TODO: Пока это не повлияло положительно!
+
         #$[OVER]
         # * В MV отключено выделение HTML элементов по умолчанию
         _._disableTextSelection = -> # * EMPTY
