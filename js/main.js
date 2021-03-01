@@ -84,7 +84,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuCommand_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuStatus_@.js"
-,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuStatus_AN.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuStatus_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkActorsList.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkGameMenu.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomCommands.js"
@@ -226,6 +226,8 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
 
 
 

@@ -8,6 +8,15 @@ do ->
     _ = Window_MenuStatus::
 
     #@[ALIAS]
+    ALIAS__initialize = _.initialize
+    _.initialize = (rect) ->
+        ALIAS__initialize.call(@, rect)
+        if ANNetwork.isConnected()
+            if ANET.PP.isOtherPlayersVisibleInMenu() is false
+                @setOnlyMyPlayerInMenuMode()
+        return
+
+    #@[ALIAS]
     ALIAS__isCurrentItemEnabled = _.isCurrentItemEnabled
     _.isCurrentItemEnabled = ->
         if ANNetwork.isConnected()

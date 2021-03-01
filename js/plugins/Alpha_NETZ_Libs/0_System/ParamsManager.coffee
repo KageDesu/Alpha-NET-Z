@@ -30,6 +30,9 @@ do ->
         # * Можно ли просматривать статус других игроков
         isOtherPlayersMenuStatusAllowed: -> true
 
+        # * Видно ли других игроков в меню
+        isOtherPlayersVisibleInMenu: -> true
+
         #TODO: Нужна комманда плагина, которая работает только на начальной карте
         # и перемещает на начальную игровую карту (не Transfer, а on game start)
 
