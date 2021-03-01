@@ -10,7 +10,6 @@ do ->
     #?EVENT
     # * Когда пришли какие-либо данные DataObserver
     _.netOn_game_observerData = ->
-        "REFRESH".p()
         @refreshNetwork()
 
     # * Обновить все окна при изменениях данных из сети
