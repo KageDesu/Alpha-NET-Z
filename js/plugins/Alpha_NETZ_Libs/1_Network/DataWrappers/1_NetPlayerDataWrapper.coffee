@@ -41,8 +41,12 @@ do ->
         return -1
 
     _.getNetCharacterForPlayer = (p) ->
+        return null unless p?
         return $gameMap.networkCharacterById(p.id)
 
+    _.getActorForPlayer = (p) ->
+        return null unless p?
+        return $gameActors.actor(p.actorId)
     
     return
 # ■ END NetPlayerDataWrapper.coffee

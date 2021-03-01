@@ -7,7 +7,7 @@ var ANET = {};
 ANET.Version = 10; // 0.1.0
 ANET.ServerRev = 100; // * Необходимая ревизия сервера
 
-// * Данный символ переопределяется в Z_TestScripts_TEST как dev
+// * Данный символ переопределяется в 1_DevSymbol_TEST как dev
 ANET._define = 'build'; // * По умолчанию -> сборка
 
 ANET.link = function (library) {

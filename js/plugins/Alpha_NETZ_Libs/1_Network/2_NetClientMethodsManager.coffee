@@ -77,7 +77,6 @@ do ->
         ANGameManager.onRefreshGameParty()
         "REFRESH PARTY".p()
 
-
     _.event_game_observerData = (content) ->
         try
             ANSyncDataManager.onObserverData(content.id, content.type, content.data)

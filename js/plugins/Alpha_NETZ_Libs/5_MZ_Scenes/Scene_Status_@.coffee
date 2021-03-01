@@ -1,20 +1,21 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Player.coffee
+# ■ Scene_Status.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Player::
+    _ = Scene_Status::
 
-    _.dataObserverHaveChanges = ->
-        ANSyncDataManager.sendPlayerObserver()
-
-    _.updateNetwork = ->
-        return if $gameParty.isEmpty()
-        # * Проверяем и обновляем DataObserver своего персонажа
-        $gameParty.leader()?.updateDataObserver()
-
+    #@[ALIAS]
+    ALIAS__needsPageButtons = _.needsPageButtons
+    _.needsPageButtons = ->
+        # * В сетевом режиме зависит от параметра
+        if ANNetwork.isConnected()
+            return ANET.PP.isOtherPlayersMenuStatusAllowed()
+        else
+            return ALIAS__needsPageButtons.call(@)
+    
     return
-# ■ END Game_Player.coffee
+# ■ END Scene_Status.coffee
 #---------------------------------------------------------------------------

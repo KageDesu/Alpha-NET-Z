@@ -7,7 +7,7 @@ do ->
     #@[DEFINES]
     _ = Game_Event::
 
-    _.dataOserverHaveChanges = ->
+    _.dataObserverHaveChanges = ->
         if ANGameManager.isMapMaster()
             ANSyncDataManager.sendEventObserver(@eventId())
         # * Если мы не отправляем данные Observer,

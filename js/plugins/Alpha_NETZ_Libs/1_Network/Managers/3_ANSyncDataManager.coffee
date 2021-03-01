@@ -35,6 +35,13 @@ do ->
         )
         return
 
+    _.sendActorObserver = () ->
+        @_sendObserverData(
+            'playerActor',
+            ANNetwork.myId(),
+            $gameParty.leader().getObserverDataForNetwork()
+        )
+
     _._sendObserverData = (type, id, observerData) ->
         data = {
             type: type,
@@ -43,6 +50,7 @@ do ->
         }
         ANNetwork.send(NMS.Game("observer", data))
         return
+
 
     #TODO: Может отправлять изменение на мастера, он уже все глобальные переменные всем отправляет
     _.sendGlobalVariableChange = (varId, newValue) ->
@@ -74,6 +82,8 @@ do ->
                 @_onPlayerCharObserverData(id, content)
             when 'eventChar'
                 @_onEventCharObserverData(id, content)
+            when 'playerActor'
+                @_onPlayerActorObserverData(id, content)
             else
                 LOG.p("From server: unknown observer data type: " + type)
                 return
@@ -94,6 +104,26 @@ do ->
             event?.applyObserverData(content)
         catch e
             ANET.w e
+        return
+
+    _._onPlayerActorObserverData = (id, content) ->
+        try
+            player = ANGameManager.getPlayerDataById(id)
+            actor = NetPlayerDataWrapper.getActorForPlayer(player)
+            return unless actor?
+            @_convertActorEquipmens(content)
+            actor.applyObserverData(content)
+        catch e
+            ANET.w e
+        return
+
+    _._convertActorEquipmens = (content) ->
+        return unless content._equips?
+        for i in [0...content._equips.length]
+            itemData = content._equips[i]
+            content._equips[i] = new Game_Item()
+            content._equips[i]._dataClass = itemData._dataClass
+            content._equips[i]._itemId = itemData._itemId
         return
 
     _.onVariableValue = (varId, value) ->

@@ -7,8 +7,6 @@ do ->
     #@[DEFINES]
     _ = Window_MenuStatus::
 
-    #TODO: Тут остановился - стрелочки туда - сюда ещё надо отключить
-
     _.isCurrentItemEnabledInNetworkGame = ->
         if @isSymbolOnlyForMyNetActor()
             return @isCurrentActorIsMyNetActor()
@@ -22,9 +20,7 @@ do ->
             symbol = SceneManager._scene._commandWindow.currentSymbol()
             # * Навыки и экипировка - только для моего персонажа
             isOnlyForMyActor = (symbol == 'skill' || symbol == 'equip')
-            if ANNetwork.isMultiMode()
-                #TODO: Возможность просматривать статус и в мультиплеере
-                # * В режиме мультиплеера, также нельзя статус смотреть других игроков
+            if ANET.PP.isOtherPlayersMenuStatusAllowed() == false
                 isOnlyForMyActor = isOnlyForMyActor || (symbol == 'status')
             return isOnlyForMyActor
         catch e

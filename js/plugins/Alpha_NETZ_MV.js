@@ -2243,12 +2243,12 @@ ANSyncDataManager = function() {};
       }
       this.netDataObserver.check(this);
       if (this.netDataObserver.isDataChanged()) {
-        this.dataOserverHaveChanges();
+        this.dataObserverHaveChanges();
         this.netDataObserver.refreshAll(this);
       }
     };
     // * Этот метод вызывается, когда изменились сихнронизируеммые данные
-    _.dataOserverHaveChanges = function() {}; // * EMPTY (for childrens)
+    _.dataObserverHaveChanges = function() {}; // * EMPTY (for childrens)
     _.getObserverDataForNetwork = function() {
       return this.netDataObserver.getDataForNetwork(this);
     };
@@ -2349,7 +2349,7 @@ ANSyncDataManager = function() {};
   var _;
   //@[DEFINES]
   _ = Game_Event.prototype;
-  _.dataOserverHaveChanges = function() {
+  _.dataObserverHaveChanges = function() {
     if (ANGameManager.isMapMaster()) {
       ANSyncDataManager.sendEventObserver(this.eventId());
     }
@@ -2576,7 +2576,7 @@ ANSyncDataManager = function() {};
   var _;
   //@[DEFINES]
   _ = Game_Player.prototype;
-  _.dataOserverHaveChanges = function() {
+  _.dataObserverHaveChanges = function() {
     return ANSyncDataManager.sendPlayerObserver();
   };
 })();

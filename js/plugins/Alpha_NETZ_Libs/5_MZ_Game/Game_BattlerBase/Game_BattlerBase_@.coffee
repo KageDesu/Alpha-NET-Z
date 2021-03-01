@@ -1,20 +1,18 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Player.coffee
+# ■ Game_BattlerBase.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Player::
+    _ = Game_BattlerBase::
 
-    _.dataObserverHaveChanges = ->
-        ANSyncDataManager.sendPlayerObserver()
-
-    _.updateNetwork = ->
-        return if $gameParty.isEmpty()
-        # * Проверяем и обновляем DataObserver своего персонажа
-        $gameParty.leader()?.updateDataObserver()
-
+    #@[ALIAS]
+    ALIAS__initMembers = _.initMembers
+    _.initMembers = ->
+        ALIAS__initMembers.call(@)
+        @_createNetworkObserver()
+    
     return
-# ■ END Game_Player.coffee
+# ■ END Game_BattlerBase.coffee
 #---------------------------------------------------------------------------

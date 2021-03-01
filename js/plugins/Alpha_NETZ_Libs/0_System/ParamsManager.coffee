@@ -27,7 +27,8 @@ do ->
 
         globalSwitchesIds: -> @_globalSwitches
 
-
+        # * Можно ли просматривать статус других игроков
+        isOtherPlayersMenuStatusAllowed: -> true
 
         #TODO: Нужна комманда плагина, которая работает только на начальной карте
         # и перемещает на начальную игровую карту (не Transfer, а on game start)

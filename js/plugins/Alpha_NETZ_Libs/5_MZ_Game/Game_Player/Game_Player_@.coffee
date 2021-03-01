@@ -36,11 +36,10 @@ do ->
         return
     
     #@[ALIAS]
-    #ALIAS__update = _.update
-    #_.update = (sceneActive) ->
-        #ALIAS__update.call(@, sceneActive)
-        #if ANNetwork.isConnected()
-        #    @updateNetwork()
+    ALIAS__update = _.update
+    _.update = (sceneActive) ->
+        ALIAS__update.call(@, sceneActive)
+        @updateNetwork() if ANNetwork.isConnected()
 
     return
 # ■ END Game_Player.coffee

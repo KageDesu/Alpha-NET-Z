@@ -1,11 +1,11 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_CharacterBase.coffee
+# ■ Game_BattlerBase.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_CharacterBase::
+    _ = Game_BattlerBase::
 
     # * OBSERVER
     do ->
@@ -13,23 +13,28 @@ do ->
         _._createNetworkObserver = ->
             @netDataObserver = new DataObserver()
             #TODO: вынести в параметры плагина
-            @netDataObserver.setCheckInterval(4)
+            @netDataObserver.setCheckInterval(60)
+            #TODO: Это может создавать нагрузку на сервер!
+            @netDataObserver.setInstanteMode()
             @_fillNetworkObserver()
             @netDataObserver.refreshAll(@)
 
-        #TODO: Добавить API для разработчиков плагинов вносить свои поля (и так со всем Observers)
-        # * Движение передаётся отдельным методом для достижения плавности
         _._fillNetworkObserver = ->
             @netDataObserver.addFields(@, [
-                "_opacity"
-                "_blendMode"
-                "_walkAnime"
-                "_stepAnime"
-                "_directionFix"
-                "_transparent"
-                "_direction"
+                "_hp"
+                "_mp"
+                "_tp"
+                "_paramPlus"
+                "_states"
+                "_stateTurns"
+                "_buffs"
+                "_buffTurns"
             ])
+            return
 
+        #TODO: updateStateTurns и баффы не должны выполняться на фантоме (???)
+
+        # * Этот метод должны вызывать потомки верхнего уровня, так как нету Update в этом классе
         _._updateDataObserver = ->
             return unless @netDataObserver?
             @netDataObserver.check(@)
@@ -49,31 +54,7 @@ do ->
             return
 
         return
-
-    _.moveStraightFromServer = (moveData) ->
-        # * Всегда успех, так как если нет, то данные и не прийдут от другого игрока
-        @setMovementSuccess(true)
-        @setDirection(moveData.direction)
-        @_x = moveData.x
-        @_y = moveData.y
-        @_realX = moveData.realX
-        @_realY = moveData.realY
-        # * Чтобы синхронизировать правильно бег
-        @_moveSpeed = moveData.moveSpeed
-        @increaseSteps()
-        return
-
-    _.getMoveDataForNetwork = () ->
-        return {
-            direction: @_direction
-            moveSpeed: @realMoveSpeed()
-            x: @x
-            y: @y
-            realX: @_realX
-            realY: @_realY
-        }
-
-
+    
     return
-# ■ END Game_CharacterBase.coffee
+# ■ END Game_BattlerBase.coffee
 #---------------------------------------------------------------------------

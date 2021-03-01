@@ -1,19 +1,21 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Actor.coffee
+# ■ Scene_Equip.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Actor::
+    _ = Scene_Equip::
 
-    # * Данный персонаж - мой сетевой персонаж (текущего игрока)
-    _.isMyNetworkActor = ->
+    #@[ALIAS]
+    ALIAS__needsPageButtons = _.needsPageButtons
+    _.needsPageButtons = ->
+        # * В сетевом режиме нельзя переключать персонажей
         if ANNetwork.isConnected()
-            return @ == $gameParty.leader()
+            return false
         else
-            return true
+            return ALIAS__needsPageButtons.call(@)
     
     return
-# ■ END Game_Actor.coffee
+# ■ END Scene_Equip.coffee
 #---------------------------------------------------------------------------

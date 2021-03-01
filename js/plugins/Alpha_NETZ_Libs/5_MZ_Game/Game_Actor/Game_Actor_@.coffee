@@ -1,20 +1,27 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Player.coffee
+# ■ Game_Actor.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Player::
+    _ = Game_Actor::
 
-    _.dataObserverHaveChanges = ->
-        ANSyncDataManager.sendPlayerObserver()
+    #@[ALIAS]
+    ALIAS__setup = _.setup
+    _.setup = (actorId) ->
+        ALIAS__setup.call(@, actorId)
+        # * Чтобы refreshNetwork не вызывался когда ещё Actor не создан
+        if ANNetwork.isConnected()
+            @refreshNetworkDummy = @refreshNetwork
+        return
 
-    _.updateNetwork = ->
-        return if $gameParty.isEmpty()
-        # * Проверяем и обновляем DataObserver своего персонажа
-        $gameParty.leader()?.updateDataObserver()
-
+    #@[ALIAS]
+    ALIAS__refresh = _.refresh
+    _.refresh = ->
+        ALIAS__refresh.call(@)
+        @refreshNetworkDummy()
+    
     return
-# ■ END Game_Player.coffee
+# ■ END Game_Actor.coffee
 #---------------------------------------------------------------------------

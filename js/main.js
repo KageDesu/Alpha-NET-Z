@@ -36,7 +36,11 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANPlayersManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANSyncDataManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/ConfigManager_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actor_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actor_AN.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actor_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_BattlerBase_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_BattlerBase_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_CharacterBase_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_CharacterBase_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Event_@.js"
@@ -59,6 +63,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Base_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Base_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Boot_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Equip_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Map_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Map_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkGameMenu_@.js"
@@ -67,6 +72,8 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkRoom.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkRoomsList.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkSettings.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Skill_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Status_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Title_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Title_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Character_@.js"
@@ -218,6 +225,16 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
 
 
 
