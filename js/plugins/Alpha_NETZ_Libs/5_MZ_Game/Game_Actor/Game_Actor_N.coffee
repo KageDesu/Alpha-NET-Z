@@ -23,6 +23,8 @@ do ->
         if @isMyNetworkActor()
             ANSyncDataManager.sendActorObserver()
     
+    #TODO: Может просто все все свойства передавать?
+    # собрать их автоматически
     _._fillNetworkObserver = ->
         Game_Battler::_fillNetworkObserver.call(@)
         @netDataObserver.addFields(@, [
