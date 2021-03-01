@@ -35,7 +35,7 @@ do ->
             id: ANNetwork.myId(),
             data: $gamePlayer.getMoveDataForNetwork()
         }
-        ANNetwork.send(NMS.Map("playerMove", data))
+        ANNetwork.send(NMS.Map("playerMove", data), true)
 
     _.sendPlayerLocation = () ->
         data = {

@@ -48,7 +48,7 @@ do ->
             id: id,
             data: observerData
         }
-        ANNetwork.send(NMS.Game("observer", data))
+        ANNetwork.send(NMS.Game("observer", data), true)
         return
 
 

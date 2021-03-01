@@ -39,7 +39,7 @@ do ->
             mapId: $gameMap.mapId(),
             data: $gameMap.event(eventId).getMoveDataForNetwork()
         }
-        ANNetwork.send(NMS.Map("eventMove", data))
+        ANNetwork.send(NMS.Map("eventMove", data), true)
         return
 
     # * Данную команду выполняет только мастер карты, когда кто-то подключается к карте

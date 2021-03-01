@@ -39,13 +39,16 @@ do ->
 
     # * Выполнить команду от сервера
     _.handlePrcEvent = (eventHandlerMethodName, content) ->
-        LOG.p("Handle Event: " + eventHandlerMethodName)
+        noLog =
+            ["game_observerData", "map_eventMove", "map_playerMove"].
+                contains(eventHandlerMethodName)
+        LOG.p("Handle Event: " + eventHandlerMethodName) unless noLog
         NetClientMethodsManager["event_" + eventHandlerMethodName](content)
         # * Вызвать метод на сцене, если он существует
         # * Сцена уже сама знает, надо ей обновить (перерисовать) что-то или нет,
         # * определяет по имени метода
         @callSceneCallback(eventHandlerMethodName)
-        LOG.p("Event End: " + eventHandlerMethodName)
+        LOG.p("Event End: " + eventHandlerMethodName) unless noLog
         return
 
     _.callSceneCallback = (eventName) ->

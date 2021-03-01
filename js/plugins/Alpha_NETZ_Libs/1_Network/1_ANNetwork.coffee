@@ -66,11 +66,11 @@ do ->
             return
 
         # * Просто отправить данные на сервер
-        _.send = (msg) ->
+        _.send = (msg, noLog = false) ->
             unless @isConnected()
                 LOG.p("You try send message, but NOT connection!")
             else
-                LOG.p("Send: " + msg.fullName())
+                LOG.p("Send: " + msg.fullName()) unless noLog
                 msg.setFrom(@socket.id).send()
             return
 
