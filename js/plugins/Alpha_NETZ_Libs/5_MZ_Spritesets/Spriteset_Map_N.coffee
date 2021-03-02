@@ -21,6 +21,7 @@ do ->
     _.refreshNetworkCharacters = ->
         return unless @_networkCharactersLayer?
         for char in @_networkCharacterSprites
+            @_removeNetCharInfo(char)
             @_networkCharactersLayer.removeChild char
             @_characterSprites.delete char
         @_networkCharacterSprites = []
@@ -50,6 +51,7 @@ do ->
     # * при refreshNetworkCharacters, их иконки не удаляются с ними
     # * так как находятся на другом слое
     _._destroyNetStatusIconDuplicate = (iconSpr) ->
+        return unless iconSpr?
         #TODO: Возможно после создания таблиц имён надо разлелить метод
         # так как сейчас удаляется любой спрайт из массива с соответсвием персонажа
         for spr in @_networkCharactersInfoSprites
@@ -57,6 +59,11 @@ do ->
                 @_networkCharactersInfoLayer.removeChild spr
                 @_networkCharactersInfoSprites.delete(spr)
         return
+
+    # * Удаляет все связанные с персонажем спрайты информации (статус, имя)
+    _._removeNetCharInfo = (char) ->
+        return unless char?
+        @_destroyNetStatusIconDuplicate(char.netStateIcon)
 
     return
 # ■ END Spriteset_Map.coffee
