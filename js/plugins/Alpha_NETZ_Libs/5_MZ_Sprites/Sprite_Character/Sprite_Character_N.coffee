@@ -15,16 +15,23 @@ do ->
 
     _._updateNetworkStateIcon = ->
         unless @netStateIcon?
-            @_createNetworkStateIcon() if @parent?
+            @_createNetworkStateIcon()
         else
-            @netStateIcon.y = -@height
+            @netStateIcon.x = @x
+            @netStateIcon.y = @y - @height
+        return
 
     _._createNetworkStateIcon = ->
-        @netStateIcon = new ANET.Sprite_PlayerNetworkStatus()
+        @netStateIcon = new ANET.Sprite_PlayerNetworkStatus(@)
         @netStateIcon.setupNETCharacter(@_character)
-        @addChild @netStateIcon
+        try
+            # * Не лучший способ
+            SceneManager._scene._spriteset.addNetworkStatusIconForCharacter(@netStateIcon)
+        catch e
+            ANET.w e
         return
-    
+
+
     return
 # ■ END Sprite_Character.coffee
 #---------------------------------------------------------------------------

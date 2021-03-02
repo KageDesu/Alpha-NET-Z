@@ -29,9 +29,35 @@ do ->
             @_characterSprites.push(spr)
             @_networkCharacterSprites.push(spr)
             @_networkCharactersLayer.addChild spr
-            #@_tilemap.addChild spr
         return
     
+    # * Специальный слой для иконок статусов и имён сетевых персонажей
+    _._createNetworkCharactersInfo = ->
+        @_networkCharactersInfoSprites = []
+        @_networkCharactersInfoLayer = new Sprite()
+        @_networkCharactersInfoLayer.z = 9
+        @_tilemap.addChild @_networkCharactersInfoLayer
+        return
+
+    # * Добавить иконку статуса для персонажа
+    _.addNetworkStatusIconForCharacter = (iconSpr) ->
+        @_destroyNetStatusIconDuplicate(iconSpr)
+        @_networkCharactersInfoSprites.push(iconSpr)
+        @_networkCharactersInfoLayer.addChild iconSpr
+        return
+        
+    # * Надо найти и удалить, если икона уже существует для персонажа
+    # * при refreshNetworkCharacters, их иконки не удаляются с ними
+    # * так как находятся на другом слое
+    _._destroyNetStatusIconDuplicate = (iconSpr) ->
+        #TODO: Возможно после создания таблиц имён надо разлелить метод
+        # так как сейчас удаляется любой спрайт из массива с соответсвием персонажа
+        for spr in @_networkCharactersInfoSprites
+            if spr._character == iconSpr._character
+                @_networkCharactersInfoLayer.removeChild spr
+                @_networkCharactersInfoSprites.delete(spr)
+        return
+
     return
 # ■ END Spriteset_Map.coffee
 #---------------------------------------------------------------------------
