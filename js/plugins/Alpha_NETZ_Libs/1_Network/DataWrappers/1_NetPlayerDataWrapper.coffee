@@ -29,6 +29,7 @@ do ->
             characterReady: false
             isMapMaster: false
             onEvent: 0
+            onCommonEvent: 0
         }
 
     _.isCharOnMap = (p) -> p.mapId == $gameMap.mapId() && p.characterReady is true
@@ -38,6 +39,8 @@ do ->
     _.getRequestedNetworkState = (p) ->
         if p.scene == "menu"
             return 2
+        if p.onEvent > 0
+            return 1
         return -1
 
     _.getNetCharacterForPlayer = (p) ->
@@ -48,6 +51,10 @@ do ->
         return null unless p?
         return $gameActors.actor(p.actorId)
     
+    _.isOnAnyEvent = (p) ->
+        return false unless p?
+        return p.onEvent > 0 || p.onCommonEvent > 0
+
     return
 # ■ END NetPlayerDataWrapper.coffee
 #---------------------------------------------------------------------------

@@ -1,31 +1,20 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ NetMessages.coffee
+# ■ Game_Message.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _M = NetMessage
-    _CM = (name, flag, data, socket) ->
-        _M.EmptyMessageWithFlag(flag, data, socket).setName(name)
+    _ = Game_Message::
 
-    # * Обозначения
-    # f - имя комманды (флага)
-    # d - данные
-    # s - сокет (либо ничего)
-
-    #?LOBBY COMMANDS
-    _M.Lobby = (f, d, s) -> _CM 'lobby', f, d, s
-
-    #?MAP COMMANDS
-    _M.Map = (f, d, s) -> _CM 'map', f, d, s
-
-    #?GAME COMMANDS
-    _M.Game = (f, d, s) -> _CM 'game', f, d, s
-
-    #?INTERPRETER COMMANDS
-    _M.Event = (f, d, s) -> _CM 'event', f, d, s
+    _.nSetEndCallback = (@_nEndCallbackMethod) ->
+    
+    _.nEndCallback = ->
+        if @_nEndCallbackMethod?
+            do @_nEndCallbackMethod
+            @_nEndCallbackMethod = null
+        return
 
     return
-# ■ END NetMessages.coffee
+# ■ END Game_Message.coffee
 #---------------------------------------------------------------------------

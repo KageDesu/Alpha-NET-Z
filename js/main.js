@@ -32,6 +32,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_ANGameManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_DataObserver.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/2_NetClientMethodsManager.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANInterpreterManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANMapManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANPlayersManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANSyncDataManager.js"
@@ -46,8 +47,11 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Event_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Event_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Followers_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Interpreter_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Map_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Map_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Message_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Message_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Party_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Party_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Player_@.js"
@@ -226,6 +230,11 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
 
 
 
