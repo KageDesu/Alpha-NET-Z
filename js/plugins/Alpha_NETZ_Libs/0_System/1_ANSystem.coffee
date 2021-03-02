@@ -20,6 +20,7 @@ do ->
             "INIT ANET SYSTEM".p()
             @loadParameters()
             @applyParameters()
+            ANET.loadPluginCommands()
             HUIManager.init()
             return
 
@@ -27,7 +28,7 @@ do ->
             ANET.PP = new ANET.ParamsManager()
 
         _.applyParameters = ->
-            
+            #TODO: Например конфигурация классов (dinamyc методов)
         
         return
     # -----------------------------------------------------------------------

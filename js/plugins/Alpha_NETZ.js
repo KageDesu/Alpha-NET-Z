@@ -112,6 +112,7 @@
  * @option Master Except
  * @option Actor List
  * @option Actor List Except
+ * @option Me Except
  * @desc Select for who this event command will be executed
  * @default All
  * 

@@ -39,6 +39,8 @@ do ->
 
     _.myPlayerData = -> @getPlayerDataById(ANNetwork.myId())
 
+    _.myActorId = -> @myPlayerData().actorId
+
     _.myIndex = -> @myPlayerData().index
 
     _.isMapMaster = -> @myPlayerData().isMapMaster is true
