@@ -63,6 +63,64 @@
  * 
 
 
+ * @command EventStartOptions
+ * @text Event Options
+ * @desc Event network start options
+ * 
+ * @arg whoSelector
+ * @text Who can start
+ * @type select
+ * @option All
+ * @option Master
+ * @option Master Except
+ * @option Actor List
+ * @option Actor List Except
+ * @desc Select who can start this event
+ * @default All
+ * 
+ * @arg actorList
+ * @text Actors List
+ * @type actor[]
+ * @default []
+ * @desc Actors list for 'Execute For' if you select 'Actor List' or 'Actor List Except'
+ * 
+ * @arg lockMode
+ * @text Lock Event?
+ * @type boolean
+ * @default false
+ * @desc If true - event will be locked while exectuted. Nobody can't start locked event
+ * 
+ * @arg sharedMode
+ * @text Shared Mode
+ * @type select
+ * @option No
+ * @option Strict
+ * @option Optional
+ * @desc [No implemented!] Shared event - starts for all players simultaneously, synchronized commands execution
+ * @default No
+ * 
+ * 
+ * @command EventCommandSelector
+ * @text Command Options
+ * @desc Next Event Command network start options
+ * 
+ * @arg whoSelector
+ * @text Execute for
+ * @type select
+ * @option All
+ * @option Master
+ * @option Master Except
+ * @option Actor List
+ * @option Actor List Except
+ * @desc Select for who this event command will be executed
+ * @default All
+ * 
+ * @arg actorList
+ * @text Actors List
+ * @type actor[]
+ * @default []
+ * @desc Actors list for 'Execute For' if you select 'Actor List' or 'Actor List Except'
+ * 
  * 
 
 

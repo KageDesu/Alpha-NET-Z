@@ -42,7 +42,7 @@ do ->
                 ANInterpreterManager.checkEventRunning()
                 @_nRunningCheckTimer = 0
         return
-        
+
     return
 # ■ END Game_Interpreter.coffee
 #---------------------------------------------------------------------------
