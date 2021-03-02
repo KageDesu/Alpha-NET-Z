@@ -1,4 +1,4 @@
-#TODO: Version for MV (rect!)
+#TODO: Отключить комнаты других игр (параметр или от сервера зависит)
 class Window_NetworkRoomsList extends Window_Selectable
     constructor: (rect) ->
         super(rect)
@@ -62,12 +62,10 @@ do ->
 
     _._drawRoomInfo = (rect, roomData) ->
         rpgVersion = if roomData.rpgVersion is 0 then 'MZ' else 'MV'
-        gameMode = if roomData.gameMode is 0 then  'Coop' else 'Mult'
         state = if roomData.inGame is true then 'In Game'  else 'In Lobby'
-        # * [VER]{GAME MODE}(GAME NAME) RoomName 0\X (inGame|inLobby)
-        roomText = "\\}\\C[1][%1]\\C[6]{%2}\\C[3](%3)\\{\\C[0]   %4   \\C[4]%5/%6 \\}\\C[5](%7)".format(
+        # * [VER](GAME NAME) RoomName 0\X (inGame|inLobby)
+        roomText = "\\}\\C[1][%1]\\C[3](%2)\\{\\C[0]   %3   \\C[4]%4/%5 \\}\\C[5](%6)".format(
             rpgVersion,
-            gameMode,
             roomData.gameTitle,
             roomData.name,
             roomData.playersIds.length,

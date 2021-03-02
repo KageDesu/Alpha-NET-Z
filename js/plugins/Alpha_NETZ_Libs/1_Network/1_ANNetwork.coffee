@@ -22,10 +22,8 @@ do ->
 
     _.isMasterClient = -> @_isHost is true
 
-    #TODO: Пока симулируем режим кооператива
-    _.isCoopMode = -> true
-
-    _.isMultiMode = -> !@isCoopMode()
+    # * Игроки могу находится на одной карте
+    _.isSameMapMode = -> ANET.PP.isOnlySameMapMode()
 
     # * Надо ждать сеть
     _.isBusy = -> @isConnected() && (@isWaitServer() || ANGameManager.isShouldWaitServer())
@@ -167,7 +165,7 @@ do ->
             title: $dataSystem.gameTitle,
             version: if KDCore.isMZ() then 0 else 1,
             maxPlayers: 4,
-            mode: if @isCoopMode() then 0 else 1
+            mode: 0 #TODO: Deprecated
         }
 
     return

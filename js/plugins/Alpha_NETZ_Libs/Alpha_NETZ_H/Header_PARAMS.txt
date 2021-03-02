@@ -10,21 +10,29 @@
 
 @param spacer|gamesettings @text‏‏‎ ‎@desc ===============================================
 
-@param gameMode
-@type combo
-@text Game Mode
-@option Cooperative
-@option Multiplayer
-@default Cooperative
-@desc ! In current version only cooperative !
+@param gameModeSettingsGroup
+@text Multiplayer Settings
+
+@param onlySameMap:b
+@parent gameModeSettingsGroup
+@type boolean
+@text Only Same Map?
+@default true
+@desc Players can be only on same map?
+
+@param playersSettingsGroup
+@text Players Settings
+
 
 @param actorsForNetwork:intA
+@parent playersSettingsGroup
 @type actor[]
 @text Actors
 @default ["1","2","3","4"]
 @desc Available actors for network game players
 
 @param isActorSelectionAllowed:b
+@parent playersSettingsGroup
 @text Actor selection?
 @type boolean
 @default true
@@ -35,7 +43,6 @@
 @type struct<LNetworkMap>
 @default {"gameStartMap:i":"0","isNetworkGameAutoStart:b":"true"}
 @desc Network game start map settings
-
 
 @param globalData:s
 @text Global Data

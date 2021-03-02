@@ -39,7 +39,7 @@ do ->
     _.getRequestedNetworkState = (p) ->
         if p.scene == "menu"
             return 2
-        if p.onEvent > 0
+        if _.isOnAnyEvent(p)
             return 1
         return -1
 
@@ -53,7 +53,7 @@ do ->
     
     _.isOnAnyEvent = (p) ->
         return false unless p?
-        return p.onEvent > 0 || p.onCommonEvent > 0
+        return (p.onEvent > 0 || p.onCommonEvent > 0) and _.isCharOnMap(p)
 
     return
 # ■ END NetPlayerDataWrapper.coffee

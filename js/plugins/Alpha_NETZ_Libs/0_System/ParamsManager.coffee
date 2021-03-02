@@ -10,6 +10,8 @@ do ->
         serverIp: -> @_ip
         serverPort: -> @_port
 
+        isOnlySameMapMode: -> @getParam("onlySameMap", true)
+
         # * Набор персонажей Actors для сетевой игры
         actorsForNetwork: -> @getParam("actorsForNetwork", [1, 2, 3, 4])
 

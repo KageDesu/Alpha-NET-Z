@@ -66,7 +66,7 @@ do ->
         ANMapManager.sendMapLoaded()
         # * Отправляем начальные данные (позиция игрока)
         ANMapManager.sendInitialMapData()
-        if ANNetwork.isCoopMode() || @networkGameStarted is true
+        if ANNetwork.isSameMapMode() || @networkGameStarted is true
             @setWait('playersOnMap') # * Ждём игроков
         return
 
