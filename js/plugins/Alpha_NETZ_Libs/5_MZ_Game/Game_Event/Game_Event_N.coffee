@@ -12,33 +12,9 @@ do ->
     # * Может ли данный игрок запустить это событие
     _.isPassStartOptions = ->
         return true unless @isHaveNetworkStartOptions()
-        try
-            switch @nStartOptions.whoSelector
-                when "All"
-                    return true
-                when "Master"
-                    return ANNetwork.isMasterClient()
-                when "Master Except"
-                    return !ANNetwork.isMasterClient()
-                when "Actor List"
-                    return @_isMyActorInValidListToStart(@nStartOptions.actorList, true)
-                when "Actor List Except"
-                    return @_isMyActorInValidListToStart(@nStartOptions.actorList, false)
-                else
-                    return false
-        catch e
-            ANET.w e
-            return false
+        return ANET.Utils.isPassEventFilterOptions(@nStartOptions)
 
         #TODO: locked and shared event flags - в отдельном методе! после вызова isPassStartOptions
-
-    _._isMyActorInValidListToStart = (list, isInclude) ->
-        try
-            list = JsonEx.parse(list).map (i) -> parseInt(i)
-            return list.contains(ANGameManager.myActorId()) == isInclude
-        catch e
-            ANET.w e
-            return false
 
     _.dataObserverHaveChanges = ->
         if ANGameManager.isMapMaster()
@@ -53,9 +29,7 @@ do ->
         try
             options = @list()?.find (line) ->
                 line.code == 357 && line.parameters?[1] == "EventStartOptions"
-            if options?
-                @nStartOptions = options.parameters[3]
-            console.info @nStartOptions if @nStartOptions?
+            @nStartOptions = options.parameters[3] if options?
         catch e
             ANET.w e
             @nStartOptions = null

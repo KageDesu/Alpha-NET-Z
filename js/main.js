@@ -36,6 +36,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANMapManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANPlayersManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANSyncDataManager.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/ANETCommon.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/ConfigManager_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actor_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actor_AN.js"
@@ -48,6 +49,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Event_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Followers_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Interpreter_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Interpreter_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Map_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Map_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Message_@.js"
@@ -58,6 +60,8 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Player_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Switches_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Switches_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Temp_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Temp_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Variables_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Variables_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETCharacter.js"
@@ -231,6 +235,11 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
 
 
 

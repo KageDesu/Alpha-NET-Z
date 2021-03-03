@@ -124,6 +124,12 @@ do ->
         catch e
             console.warn("event_map_eventMove", e)
 
+    _.event_event_virtualEventCommand = (content) ->
+        try
+            ANInterpreterManager.onVirtualCommand(content)
+        catch e
+            console.warn("event_event_virtualEventCommand", e)
+
     return
 # ■ END NetClientMethodsManager.coffee
 #---------------------------------------------------------------------------

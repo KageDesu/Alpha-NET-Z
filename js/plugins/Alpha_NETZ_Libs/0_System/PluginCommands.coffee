@@ -14,9 +14,9 @@ do ->
     
 
     registerPluginCommandsMZ = (pluginName) ->
-        PluginManager.registerCommand(pluginName, 'EventStartOptions', (args) ->
+        PluginManager.registerCommand(pluginName, 'EventCommandSelector', (args) ->
             try
-                
+                this.nSetCommandOptions(args)
             catch e
                 ANET.w e
         )

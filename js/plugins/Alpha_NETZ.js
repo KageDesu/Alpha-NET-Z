@@ -122,6 +122,22 @@
  * @default []
  * @desc Actors list for 'Execute For' if you select 'Actor List' or 'Actor List Except'
  * 
+ * @arg scope
+ * @text Scope
+ * @type select
+ * @option Same map
+ * @option All world
+ * @default Same map
+ * @desc For which players will the virtual command be executed?
+ * 
+ * @arg executeMode
+ * @text Execute Mode
+ * @type select
+ * @option Auto
+ * @option Virtual
+ * @option Common Event
+ * @default Auto
+ * @desc How this command will be exectuted for other players. Read Wiki for more info
  * 
 
 
