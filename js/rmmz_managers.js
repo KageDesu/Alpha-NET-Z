@@ -1,5 +1,5 @@
 //=============================================================================
-// rmmz_managers.js v1.0.2
+// rmmz_managers.js v1.2.0
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -688,8 +688,8 @@ StorageManager.saveToForage = function(saveName, zip) {
     setTimeout(() => localforage.removeItem(testKey));
     return localforage
         .setItem(testKey, zip)
-        .then(localforage.setItem(key, zip))
-        .then(this.updateForageKeys());
+        .then(() => localforage.setItem(key, zip))
+        .then(() => this.updateForageKeys());
 };
 
 StorageManager.loadFromForage = function(saveName) {
@@ -704,7 +704,7 @@ StorageManager.forageExists = function(saveName) {
 
 StorageManager.removeForage = function(saveName) {
     const key = this.forageKey(saveName);
-    return localforage.removeItem(key).then(this.updateForageKeys());
+    return localforage.removeItem(key).then(() => this.updateForageKeys());
 };
 
 StorageManager.updateForageKeys = function() {
@@ -998,7 +998,7 @@ EffectManager.load = function(filename) {
 
 EffectManager.startLoading = function(url) {
     const onLoad = () => this.onLoad(url);
-    const onError = () => this.onError(url);
+    const onError = (message, url) => this.onError(url);
     const effect = Graphics.effekseer.loadEffect(url, 1, onLoad, onError);
     this._cache[url] = effect;
     return effect;
@@ -2742,6 +2742,7 @@ BattleManager.startAction = function() {
     this._phase = "action";
     this._action = action;
     this._targets = targets;
+    subject.cancelMotionRefresh();
     subject.useItem(action.item());
     this._action.applyGlobal();
     this._logWindow.startAction(subject, action, targets);

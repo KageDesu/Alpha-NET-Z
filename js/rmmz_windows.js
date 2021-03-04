@@ -1,5 +1,5 @@
 //=============================================================================
-// rmmz_windows.js v1.0.2
+// rmmz_windows.js v1.2.0
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -468,8 +468,8 @@ Window_Base.prototype.drawFace = function(
     const sh = Math.min(height, ph);
     const dx = Math.floor(x + Math.max(width - pw, 0) / 2);
     const dy = Math.floor(y + Math.max(height - ph, 0) / 2);
-    const sx = (faceIndex % 4) * pw + (pw - sw) / 2;
-    const sy = Math.floor(faceIndex / 4) * ph + (ph - sh) / 2;
+    const sx = Math.floor((faceIndex % 4) * pw + (pw - sw) / 2);
+    const sy = Math.floor(Math.floor(faceIndex / 4) * ph + (ph - sh) / 2);
     this.contents.blt(bitmap, sx, sy, sw, sh, dx, dy);
 };
 
@@ -1998,7 +1998,7 @@ Window_MenuStatus.prototype.drawItemStatus = function(index) {
     const actor = this.actor(index);
     const rect = this.itemRect(index);
     const x = rect.x + 180;
-    const y = rect.y + rect.height / 2 - this.lineHeight() * 1.5;
+    const y = rect.y + Math.floor(rect.height / 2 - this.lineHeight() * 1.5);
     this.drawActorSimpleStatus(actor, x, y);
 };
 
@@ -5198,9 +5198,13 @@ Window_ScrollText.prototype.update = function() {
 
 Window_ScrollText.prototype.startMessage = function() {
     this._text = $gameMessage.allText();
-    this.updatePlacement();
-    this.refresh();
-    this.show();
+    if (this._text) {
+        this.updatePlacement();
+        this.refresh();
+        this.show();
+    } else {
+        $gameMessage.clear();
+    }
 };
 
 Window_ScrollText.prototype.refresh = function() {
