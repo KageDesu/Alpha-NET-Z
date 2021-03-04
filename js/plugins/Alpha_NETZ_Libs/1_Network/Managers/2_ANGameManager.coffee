@@ -45,6 +45,8 @@ do ->
 
     _.isMapMaster = -> @myPlayerData().isMapMaster is true
 
+    _.isBattleMaster = -> true
+
     _.isPlayerDataExists = (id) ->
         data = @playersData.find (p) -> p.id == id
         return data?
@@ -161,7 +163,15 @@ do ->
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
 
-    
+    _.sendSceneChanging = () ->
+        sceneType = "unknown"
+        # * Тут не учитывается наследовательность, определяется точный класс через ===
+        if SceneManager.isNextScene(Scene_Menu)
+            sceneType = "menu"
+        if SceneManager.isNextScene(Scene_Battle)
+            sceneType = "battle"
+        ANNetwork.send(NMS.Game("sceneChange", sceneType))
+        return
 
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
@@ -189,7 +199,7 @@ do ->
         @onRoomPlayers(data)
         # * Проверить состояние для всех игроков (иконки)
         @refreshNetworkStates()
-        $gameMap.refresh()
+        $gameMap.nSafeRefresh()
         return
 
     # * Когда кто-то из игроков выбрал своего персонажа (готов к игре)
@@ -199,7 +209,7 @@ do ->
             if plData.actorId > 0 && plData.characterReady is true
                 $gameParty._actors.push(plData.actorId)
         $gamePlayer.refresh()
-        $gameMap.refresh()
+        $gameMap.nSafeRefresh()
         return
 
     _.onLeaveRoom = ->

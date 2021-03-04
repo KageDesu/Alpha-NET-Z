@@ -1,29 +1,16 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Scene_Base.coffee
+# ■ Scene_Battle.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Scene_Base::
+    _ = Scene_Battle::
 
-    #@[ALIAS]
-    ALIAS__update = _.update
-    _.update = ->
-        if ANNetwork.isBusy()
-            ANGameManager.updateWaiting()
-            console.log("wait network...")
-        else
-            ALIAS__update.call(@)
+    _.nOnBattleStarted = ->
+        ANBattleManager.onBattleStarted()
+        return
     
-    #@[ALIAS]
-    ALIAS__terminate = _.terminate
-    _.terminate = ->
-        # * Смена сцены
-        if ANNetwork.isConnected()
-            ANGameManager.sendSceneChanging()
-        ALIAS__terminate.call(@)
-
     return
-# ■ END Scene_Base.coffee
+# ■ END Scene_Battle.coffee
 #---------------------------------------------------------------------------

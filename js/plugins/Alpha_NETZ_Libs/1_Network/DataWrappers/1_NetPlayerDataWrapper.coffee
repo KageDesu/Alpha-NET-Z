@@ -39,6 +39,8 @@ do ->
     _.getRequestedNetworkState = (p) ->
         if p.scene == "menu"
             return 2
+        if p.scene == "battle"
+            return 5
         if _.isOnAnyEvent(p)
             return 1
         return -1

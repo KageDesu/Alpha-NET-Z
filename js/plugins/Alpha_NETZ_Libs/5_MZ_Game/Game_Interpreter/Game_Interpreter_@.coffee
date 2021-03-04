@@ -64,6 +64,13 @@ do ->
                     return @nProcessCommandWithOptions()
             return _.ALIAS__executeCommand.call(@)
 
+        #TODO: Тут остановился, надо создавать данные битвы на сервере при запуске битвы
+        # * Ждать ответ от сервера, если битва зарегестрированна, то начинать
+        #@[ALIAS]
+        ALIAS__command301 = _.command301
+        _.command301 = ->
+            return ALIAS__command301.call(@, ...arguments)
+
     return
 # ■ END Game_Interpreter.coffee
 #---------------------------------------------------------------------------

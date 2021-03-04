@@ -26,6 +26,9 @@ do ->
     #?INTERPRETER COMMANDS
     _M.Event = (f, d, s) -> _CM 'event', f, d, s
 
+    #?BATTLE COMMANDS
+    _M.Battle = (f, d, s) -> _CM 'battle', f, d, s
+
     return
 # ■ END NetMessages.coffee
 #---------------------------------------------------------------------------

@@ -25,14 +25,6 @@ do ->
         ANPlayersManager.sendPlayerLocation()
         return
 
-    _.sendMapSceneChanging = () ->
-        sceneType = "unknown"
-        # * Тут не учитывается наследовательность, определяется точный класс через ===
-        if SceneManager.isNextScene(Scene_Menu)
-            sceneType = "menu"
-        ANNetwork.send(NMS.Game("sceneChange", sceneType))
-        return
-
     _.sendEventMove = (eventId) ->
         data = {
             id: eventId,

@@ -17,12 +17,12 @@ do ->
         return
         
     #@[ALIAS]
-    ALIAS__updateScene = _.updateScene
+    ###ALIAS__updateScene = _.updateScene
     _.updateScene = ->
         ALIAS__updateScene.call(@)
         if ANNetwork.isConnected()
             if SceneManager.isSceneChanging()
-                ANMapManager.sendMapSceneChanging()
+                ANGameManager.sendSceneChanging()###
 
     #@[ALIAS]
     #ALIAS__update = _.update
