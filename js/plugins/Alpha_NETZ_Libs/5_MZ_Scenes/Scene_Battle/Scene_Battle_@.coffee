@@ -15,6 +15,26 @@ do ->
             @nOnBattleStarted()
         return
 
+    #@[ALIAS]
+    ALIAS__updateBattleProcess = _.updateBattleProcess
+    _.updateBattleProcess = ->
+        if ANNetwork.isConnected()
+            @nUpdateBattleProcess()
+            # * BattleManager update выполняет только мастер битвы
+            return unless ANGameManager.isBattleMaster()
+        ALIAS__updateBattleProcess.call(@)
+        
+
+    # * На всякий случай отключу автобитву
+    #@[ALIAS]
+    ALIAS__updateTpbAutoBattle = _.updateTpbAutoBattle
+    _.updateTpbAutoBattle = ->
+        if ANNetwork.isConnected()
+            return
+        else
+            ALIAS__updateTpbAutoBattle.call(@)
+        
+
     return
 # ■ END Scene_Battle.coffee
 #---------------------------------------------------------------------------

@@ -14,14 +14,29 @@ do ->
         else
             return true
 
-    # * Проверка observer только свого персонажа
     _.updateDataObserver = ->
-        @_updateDataObserver() if @isMyNetworkActor()
+        # * Если в бою, то вся синхронизация идёт от мастера битвы
+        if $gameParty.inBattle()
+            if ANGameManager.isBattleMaster()
+                #"UPD OBSERVER".p()
+                @_updateDataObserver()
+                #@updateBattleDataObserver()
+        else
+            # * Если не в бою, то проверка observer только свого персонажа
+            @_updateDataObserver() if @isMyNetworkActor()
+        return
 
     # * Отправка Observer только своего персонажа
     _.dataObserverHaveChanges = ->
-        if @isMyNetworkActor()
-            ANSyncDataManager.sendActorObserver()
+        # * Если в бою, то вся синхронизация идёт от мастера битвы
+        if $gameParty.inBattle()
+            if ANGameManager.isBattleMaster()
+                ANSyncDataManager.sendActorBattlerObserver(@)
+        else
+            # * Если не в бою, то только свои данные
+            if @isMyNetworkActor()
+                ANSyncDataManager.sendActorObserver()
+        return
     
     #TODO: Может просто все все свойства передавать?
     # собрать их автоматически

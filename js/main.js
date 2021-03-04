@@ -43,6 +43,8 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actor_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actor_AN.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actor_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Battler_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Battler_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_BattlerBase_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_BattlerBase_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_CharacterBase_@.js"
@@ -240,6 +242,9 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
 
 
 

@@ -42,6 +42,13 @@ do ->
             $gameParty.leader().getObserverDataForNetwork()
         )
 
+    _.sendActorBattlerObserver = (battler) ->
+        @_sendObserverData(
+            'playerBattler',
+            battler.actorId(),
+            battler.getObserverDataForNetwork()
+        )
+
     _._sendObserverData = (type, id, observerData) ->
         data = {
             type: type,
@@ -84,6 +91,8 @@ do ->
                 @_onEventCharObserverData(id, content)
             when 'playerActor'
                 @_onPlayerActorObserverData(id, content)
+            when 'playerBattler'
+                @_onActorBattlerObserverData(id, content)
             else
                 LOG.p("From server: unknown observer data type: " + type)
                 return
@@ -117,6 +126,17 @@ do ->
             ANET.w e
         return
 
+    _._onActorBattlerObserverData = (id, content) ->
+        try
+            actor = $gameActors.actor(id)
+            return unless actor?
+            @_convertActorEquipmens(content)
+            @_convertBattlerActionResult(content)
+            actor.applyObserverData(content)
+        catch e
+            ANET.w e
+        return
+
     _._convertActorEquipmens = (content) ->
         return unless content._equips?
         for i in [0...content._equips.length]
@@ -124,6 +144,14 @@ do ->
             content._equips[i] = new Game_Item()
             content._equips[i]._dataClass = itemData._dataClass
             content._equips[i]._itemId = itemData._itemId
+        return
+
+    _._convertBattlerActionResult = (content) ->
+        return unless content._result?
+        result = new Game_ActionResult()
+        for field of content._result
+            result[field] = content._result[field]
+        content._result = result
         return
 
     _.onVariableValue = (varId, value) ->
