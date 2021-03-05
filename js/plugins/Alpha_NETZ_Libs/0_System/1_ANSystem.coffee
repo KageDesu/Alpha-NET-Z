@@ -64,20 +64,20 @@ do ->
 
     # * Дополнительные полня для синхронизации в битве
     _.BattlerObserverFields = [
+        "_tpbChargeTime"
+        #"_tpbCastTime"
+        #"_tpbIdleTime"
+        #"_tpbTurnCount"
+        #"_tpbTurnEnd"
         "_speed"
         "_actionState"
         #"_damagePopup"
         #"_effectType"
         #"_motionType"
         #"_weaponImageId"
-        "_motionRefresh"
+        #"_motionRefresh"
         "_selected"
         "_tpbState"
-        "_tpbChargeTime"
-        "_tpbCastTime"
-        "_tpbIdleTime"
-        "_tpbTurnCount"
-        "_tpbTurnEnd"
     ]
 
     _.ActorObserverFields = [

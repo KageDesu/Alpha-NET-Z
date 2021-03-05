@@ -13,7 +13,7 @@ do ->
         _._createNetworkObserver = ->
             @netDataObserver = new DataObserver()
             #TODO: вынести в параметры плагина
-            @netDataObserver.setCheckInterval(4)
+            @netDataObserver.setCheckInterval(400)
             @_fillNetworkObserver()
             @netDataObserver.refreshAll(@)
 

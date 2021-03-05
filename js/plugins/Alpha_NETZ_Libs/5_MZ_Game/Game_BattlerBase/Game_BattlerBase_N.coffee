@@ -18,7 +18,7 @@ do ->
             #TODO: вынести в параметры плагина
             @netDataObserver.setCheckInterval(60)
             #TODO: Это может создавать нагрузку на сервер!
-            @netDataObserver.setInstanteMode()
+            #@netDataObserver.setInstanteMode()
             @_fillNetworkObserver()
             @netDataObserver.refreshAll(@)
 

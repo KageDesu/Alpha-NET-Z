@@ -12,6 +12,8 @@ do ->
         @_nRegisterSyncBattleMethod("requestEffect")
         @_nRegisterSyncBattleMethod("requestMotion")
         @_nRegisterSyncBattleMethod("startWeaponAnimation")
+        @_nRegisterSyncBattleMethod("requestMotionRefresh")
+        return
 
     # * Данный баттлер является моим (этого сетевого игрока)
     _.isMyNetworkBattler = ->
@@ -37,7 +39,7 @@ do ->
         # * Данные только для боя (эти данные передаёт только Battle Master)
         _._nStartBattleObserver = ->
             # * Ускоряем отправку данных в бою
-            @netDataObserver.setCheckInterval(0)
+            #@netDataObserver.setCheckInterval(60)
             # * По проверке изменеий теперь
             @netDataObserver.setCheckMode()
             @_addBattleFieldsToNetowrkDataObserver()
@@ -58,7 +60,7 @@ do ->
 
         # * После битвы нет необходимости хранить observer
         _._nEndBattleObserver = ->
-            @netDataObserver.setInstanteMode()
+            #@netDataObserver.setInstanteMode()
             @netDataObserver.setCheckInterval(60) #TODO: вернуть стандартное значение
             # * Убираем добавленные для боя поля
             @netDataObserver.removeFields(@, ANET.System.BattlerObserverFields)

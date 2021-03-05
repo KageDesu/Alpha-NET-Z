@@ -43,6 +43,7 @@ do ->
         )
 
     _.sendBattlerObserver = (battler) ->
+        #"SEND BATTLER OBSERVER".p()
         @_sendObserverData(
             'battler',
             battler.packForNetwork(),
@@ -50,6 +51,7 @@ do ->
         )
 
     _.sendBattlerResultObserver = (battler) ->
+        #"SEND BATTLER RESULT".p()
         @_sendObserverData(
             'battlerResult',
             battler.packForNetwork(),

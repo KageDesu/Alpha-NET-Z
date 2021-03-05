@@ -5,5 +5,5 @@ null,
 {"id":3,"expanded":false,"name":"Second_Map","order":3,"parentId":2,"scrollX":719.5,"scrollY":505.5},
 {"id":4,"expanded":false,"name":"Events","order":5,"parentId":5,"scrollX":472.5,"scrollY":317.5},
 {"id":5,"expanded":true,"name":"Tests","order":4,"parentId":0,"scrollX":473.5,"scrollY":317.5},
-{"id":6,"expanded":false,"name":"Battle","order":6,"parentId":5,"scrollX":473.5,"scrollY":345.5}
+{"id":6,"expanded":false,"name":"Battle","order":6,"parentId":5,"scrollX":481.5,"scrollY":345.5}
 ]
