@@ -62,6 +62,24 @@ do ->
         117
     ]
 
+    # * Дополнительные полня для синхронизации в битве
+    _.BattlerObserverFields = [
+        "_speed"
+        "_actionState"
+        #"_damagePopup"
+        #"_effectType"
+        #"_motionType"
+        #"_weaponImageId"
+        "_motionRefresh"
+        "_selected"
+        "_tpbState"
+        "_tpbChargeTime"
+        "_tpbCastTime"
+        "_tpbIdleTime"
+        "_tpbTurnCount"
+        "_tpbTurnEnd"
+    ]
+
 
 # ■ END IMPLEMENTATION.coffee
 #---------------------------------------------------------------------------

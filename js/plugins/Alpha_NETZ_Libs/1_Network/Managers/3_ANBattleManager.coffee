@@ -13,6 +13,8 @@ do ->
     #@[DEFINES]
     _ = ANBattleManager
 
+    
+    #TODO: Если в бою только один, то ничего передавать на сервер не надо!
 
     _.onBattleStarted = ->
         @sendBattleStarted()
@@ -20,8 +22,10 @@ do ->
         #TODO: получить флаг мастер боя - просто первый в группе?
         #TODO: это наверное через get?
         
-    #TODO: Так же переделать и Battle observer
+    #TODO: Так же переделать и Battle observer в SyncData
     _.callBattleMethod = (battler, method, args) ->
+        # * Если в бою только один игрок, то ничего не отправляем (чтобы не грузить сеть)
+        return if $gameParty.isOneBattler()
         @sendBattleMethod(
             method,
             battler.packForNetwork(),

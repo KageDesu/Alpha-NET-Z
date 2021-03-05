@@ -21,6 +21,7 @@ do ->
         if ANNetwork.isConnected()
             @nUpdateBattleProcess()
             # * BattleManager update выполняет только мастер битвы
+            # * Иначе, выходим сразу из метода
             return unless ANGameManager.isBattleMaster()
         ALIAS__updateBattleProcess.call(@)
         

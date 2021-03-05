@@ -7,76 +7,57 @@ do ->
     #@[DEFINES]
     _ = Game_Battler::
 
+    _.nInitializeNetwork = ->
+        @_nRegisterSyncBattleMethod("startDamagePopup")
+        @_nRegisterSyncBattleMethod("requestEffect")
+        @_nRegisterSyncBattleMethod("requestMotion")
+        @_nRegisterSyncBattleMethod("startWeaponAnimation")
+
+    # * Данный баттлер является моим (этого сетевого игрока)
     _.isMyNetworkBattler = ->
         if ANNetwork.isConnected()
             return @ == $gameParty.leader()
         else
             return true
 
+    _._nRegisterSyncBattleMethod = (methodName) ->
+        alias = @[methodName]
+        @[methodName] = () ->
+            if ANNetwork.isConnected() && ANGameManager.isBattleMaster()
+                # * В данной реализации передаётся только один аргумент, так как ... перед arguments
+                ANBattleManager.callBattleMethod(@, methodName, ...arguments)
+            alias.call(@, ...arguments)
+        return
+
     # * Специальный Data Observer для боя
     # -----------------------------------------------------------------------
     do ->
 
         # * Данные только для боя (эти данные передаёт только Battle Master)
-        _._nCreateBattleObserver = ->
-            #@netBattleDataObserver = new DataObserver()
-            #@netBattleDataObserver.setInstanteMode()
-            #"BATTLE OBSERVER CREATED".p()
-            #@_fillBattleDataObserver()
-            #@netBattleDataObserver.refreshAll(@)
-            # * Ускоренный режим обновления (TODO: может и не надо!)
-            #@netDataObserver.setCheckInterval(10)
-
+        _._nStartBattleObserver = ->
+            # * Ускоряем отправку данных в бою
             @netDataObserver.setCheckInterval(0)
             @_addBattleFieldsToNetowrkDataObserver()
             return
 
-        # * Добавлять эти поля в начале битвы только!!!
+        # * Добавляем дополнительные поля в Observer
         _._addBattleFieldsToNetowrkDataObserver = ->
-            @netDataObserver.addFields(@, [
-                    "_speed"
-                    "_actionState"
-                    #"_damagePopup"
-                    #"_effectType"
-                    #"_motionType"
-                    #"_weaponImageId"
-                    "_motionRefresh"
-                    "_selected"
-                    "_tpbState"
-                    "_tpbChargeTime"
-                    "_tpbCastTime"
-                    "_tpbIdleTime"
-                    "_tpbTurnCount"
-                    "_tpbTurnEnd"
-                ])
+            @netDataObserver.addFields(@, ANET.System.BattlerObserverFields)
             return
 
         # * Этот метод вызывается во время битвы
         _._updateBattleDataObserver = ->
+            # * У ActionResult свой обсервер, надо его синхронизировать тут
             @result().nUpdateObserver()
             if @result().isDataObserverHaveChanges == true
                 ANSyncDataManager.sendActorBattlerResultObserver(@)
-            #return unless @netBattleDataObserver?
-            #@netBattleDataObserver.check(@)
-            #if @netBattleDataObserver.isDataChanged()
-            #    @nBattleDataObserverHaveChanges()
-            #    @netBattleDataObserver.refreshAll(@)
-            return
-
-        _.nBattleDataObserverHaveChanges = ->
-
-        _.getBattleObserverDataForNetwork = -> @netBattleDataObserver.getDataForNetwork(@)
-
-        _.applyBattleObserverData = (data) ->
-            #return unless @netBattleDataObserver?
-            #@netBattleDataObserver.setDataFromNetwork(@, data)
             return
 
         # * После битвы нет необходимости хранить observer
-        _._nDestroyBattleObserver = ->
-            #TODO: удалить поля не нужные
-            @netBattleDataObserver = null
+        _._nEndBattleObserver = ->
             @netDataObserver.setCheckInterval(60) #TODO: вернуть стандартное значение
+            # * Убираем добавленные для боя поля
+            @netDataObserver.removeFields(@, ANET.System.BattlerObserverFields)
             return
     
     return

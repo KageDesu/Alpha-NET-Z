@@ -22,6 +22,9 @@ class DataObserver
         @readField(obj, f) for f in fieldsList
         return
 
+    removeFields: (fieldsList) ->
+        delete @_fields[f] for f in fieldsList
+
     # * Прочитать все значения с объекта
     refreshAll: (obj) ->
         for f of @_fields

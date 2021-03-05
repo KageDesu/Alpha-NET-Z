@@ -8,10 +8,12 @@ do ->
     _ = Scene_Battle::
 
     _.nOnBattleStarted = ->
+        # * Отправляем на сервер, что мы начали бой
         ANBattleManager.onBattleStarted()
         return
 
     _.nUpdateBattleProcess = ->
+        # * За отправку данных отвечает только мастер боя
         if ANGameManager.isBattleMaster()
             for actor in $gameParty.battleMembers()
                 actor.updateDataObserver()

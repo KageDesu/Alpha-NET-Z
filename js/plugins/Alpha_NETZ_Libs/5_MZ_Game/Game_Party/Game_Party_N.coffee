@@ -9,6 +9,9 @@ do ->
 
     _.setupNetworkGame = ->
 
+    # * В бою участвует только один персонаж?
+    _.isOneBattler = -> @battleMembers().length <= 1
+
     #TODO: как задать после выбора персонажа, чтобы каждый раз не вычислять
     _.networkLeader = ->
         actorId = ANGameManager.myPlayerData().actorId
