@@ -40,7 +40,7 @@ do ->
     # * Выполнить команду от сервера
     _.handlePrcEvent = (eventHandlerMethodName, content) ->
         noLog =
-            ["game_observerData", "map_eventMove", "map_playerMove"].
+            ["game_observerData", "map_eventMove", "map_playerMove", "battle_battleMethod"].
                 contains(eventHandlerMethodName)
         LOG.p("Handle Event: " + eventHandlerMethodName) unless noLog
         NetClientMethodsManager["event_" + eventHandlerMethodName](content)

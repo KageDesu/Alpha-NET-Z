@@ -9,8 +9,6 @@ do ->
 
     _.nCreateObserver = ->
         @netDataObserver = new DataObserver()
-        #@netDataObserver.setCheckInterval(1)
-        #@netDataObserver.setInstanteMode()
         @nFillObserver()
         # * Создаём после nFillObserver, чтобы не было в списке полей Observer
         @isDataObserverHaveChanges = false
