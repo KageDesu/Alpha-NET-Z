@@ -42,17 +42,17 @@ do ->
             $gameParty.leader().getObserverDataForNetwork()
         )
 
-    _.sendActorBattlerObserver = (battler) ->
+    _.sendBattlerObserver = (battler) ->
         @_sendObserverData(
-            'playerBattler',
-            battler.actorId(),
+            'battler',
+            battler.packForNetwork(),
             battler.getObserverDataForNetwork()
         )
 
-    _.sendActorBattlerResultObserver = (battler) ->
+    _.sendBattlerResultObserver = (battler) ->
         @_sendObserverData(
-            'palyerBattlerResult',
-            battler.actorId(),
+            'battlerResult',
+            battler.packForNetwork(),
             battler.result().getObserverDataForNetwork()
         )
 
@@ -98,10 +98,10 @@ do ->
                 @_onEventCharObserverData(id, content)
             when 'playerActor'
                 @_onPlayerActorObserverData(id, content)
-            when 'playerBattler'
-                @_onActorBattlerObserverData(id, content)
-            when 'palyerBattlerResult'
-                @_onActorBattlerResultObserverData(id, content)
+            when 'battler'
+                @_onBattlerObserverData(id, content)
+            when 'battlerResult'
+                @_onBattlerResultObserverData(id, content)
             else
                 LOG.p("From server: unknown observer data type: " + type)
                 return
@@ -135,13 +135,12 @@ do ->
             ANET.w e
         return
 
-    _._onActorBattlerObserverData = (id, content) ->
+    _._onBattlerObserverData = (battlerNetData, content) ->
         try
-            actor = $gameActors.actor(id)
-            return unless actor?
+            battler = ANET.Utils.unpackBattlerFromNetwork(battlerNetData)
+            return unless battler?
             @_convertActorEquipmens(content)
-            #@_convertBattlerActionResult(content)
-            actor.applyObserverData(content)
+            battler.applyObserverData(content)
         catch e
             ANET.w e
         return
@@ -155,20 +154,11 @@ do ->
             content._equips[i]._itemId = itemData._itemId
         return
 
-    #TODO: не нужен
-    _._convertBattlerActionResult = (content) ->
-        return unless content._result?
-        result = new Game_ActionResult()
-        for field of content._result
-            result[field] = content._result[field]
-        content._result = result
-        return
-
-    _._onActorBattlerResultObserverData = (id, content) ->
+    _._onBattlerResultObserverData = (battlerNetData, content) ->
         try
-            actor = $gameActors.actor(id)
-            return unless actor?
-            actor.result()?.applyObserverData(content)
+            battler = ANET.Utils.unpackBattlerFromNetwork(battlerNetData)
+            return unless battler?
+            battler.result()?.applyObserverData(content)
         catch e
             ANET.w e
         return

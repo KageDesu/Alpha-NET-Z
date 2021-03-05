@@ -7,6 +7,9 @@ do ->
     #@[DEFINES]
     _ = Game_Party::
 
+
+    #TODO: battleMembers надо переделать, чтобы только тех, кто в бою возвращал
+
     #@[ALIAS]
     ALIAS__setupStartingMembers = _.setupStartingMembers
     _.setupStartingMembers = ->

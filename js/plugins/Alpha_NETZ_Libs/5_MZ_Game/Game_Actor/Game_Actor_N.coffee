@@ -14,11 +14,12 @@ do ->
         # * Если в бою, то вся синхронизация идёт от мастера битвы
         if $gameParty.inBattle()
             if ANGameManager.isBattleMaster()
-                #"UPD OBSERVER".p()
                 @_updateDataObserver()
                 @_updateBattleDataObserver()
+            else
+                # * Только приём данных
         else
-            # * Если не в бою, то проверка observer только свого персонажа
+            # * Если НЕ в бою, то проверка observer только свого персонажа
             @_updateDataObserver() if @isMyNetworkActor()
         return
 
@@ -27,7 +28,7 @@ do ->
         # * Если в бою, то вся синхронизация идёт от мастера битвы
         if $gameParty.inBattle()
             if ANGameManager.isBattleMaster()
-                ANSyncDataManager.sendActorBattlerObserver(@)
+                ANSyncDataManager.sendBattlerObserver(@)
         else
             # * Если не в бою, то только свои данные
             if @isMyNetworkActor()
@@ -38,19 +39,7 @@ do ->
     # собрать их автоматически
     _._fillNetworkObserver = ->
         Game_Battler::_fillNetworkObserver.call(@)
-        @netDataObserver.addFields(@, [
-                "_name"
-                "_nickname"
-                "_classId"
-                "_level"
-                "_characterName"
-                "_characterIndex"
-                "_faceName"
-                "_faceIndex"
-                "_battlerName"
-                "_exp"
-                "_equips"
-            ])
+        @netDataObserver.addFields(@, ANET.System.ActorObserverFields)
         return
 
     #?{DYNAMIC}

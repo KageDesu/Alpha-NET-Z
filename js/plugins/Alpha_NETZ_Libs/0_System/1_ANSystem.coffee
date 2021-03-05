@@ -80,6 +80,28 @@ do ->
         "_tpbTurnEnd"
     ]
 
+    _.ActorObserverFields = [
+        "_name"
+        "_nickname"
+        "_classId"
+        "_level"
+        "_characterName"
+        "_characterIndex"
+        "_faceName"
+        "_faceIndex"
+        "_battlerName"
+        "_exp"
+        "_equips"
+    ]
+
+    _.EnemyObserverFields = [
+        "_enemyId"
+        "_letter"
+        "_plural"
+        "_screenX"
+        "_screenY"
+    ]
+
 
 # ■ END IMPLEMENTATION.coffee
 #---------------------------------------------------------------------------

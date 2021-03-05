@@ -20,6 +20,7 @@ do ->
         else
             return true
 
+    # * Подписать метод на синхронизацию через сервер
     _._nRegisterSyncBattleMethod = (methodName) ->
         alias = @[methodName]
         @[methodName] = () ->
@@ -50,7 +51,7 @@ do ->
             # * У ActionResult свой обсервер, надо его синхронизировать тут
             @result().nUpdateObserver()
             if @result().isDataObserverHaveChanges == true
-                ANSyncDataManager.sendActorBattlerResultObserver(@)
+                ANSyncDataManager.sendBattlerResultObserver(@)
             return
 
         # * После битвы нет необходимости хранить observer
