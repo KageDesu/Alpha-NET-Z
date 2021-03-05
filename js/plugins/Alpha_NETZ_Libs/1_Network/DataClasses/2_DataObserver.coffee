@@ -9,8 +9,11 @@ class DataObserver
         @_timer = 0
         return
 
-    # * таймер проверки изменений (отправки)
+    # * отправка без проверки изменений (по таймеру, если задан)
     setInstanteMode: -> @_instante = true
+
+    # * проверка изменений (по таймеру, если задан)
+    setCheckMode: -> @_instante = false
 
     # * не проверять изменения, устанавливать флаг _isDataChanged сразу (по истечению таймера)
     setCheckInterval: (@_checkTime) ->

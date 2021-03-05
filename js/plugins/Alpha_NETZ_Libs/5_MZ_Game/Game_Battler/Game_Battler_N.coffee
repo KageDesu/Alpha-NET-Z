@@ -38,6 +38,8 @@ do ->
         _._nStartBattleObserver = ->
             # * Ускоряем отправку данных в бою
             @netDataObserver.setCheckInterval(0)
+            # * По проверке изменеий теперь
+            @netDataObserver.setCheckMode()
             @_addBattleFieldsToNetowrkDataObserver()
             return
 
@@ -56,6 +58,7 @@ do ->
 
         # * После битвы нет необходимости хранить observer
         _._nEndBattleObserver = ->
+            @netDataObserver.setInstanteMode()
             @netDataObserver.setCheckInterval(60) #TODO: вернуть стандартное значение
             # * Убираем добавленные для боя поля
             @netDataObserver.removeFields(@, ANET.System.BattlerObserverFields)

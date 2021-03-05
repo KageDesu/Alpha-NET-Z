@@ -30,6 +30,16 @@ do ->
             return ALIAS__retrieveCommonEvent.call(@)
         return
 
+    #@[ALIAS]
+    ALIAS__requestAnimation = _.requestAnimation
+    _.requestAnimation = () ->
+        if ANNetwork.isConnected()
+            # * В бою анимацию синхронизируется (только мастер)(отправляется другим игрокам)
+            if $gameParty.inBattle() && ANGameManager.isBattleMaster()
+                ANBattleManager.requestAnimation(...arguments)
+        ALIAS__requestAnimation.call(@, ...arguments)
+        
+
     return
 # ■ END Game_Temp.coffee
 #---------------------------------------------------------------------------

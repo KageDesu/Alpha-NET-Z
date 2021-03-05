@@ -33,6 +33,18 @@ do ->
         )
         return
 
+    # * Анимация в бою
+    _.requestAnimation = (targets, animationId, mirror = false) ->
+        return if $gameParty.isOneBattler()
+        converted = targets.map (t) -> t.packForNetwork()
+        data = {
+            animationId: animationId
+            mirror: mirror
+            targets: converted
+        }
+        @sendBattleAnimation(data)
+        return
+
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
 
@@ -48,8 +60,21 @@ do ->
         ANNetwork.send(NMS.Battle("battleMethod", data), true)
         return
 
+    _.sendBattleAnimation = (data) ->
+        ANNetwork.send(NMS.Battle("animation", data))
+        return
+
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
+
+    # * С сервера пришла команда проиграть анимацию
+    _.onBattleAnimation = (data) ->
+        try
+            targets = data.targets.map (t) -> ANET.Utils.unpackBattlerFromNetwork(t)
+            $gameTemp.requestAnimation(targets, data.animationId, data.mirror)
+        catch e
+            ANET.w e
+        return
 
     # * С сервера пришла команда (метод) боя
     _.onBattleMethod = (battlerNetData, method, args) ->

@@ -13,7 +13,8 @@ do ->
     _.updateNetwork = ->
         return if $gameParty.isEmpty()
         # * Проверяем и обновляем DataObserver своего персонажа
-        $gameParty.leader().updateDataObserver()
+        # * Тут этот ? (првоерка Null) нужна!
+        $gameParty.leader()?.updateDataObserver()
 
     return
 # ■ END Game_Player.coffee

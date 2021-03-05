@@ -47,6 +47,7 @@ do ->
     _._removeNotExistsCharacters = ->
         x = ANGameManager.anotherPlayersOnMap()
         for char in @characters()
+            continue unless char?
             unless x.find (c) -> c.id == char.id
                 @_data.delete(char)
         return

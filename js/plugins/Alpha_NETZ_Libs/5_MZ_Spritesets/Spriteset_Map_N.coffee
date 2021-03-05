@@ -55,6 +55,7 @@ do ->
         #TODO: Возможно после создания таблиц имён надо разлелить метод
         # так как сейчас удаляется любой спрайт из массива с соответсвием персонажа
         for spr in @_networkCharactersInfoSprites
+            continue unless spr?
             if spr._character == iconSpr._character
                 @_networkCharactersInfoLayer.removeChild spr
                 @_networkCharactersInfoSprites.delete(spr)
