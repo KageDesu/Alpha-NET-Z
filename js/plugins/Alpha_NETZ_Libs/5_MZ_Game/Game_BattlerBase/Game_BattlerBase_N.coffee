@@ -19,6 +19,7 @@ do ->
             @_fillNetworkObserver()
             @netDataObserver.refreshAll(@)
 
+        #TODO: Можно автоматически и удалять лишнее (см. Game_ActionResult)
         _._fillNetworkObserver = ->
             @netDataObserver.addFields(@, [
                 "_hp"

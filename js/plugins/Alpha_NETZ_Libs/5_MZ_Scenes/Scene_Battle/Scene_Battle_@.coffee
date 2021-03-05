@@ -24,7 +24,6 @@ do ->
             return unless ANGameManager.isBattleMaster()
         ALIAS__updateBattleProcess.call(@)
         
-
     # * На всякий случай отключу автобитву
     #@[ALIAS]
     ALIAS__updateTpbAutoBattle = _.updateTpbAutoBattle

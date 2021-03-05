@@ -1,20 +1,18 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Player.coffee
+# ■ Game_ActionResult.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Player::
+    _ = Game_ActionResult::
 
-    _.dataObserverHaveChanges = ->
-        ANSyncDataManager.sendPlayerObserver()
-
-    _.updateNetwork = ->
-        return if $gameParty.isEmpty()
-        # * Проверяем и обновляем DataObserver своего персонажа
-        $gameParty.leader().updateDataObserver()
-
+    #@[ALIAS]
+    ALIAS__initialize = _.initialize
+    _.initialize = ->
+        ALIAS__initialize.call(@)
+        @nCreateObserver() if ANNetwork.isConnected()
+    
     return
-# ■ END Game_Player.coffee
+# ■ END Game_ActionResult.coffee
 #---------------------------------------------------------------------------

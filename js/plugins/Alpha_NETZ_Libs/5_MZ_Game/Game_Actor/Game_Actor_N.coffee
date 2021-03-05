@@ -8,11 +8,7 @@ do ->
     _ = Game_Actor::
 
     # * Данный персонаж - мой сетевой персонаж (текущего игрока)
-    _.isMyNetworkActor = ->
-        if ANNetwork.isConnected()
-            return @ == $gameParty.leader()
-        else
-            return true
+    _.isMyNetworkActor = -> @isMyNetworkBattler()
 
     _.updateDataObserver = ->
         # * Если в бою, то вся синхронизация идёт от мастера битвы
@@ -20,7 +16,7 @@ do ->
             if ANGameManager.isBattleMaster()
                 #"UPD OBSERVER".p()
                 @_updateDataObserver()
-                #@updateBattleDataObserver()
+                @_updateBattleDataObserver()
         else
             # * Если не в бою, то проверка observer только свого персонажа
             @_updateDataObserver() if @isMyNetworkActor()

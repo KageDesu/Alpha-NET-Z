@@ -12,15 +12,11 @@ do ->
         return
 
     _.nUpdateBattleProcess = ->
-        @nSimulateTpbUpdate()
-    
-    # * Симуляция заполнения полос TPB
-    # * Не успевает с сервера приходить значение float так быстро, поэтому эмулируем "заполнение" на других клиентах
-    _.nSimulateTpbUpdate = ->
-        # * На мастере битвы нельзя, иначе ускорится в 2 раза, он ведь и так считает Tpb
-        unless ANGameManager.isBattleMaster()
-            m.updateTpb() for m in $gameParty.battleMembers()
+        if ANGameManager.isBattleMaster()
+            for actor in $gameParty.battleMembers()
+                actor.updateDataObserver()
         return
+
 
     return
 # ■ END Scene_Battle.coffee

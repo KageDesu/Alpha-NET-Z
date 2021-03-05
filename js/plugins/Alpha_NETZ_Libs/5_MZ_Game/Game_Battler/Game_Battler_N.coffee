@@ -7,6 +7,11 @@ do ->
     #@[DEFINES]
     _ = Game_Battler::
 
+    _.isMyNetworkBattler = ->
+        if ANNetwork.isConnected()
+            return @ == $gameParty.leader()
+        else
+            return true
 
     # * Специальный Data Observer для боя
     # -----------------------------------------------------------------------
@@ -29,10 +34,8 @@ do ->
         # * Добавлять эти поля в начале битвы только!!!
         _._addBattleFieldsToNetowrkDataObserver = ->
             @netDataObserver.addFields(@, [
-                    #"_result"
                     "_speed"
                     "_actionState"
-                    "_lastTargetIndex"
                     "_damagePopup"
                     "_effectType"
                     "_motionType"
@@ -48,8 +51,11 @@ do ->
                 ])
             return
 
-        # * Этот метод вызывается в сцене битвы
-        _.updateBattleDataObserver = ->
+        # * Этот метод вызывается во время битвы
+        _._updateBattleDataObserver = ->
+            @result().nUpdateObserver()
+            if @result().isDataObserverHaveChanges == true
+                ANSyncDataManager.sendActorBattlerResultObserver(@)
             #return unless @netBattleDataObserver?
             #@netBattleDataObserver.check(@)
             #if @netBattleDataObserver.isDataChanged()
@@ -68,8 +74,9 @@ do ->
 
         # * После битвы нет необходимости хранить observer
         _._nDestroyBattleObserver = ->
+            #TODO: удалить поля не нужные
             @netBattleDataObserver = null
-            #@netDataObserver.setCheckInterval(60) #TODO: вернуть стандартное значение
+            @netDataObserver.setCheckInterval(60) #TODO: вернуть стандартное значение
             return
     
     return
