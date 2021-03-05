@@ -130,6 +130,12 @@ do ->
         catch e
             console.warn("event_event_virtualEventCommand", e)
 
+    _.event_battle_battleMethod = (content) ->
+        try
+            ANBattleManager.onBattleMethod(content.id, content.method, content.data)
+        catch e
+            console.warn("event_battle_battleMethod", e)
+
     return
 # ■ END NetClientMethodsManager.coffee
 #---------------------------------------------------------------------------

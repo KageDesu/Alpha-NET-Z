@@ -7,6 +7,9 @@ do ->
     #@[DEFINES]
     _ = Game_BattlerBase::
 
+    # * Специальное представление данных для сети
+    _.packForNetwork = -> ANET.Utils.packBattlerForNetwork(@)
+
     # * OBSERVER
     do ->
 

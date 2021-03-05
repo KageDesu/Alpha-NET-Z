@@ -15,6 +15,27 @@ do ->
     #@[DEFINES]
     _ = AA.Utils.ANET
 
+    #TODO: Можно все все данные для сети через метод аналогичный передавать для безопасности
+    # * Сохраняет Battler в определённый формат для отправки по сети
+    _.packBattlerForNetwork = (battler) ->
+        if battler instanceof Game_Actor
+            return {
+                type: "actor"
+                id: battler.actorId()
+            }
+        else
+            return {
+                type: "enemy"
+                id: battler.index()
+            }
+
+    # * Возвращяет конкретный Battler из данных сети
+    _.unpackBattlerFromNetwork = (data) ->
+        if data.type == "actor"
+            return $gameActors.actor(data.id)
+        else
+            return $gameTroop.members()[data.id]
+
     _.isMyActorInValidListToStart = (list, isInclude) ->
         try
             list = JsonEx.parse(list).map (i) -> parseInt(i)

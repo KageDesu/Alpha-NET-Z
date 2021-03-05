@@ -26,39 +26,40 @@ do ->
     # -----------------------------------------------------------------------
     do ->
 
-        # * Суть в том, что request приходит от сервера, а вот clear должен
-        # * выполняться только локально, когда эффект был отработан (показан)
-
         #@[ALIAS]
-        ###ALIAS__clearDamagePopup = _.clearDamagePopup
-        _.clearDamagePopup = ->
+        ALIAS__startDamagePopup = _.startDamagePopup
+        _.startDamagePopup = ->
             if ANNetwork.isConnected()
-                return unless @isMyNetworkBattler()
-            ALIAS__clearDamagePopup.call(@)###
-
+                if ANGameManager.isBattleMaster()
+                    ANBattleManager.callBattleMethod(@, "startDamagePopup")
+            ALIAS__startDamagePopup.call(@, ...arguments)
+            
+        #TODO: передавать аргументы можно через ...arguments
         #@[ALIAS]
-        ###ALIAS__clearWeaponAnimation = _.clearWeaponAnimation
-        _.clearWeaponAnimation = ->
+        ALIAS__requestEffect = _.requestEffect
+        _.requestEffect = (effectType) ->
             if ANNetwork.isConnected()
-                return unless @isMyNetworkBattler()
-            ALIAS__clearWeaponAnimation.call(@)###
+                if ANGameManager.isBattleMaster()
+                    ANBattleManager.callBattleMethod(@, "requestEffect", effectType)
+            ALIAS__requestEffect.call(@, ...arguments)
             
         #@[ALIAS]
-        ###ALIAS__clearEffect = _.clearEffect
-        _.clearEffect = ->
+        ALIAS__requestMotion = _.requestMotion
+        _.requestMotion = (motionType) ->
             if ANNetwork.isConnected()
-                return unless @isMyNetworkBattler()
-            ALIAS__clearEffect.call(@)###
-    
+                if ANGameManager.isBattleMaster()
+                    ANBattleManager.callBattleMethod(@, "requestMotion", motionType)
+            ALIAS__requestMotion.call(@, ...arguments)
+
         #@[ALIAS]
-        ###ALIAS__clearMotion = _.clearMotion
-        _.clearMotion = ->
+        ALIAS__startWeaponAnimation = _.startWeaponAnimation
+        _.startWeaponAnimation = (weaponImageId) ->
             if ANNetwork.isConnected()
-                return unless @isMyNetworkBattler()
-            ALIAS__clearMotion.call(@)###
-        
-        
-        
+                if ANGameManager.isBattleMaster()
+                    ANBattleManager.callBattleMethod(@, "startWeaponAnimation", weaponImageId)
+            ALIAS__startWeaponAnimation.call(@, ...arguments)
+            
+            
 
     return
 # ■ END Game_Battler.coffee
