@@ -14,6 +14,16 @@ do ->
         @_nRegisterSyncBattleMethod("requestMotion")
         @_nRegisterSyncBattleMethod("startWeaponAnimation")
         @_nRegisterSyncBattleMethod("setActionState")
+
+        # * Sound effects
+        @_nRegisterSyncBattleMethod("performDamage")
+        @_nRegisterSyncBattleMethod("performCollapse")
+        @_nRegisterSyncBattleMethod("performMiss")
+        @_nRegisterSyncBattleMethod("performRecovery")
+        @_nRegisterSyncBattleMethod("performEvasion")
+        @_nRegisterSyncBattleMethod("performMagicEvasion")
+        @_nRegisterSyncBattleMethod("performCounter")
+        @_nRegisterSyncBattleMethod("performReflection")
         return
 
     # * Данный баттлер является моим (этого сетевого игрока)
@@ -45,6 +55,9 @@ do ->
 
         # * Данные только для боя (эти данные передаёт только Battle Master)
         _._nStartBattleObserver = ->
+            # * Включаем Instance режим
+            @netDataObserver.setInstanteMode()
+            @netDataObserver.setCheckInterval(ANET.PP.battleDataRefreshRate())
             @_addBattleFieldsToNetowrkDataObserver()
             return
 
@@ -63,6 +76,8 @@ do ->
 
         # * После битвы нет необходимости хранить observer
         _._nEndBattleObserver = ->
+            # * Возвращаем режим проверки
+            @_applyDataObserverInitialParameters()
             # * Убираем добавленные для боя поля
             @netDataObserver.removeFields(@, ANET.System.BattlerObserverFields)
             return

@@ -60,7 +60,7 @@ do ->
 
     #TODO: NOT USED
     _.sendBattlerObserver = (battler) ->
-        #"SEND BATTLER OBSERVER".p()
+        "SEND BATTLER OBSERVER".p()
         @_sendObserverData(
             'battler',
             battler.packForNetwork(),
@@ -68,7 +68,7 @@ do ->
         )
 
     _.sendBattlerResultObserver = (battler) ->
-        #"SEND BATTLER RESULT".p()
+        "SEND BATTLER RESULT".p()
         return if $gameParty.isOneBattler()
         @_sendObserverData(
             'battlerResult',

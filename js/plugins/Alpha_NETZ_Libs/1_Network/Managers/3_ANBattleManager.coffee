@@ -68,8 +68,12 @@ do ->
     
     # * Отправка метод из очереди (используется в режиме Force Battle Sync)
     _._callBattleMethodOnServer = (battler, method, args) ->
-        @_battleMethodPool = 0 unless @_battleMethodPool?
         "CALL BATTLE METHOD".p()
+        # * Обновим данные перед методом битвы
+        # * Без этого был баг, что приходил collapse эффект, а hp = 0 уже после
+        ANSyncDataManager.sendBattlerObserver(battler)
+        # * На всякий случай, чтобы не сбивать основную логику обновления
+        battler.netDataObserver._isDataChanged = true
         @sendBattleMethod(
             method,
             battler.packForNetwork(),

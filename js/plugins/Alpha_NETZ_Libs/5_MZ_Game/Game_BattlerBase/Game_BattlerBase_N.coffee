@@ -15,10 +15,14 @@ do ->
 
         _._createNetworkObserver = ->
             @netDataObserver = new DataObserver()
-            #TODO: вынести в параметры плагина 60
-            @netDataObserver.setCheckInterval(60)
+            @_applyDataObserverInitialParameters()
             @_fillNetworkObserver()
             @netDataObserver.refreshAll(@)
+
+        _._applyDataObserverInitialParameters = ->
+            @netDataObserver.setCheckMode()
+            @netDataObserver.setCheckInterval(ANET.PP.playerDataRefreshRate())
+            return
 
         #TODO: Можно автоматически и удалять лишнее (см. Game_ActionResult)
         _._fillNetworkObserver = ->

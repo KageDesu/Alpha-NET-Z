@@ -40,8 +40,13 @@ do ->
     # * Выполнить команду от сервера
     _.handlePrcEvent = (eventHandlerMethodName, content) ->
         noLog =
-            ["game_observerData", "map_eventMove", "map_playerMove", "battle_battleMethod"].
-                contains(eventHandlerMethodName)
+            [
+                "game_observerData",
+                "map_eventMove",
+                "map_playerMove",
+                "battle_battleMethod",
+                "battle_battleMethodReceived"
+            ].contains(eventHandlerMethodName)
         LOG.p("Handle Event: " + eventHandlerMethodName) unless noLog
         NetClientMethodsManager["event_" + eventHandlerMethodName](content)
         # * Вызвать метод на сцене, если он существует
