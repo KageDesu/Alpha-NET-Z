@@ -8,8 +8,6 @@ do ->
     _ = Game_Battler::
 
     _.nInitializeNetwork = ->
-        #TODO: Можно Result только с этим методом передавать
-        @_nRegisterSyncBattleMethod("startDamagePopup")
         @_nRegisterSyncBattleMethod("requestEffect")
         @_nRegisterSyncBattleMethod("requestMotion")
         @_nRegisterSyncBattleMethod("startWeaponAnimation")
@@ -56,7 +54,7 @@ do ->
         # * Данные только для боя (эти данные передаёт только Battle Master)
         _._nStartBattleObserver = ->
             # * Включаем Instance режим
-            @netDataObserver.setInstanteMode()
+            #@netDataObserver.setInstanteMode()
             @netDataObserver.setCheckInterval(ANET.PP.battleDataRefreshRate())
             @_addBattleFieldsToNetowrkDataObserver()
             return
@@ -66,12 +64,13 @@ do ->
             @netDataObserver.addFields(@, ANET.System.BattlerObserverFields)
             return
 
+        #TODO: Теперь ActionResult передаётся непосредственно перед методом startDamagePopup
         # * Этот метод вызывается во время битвы
         _._updateBattleDataObserver = ->
             # * У ActionResult свой обсервер, надо его синхронизировать тут
-            @result().nUpdateObserver()
-            if @result().isDataObserverHaveChanges == true
-                ANSyncDataManager.sendBattlerResultObserver(@)
+            #@result().nUpdateObserver()
+            #if @result().isDataObserverHaveChanges == true
+            #    ANSyncDataManager.sendBattlerResultObserver(@)
             return
 
         # * После битвы нет необходимости хранить observer

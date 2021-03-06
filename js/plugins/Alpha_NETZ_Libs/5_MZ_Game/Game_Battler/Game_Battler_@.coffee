@@ -29,6 +29,16 @@ do ->
             @_nEndBattleObserver()
         return
 
+
+    #@[ALIAS]
+    ALIAS__startDamagePopup = _.startDamagePopup
+    _.startDamagePopup = ->
+        if ANNetwork.isConnected() && ANGameManager.isBattleMaster() && !$gameParty.isOneBattler()
+            ANSyncDataManager.sendBattlerResultObserver(@)
+            ANBattleManager.callBattleMethod(@, "startDamagePopup", null)
+        ALIAS__startDamagePopup.call(@)
+        
+
     return
 # ■ END Game_Battler.coffee
 #---------------------------------------------------------------------------
