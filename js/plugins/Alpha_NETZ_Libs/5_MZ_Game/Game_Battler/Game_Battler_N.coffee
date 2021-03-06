@@ -13,9 +13,6 @@ do ->
         @_nRegisterSyncBattleMethod("requestEffect")
         @_nRegisterSyncBattleMethod("requestMotion")
         @_nRegisterSyncBattleMethod("startWeaponAnimation")
-        @_nRegisterSyncBattleMethod("requestMotionRefresh")
-        @_nRegisterSyncBattleMethod("select")
-        @_nRegisterSyncBattleMethod("deselect")
         @_nRegisterSyncBattleMethod("setActionState")
         return
 

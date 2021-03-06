@@ -16,6 +16,14 @@ do ->
         else
             return ALIAS__isTpb.call(@)
         
+    #@[ALIAS]
+    ###ALIAS__isBusy = _.isBusy
+    _.isBusy = ->
+        if ANNetwork.isConnected() && !$gameParty.isOneBattler()
+            return !ANBattleManager.isShouldWaitServer()
+        else
+            return ALIAS__isBusy.call(@)###
+        
 
     # * На данный момент в сетевом режиме всегда Active Time Battle
     # * (Эти два метода связаны)

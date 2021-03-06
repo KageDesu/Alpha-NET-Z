@@ -46,7 +46,7 @@ do ->
     #TODO: через GET ? или callback
     _.sendBattleUnitsObserver = (members) ->
         #"SEND UNITS OBSERVER".p()
-        # TODO: result можно сюда
+        return if $gameParty.isOneBattler()
         observers = members.map (m) ->
             [m.packForNetwork(),
             m.getObserverDataForNetwork()]
@@ -58,6 +58,7 @@ do ->
         )
         return
 
+    #TODO: NOT USED
     _.sendBattlerObserver = (battler) ->
         #"SEND BATTLER OBSERVER".p()
         @_sendObserverData(
@@ -68,6 +69,7 @@ do ->
 
     _.sendBattlerResultObserver = (battler) ->
         #"SEND BATTLER RESULT".p()
+        return if $gameParty.isOneBattler()
         @_sendObserverData(
             'battlerResult',
             battler.packForNetwork(),

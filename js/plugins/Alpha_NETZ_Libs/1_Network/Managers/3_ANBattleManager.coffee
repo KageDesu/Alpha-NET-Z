@@ -13,24 +13,72 @@ do ->
     #@[DEFINES]
     _ = ANBattleManager
 
-    
+    _.isShouldWaitServer = -> @_waitMode?
+
+    _.setWait = (@_waitMode) ->
+        @_waitPool = 0
+        @_waitTimeout = 360
+        HUIManager.showLoader(500)
+
+    _.resetWait = ->
+        @setWait(null)
+        HUIManager.hideLoader()
+
+    _.update = ->
+        if @isShouldWaitServer()
+            if @_waitTimeout <= 0
+                LOG.p("TIME OUT")
+                @resetWait()
+            else
+                @_waitTimeout--
+                @updateWaiting()
+        else
+            if @_battleMethodsPool.length > 0
+                @_callBattleMethodOnServer(...@_battleMethodsPool.shift())
+        return
+
+     # * Ожидание данных (игроков) от сервера
+    _.updateWaiting = ->
+        return unless @isShouldWaitServer()
+        "WAIT".p(@_waitPool)
+        switch @_waitMode
+            when 'battleMethod'
+                if @_waitPool == $gameParty.battleMembers().length
+                    @resetWait()
+        return
+
     #TODO: Если в бою только один, то ничего передавать на сервер не надо!
 
     _.onBattleStarted = ->
+        @_battleMethodsPool = []
         @sendBattleStarted()
         #TODO: отправить статус в битве
         #TODO: получить флаг мастер боя - просто первый в группе?
         #TODO: это наверное через get?
         
-    #TODO: Так же переделать и Battle observer в SyncData
     _.callBattleMethod = (battler, method, args) ->
         # * Если в бою только один игрок, то ничего не отправляем (чтобы не грузить сеть)
         return if $gameParty.isOneBattler()
+        if ANET.PP.isForceBattleSyncMode()
+            @_battleMethodsPool = [] unless @_battleMethodsPool?
+            @_battleMethodsPool.push([battler, method, args])
+        else
+            @_callBattleMethodOnServer(battler, method, args)
+        return
+    
+    # * Отправка метод из очереди (используется в режиме Force Battle Sync)
+    _._callBattleMethodOnServer = (battler, method, args) ->
+        @_battleMethodPool = 0 unless @_battleMethodPool?
+        "CALL BATTLE METHOD".p()
         @sendBattleMethod(
             method,
             battler.packForNetwork(),
             args
         )
+        if ANET.PP.isForceBattleSyncMode()
+            # * Будем ждать игроков
+            @setWait('battleMethod')
+            @_waitPool += 1 # * Мы уже готовы (мастер боя)
         return
 
     # * Анимация в бою
@@ -64,6 +112,10 @@ do ->
         ANNetwork.send(NMS.Battle("animation", data))
         return
 
+    _.sendBattleMethodReceived = ->
+        ANNetwork.send(NMS.Battle("battleMethodReceived"))
+        return
+
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
 
@@ -79,17 +131,24 @@ do ->
     # * С сервера пришла команда (метод) боя
     _.onBattleMethod = (battlerNetData, method, args) ->
         try
+            #"BATTLE METHOD RECEIVED".p()
+            # * Отправляю мастеру битвы информацию что я получил команду
+            if ANET.PP.isForceBattleSyncMode()
+                @sendBattleMethodReceived()
             battler = ANET.Utils.unpackBattlerFromNetwork(battlerNetData)
             if battler[method]?
                 #TODO: convert arguments
                 battler[method](args)
-            #switch method
-            #    when 'startDamagePopup'
-            #        @_onStartDamagePopup(id)
-            #    else
-            #        LOG.p("From server: unknown battle method: " + method)
         catch e
             ANET.w e
+        return
+
+    # * Игрок принял команду боя
+    _.onBattleMethodReceived = () ->
+        try
+            @_waitPool += 1
+        catch e
+            ANET.w
         return
 
     return

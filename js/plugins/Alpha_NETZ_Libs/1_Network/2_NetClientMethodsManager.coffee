@@ -142,6 +142,12 @@ do ->
         catch e
             console.warn("event_battle_animation", e)
 
+    _.event_battle_battleMethodReceived = (content) ->
+        try
+            ANBattleManager.onBattleMethodReceived()
+        catch e
+            console.warn("event_battleMethodReceived", e)
+
     return
 # ■ END NetClientMethodsManager.coffee
 #---------------------------------------------------------------------------
