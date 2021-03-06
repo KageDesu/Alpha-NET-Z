@@ -42,6 +42,22 @@ do ->
             $gameParty.leader().getObserverDataForNetwork()
         )
 
+
+    #TODO: через GET ? или callback
+    _.sendBattleUnitsObserver = (members) ->
+        #"SEND UNITS OBSERVER".p()
+        # TODO: result можно сюда
+        observers = members.map (m) ->
+            [m.packForNetwork(),
+            m.getObserverDataForNetwork()]
+            #m.result().getObserverDataForNetwork()]
+        @_sendObserverData(
+            'battleUnits',
+            null,
+            observers
+        )
+        return
+
     _.sendBattlerObserver = (battler) ->
         #"SEND BATTLER OBSERVER".p()
         @_sendObserverData(
@@ -104,6 +120,8 @@ do ->
                 @_onBattlerObserverData(id, content)
             when 'battlerResult'
                 @_onBattlerResultObserverData(id, content)
+            when 'battleUnits'
+                @_onBattleUnitsObserverData(content)
             else
                 LOG.p("From server: unknown observer data type: " + type)
                 return
@@ -139,6 +157,7 @@ do ->
 
     _._onBattlerObserverData = (battlerNetData, content) ->
         try
+            #"ON BATTLER OBSERVER DATA".p()
             battler = ANET.Utils.unpackBattlerFromNetwork(battlerNetData)
             return unless battler?
             @_convertActorEquipmens(content)
@@ -158,9 +177,23 @@ do ->
 
     _._onBattlerResultObserverData = (battlerNetData, content) ->
         try
+            #"ON BATTLER RESULT DATA".p()
             battler = ANET.Utils.unpackBattlerFromNetwork(battlerNetData)
             return unless battler?
             battler.result()?.applyObserverData(content)
+        catch e
+            ANET.w e
+        return
+
+    _._onBattleUnitsObserverData = (content) ->
+        try
+            #"ON BATTLERS UNITS DATA".p()
+            for netData in content
+                battler = ANET.Utils.unpackBattlerFromNetwork(netData[0])
+                if battler?
+                    @_convertActorEquipmens(netData[1])
+                    battler.applyObserverData(netData[1])
+                    #battler.result()?.applyObserverData(netData[2])
         catch e
             ANET.w e
         return

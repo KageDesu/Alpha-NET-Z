@@ -1,22 +1,19 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Party.coffee
+# ■ Game_Unit.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Party::
+    _ = Game_Unit::
 
-    _.setupNetworkGame = ->
-
-    # * В бою участвует только один персонаж?
-    _.isOneBattler = -> @battleMembers().length <= 1
-
-    #TODO: как задать после выбора персонажа, чтобы каждый раз не вычислять
-    _.networkLeader = ->
-        actorId = ANGameManager.myPlayerData().actorId
-        return $gameActors.actor(actorId)
-
+    _.nUpdateBattleDataSync = ->
+        members = @members()
+        if members.some (m) -> m.isNeedNetPushBattleData()
+            ANSyncDataManager.sendBattleUnitsObserver(members)
+            members.forEach (m) -> m.onNetBattleDataPushed()
+        return
+    
     return
-# ■ END Game_Party.coffee
+# ■ END Game_Unit.coffee
 #---------------------------------------------------------------------------

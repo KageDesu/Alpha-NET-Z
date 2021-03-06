@@ -19,17 +19,7 @@ do ->
     _._addBattleFieldsToNetowrkDataObserver = ->
         Game_Battler::_addBattleFieldsToNetowrkDataObserver.call(@)
         # * Данные поля не нужны (наверное) врагам, так как не видно их полосу
-        #TODO: Возможно не надо удалять эти поля
-
-        #TODO: Можно ещё selected не передавать, так как другому игроку не надо знать кого сейчас кто выбирает
-        @netDataObserver.removeFields(@, [
-            "_tpbChargeTime",
-            "_tpbCastTime",
-            "_tpbIdleTime",
-            "_tpbTurnCount",
-            "_tpbTurnEnd"
-            ]
-        )
+        @netDataObserver.removeFields(@, ["_tpbChargeTime"])
         return
 
     # * Только мастер битвы может отправлять данные (вызывается из Scene_Battle)
@@ -41,7 +31,7 @@ do ->
 
     _.dataObserverHaveChanges = ->
         if $gameParty.inBattle() && ANGameManager.isBattleMaster()
-            ANSyncDataManager.sendBattlerObserver(@)
+            @requestNetBattleDataPush()
         return
 
     # * Добавляем свои поля

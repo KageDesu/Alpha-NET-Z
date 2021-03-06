@@ -21,7 +21,6 @@ do ->
                 enemy.updateDataObserver()
         return
 
-
     return
 # ■ END Scene_Battle.coffee
 #---------------------------------------------------------------------------

@@ -1,22 +1,12 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Party.coffee
+# ■ Game_Troop.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Party::
-
-    _.setupNetworkGame = ->
-
-    # * В бою участвует только один персонаж?
-    _.isOneBattler = -> @battleMembers().length <= 1
-
-    #TODO: как задать после выбора персонажа, чтобы каждый раз не вычислять
-    _.networkLeader = ->
-        actorId = ANGameManager.myPlayerData().actorId
-        return $gameActors.actor(actorId)
+    _ = Game_Troop::
 
     return
-# ■ END Game_Party.coffee
+# ■ END Game_Troop.coffee
 #---------------------------------------------------------------------------

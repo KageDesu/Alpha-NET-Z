@@ -28,7 +28,7 @@ do ->
         # * Если в бою, то вся синхронизация идёт от мастера битвы
         if $gameParty.inBattle()
             if ANGameManager.isBattleMaster()
-                ANSyncDataManager.sendBattlerObserver(@)
+                @requestNetBattleDataPush()
         else
             # * Если не в бою, то только свои данные
             if @isMyNetworkActor()
@@ -49,7 +49,8 @@ do ->
         # * Тут нельзя делать проверку на текущих Actor или нет, так как вызывает Stack Overflow
         # * Метод refresh вызывается ещё до того как Actor создан (класс)
         # * Принудительная отправка
-        @dataObserverHaveChanges()
+        unless $gameParty.inBattle()
+            @dataObserverHaveChanges()
         return
 
     return

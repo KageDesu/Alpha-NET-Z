@@ -27,7 +27,21 @@ do ->
         else
             return ALIAS__isActiveTpb.call(@)
         
-    
+    #@[ALIAS]
+    ALIAS__update = _.update
+    _.update = (activeTime) ->
+        ALIAS__update.call(@, activeTime)
+        $gameTroop.nUpdateBattleDataSync()
+        $gameParty.nUpdateBattleDataSync()
+        return
+
+    #TODO: test
+    #@[ALIAS]
+    ALIAS__displayStartMessages = _.displayStartMessages
+    _.displayStartMessages = -> # * EMPTY
+        #ALIAS__displayStartMessages.call(@)
+        
+
     return
 # ■ END BattleManager.coffee
 #---------------------------------------------------------------------------

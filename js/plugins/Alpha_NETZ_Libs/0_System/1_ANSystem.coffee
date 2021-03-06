@@ -49,7 +49,7 @@ do ->
         # * Timing
         230,
         # * Scene Control
-        301, 302, 303, 351, 352,
+        302, 303, 351, 352,
         # * System Settings
         137,
         # * Meta
@@ -59,7 +59,9 @@ do ->
     # * Список комманд которые запускаются через общее событие, а не виртуально
     _.NonVirtualCommandsList = [
         # * Flow Control
-        117
+        117,
+        # * Scene Control
+        301
     ]
 
     # * Дополнительные полня для синхронизации в битве
@@ -69,14 +71,14 @@ do ->
         #"_tpbIdleTime"
         #"_tpbTurnCount"
         #"_tpbTurnEnd"
-        "_speed"
-        "_actionState"
+        #"_speed"
+        #"_actionState"
         #"_damagePopup"
         #"_effectType"
         #"_motionType"
         #"_weaponImageId"
         #"_motionRefresh"
-        "_selected"
+        #"_selected"
         "_tpbState"
     ]
 
@@ -96,8 +98,8 @@ do ->
 
     _.EnemyObserverFields = [
         "_enemyId"
-        "_letter"
-        "_plural"
+        #"_letter"
+        #"_plural"
         "_screenX"
         "_screenY"
     ]

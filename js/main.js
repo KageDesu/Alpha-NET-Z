@@ -70,6 +70,8 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Switches_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Temp_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Temp_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Troop_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Unit_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Variables_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Variables_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETCharacter.js"
@@ -247,6 +249,9 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
 
 
 

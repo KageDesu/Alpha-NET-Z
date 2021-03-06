@@ -8,11 +8,15 @@ do ->
     _ = Game_Battler::
 
     _.nInitializeNetwork = ->
+        #TODO: Можно Result только с этим методом передавать
         @_nRegisterSyncBattleMethod("startDamagePopup")
         @_nRegisterSyncBattleMethod("requestEffect")
         @_nRegisterSyncBattleMethod("requestMotion")
         @_nRegisterSyncBattleMethod("startWeaponAnimation")
         @_nRegisterSyncBattleMethod("requestMotionRefresh")
+        @_nRegisterSyncBattleMethod("select")
+        @_nRegisterSyncBattleMethod("deselect")
+        @_nRegisterSyncBattleMethod("setActionState")
         return
 
     # * Данный баттлер является моим (этого сетевого игрока)
@@ -32,16 +36,18 @@ do ->
             alias.call(@, ...arguments)
         return
 
+    _.isNeedNetPushBattleData = -> @_netBattleObserverNeedToPush is true
+
+    _.onNetBattleDataPushed = -> @_netBattleObserverNeedToPush = null
+
+    _.requestNetBattleDataPush = -> @_netBattleObserverNeedToPush = true
+
     # * Специальный Data Observer для боя
     # -----------------------------------------------------------------------
     do ->
 
         # * Данные только для боя (эти данные передаёт только Battle Master)
         _._nStartBattleObserver = ->
-            # * Ускоряем отправку данных в бою
-            #@netDataObserver.setCheckInterval(60)
-            # * По проверке изменеий теперь
-            @netDataObserver.setCheckMode()
             @_addBattleFieldsToNetowrkDataObserver()
             return
 
@@ -60,8 +66,6 @@ do ->
 
         # * После битвы нет необходимости хранить observer
         _._nEndBattleObserver = ->
-            #@netDataObserver.setInstanteMode()
-            @netDataObserver.setCheckInterval(60) #TODO: вернуть стандартное значение
             # * Убираем добавленные для боя поля
             @netDataObserver.removeFields(@, ANET.System.BattlerObserverFields)
             return
