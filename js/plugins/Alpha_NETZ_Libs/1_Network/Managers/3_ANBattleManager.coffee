@@ -100,6 +100,12 @@ do ->
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
 
+
+    # * Отправить команду WindowLog на сервер
+    _.sendWindowLogMessage = (cmd, text) ->
+        ANNetwork.send(NMS.Battle("logMessage", { cmd, text }))
+        return
+
     _.sendBattleStarted = ->
         ANNetwork.send(NMS.Battle("started"))
 
@@ -152,7 +158,19 @@ do ->
         try
             @_waitPool += 1
         catch e
-            ANET.w
+            ANET.w e
+        return
+
+    _.onLogWindowMessage = (cmd, text) ->
+        try
+            return unless $gameParty.inBattle()
+            switch cmd
+                when "add"
+                    BattleManager._logWindow?.addText(text)
+                else
+                    BattleManager._logWindow?.clear()
+        catch e
+            ANET.w e
         return
 
     return

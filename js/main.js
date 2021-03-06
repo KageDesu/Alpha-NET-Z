@@ -105,6 +105,8 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_PlayerNetworkStatus.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_BattleLog_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_BattleLog_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuCommand_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuStatus_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuStatus_N.js"
@@ -249,6 +251,8 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
 
 
 

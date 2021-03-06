@@ -153,6 +153,12 @@ do ->
         catch e
             console.warn("event_battleMethodReceived", e)
 
+    _.event_battle_logMessage = (content) ->
+        try
+            ANBattleManager.onLogWindowMessage(content.cmd, content.text)
+        catch e
+            console.warn("event_battle_logMessage", e)
+
     return
 # ■ END NetClientMethodsManager.coffee
 #---------------------------------------------------------------------------
