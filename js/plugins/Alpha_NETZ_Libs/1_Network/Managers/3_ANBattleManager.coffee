@@ -47,10 +47,21 @@ do ->
                     @resetWait()
         return
 
+    _.updateInputChange = ->
+        if @_lastBattleManagerInputActor != BattleManager._currentActor
+            @_lastBattleManagerInputActor = BattleManager._currentActor
+            @sendInputState()
+        else if @_lastBattleManagerInputValue != BattleManager._inputting
+            @_lastBattleManagerInputValue = BattleManager._inputting
+            @sendInputState()
+        return
+
     #TODO: Если в бою только один, то ничего передавать на сервер не надо!
 
     _.onBattleStarted = ->
         @_battleMethodsPool = []
+        @_lastBattleManagerInputValue = false
+        @_lastBattleManagerInputActor = null
         @sendBattleStarted()
         #TODO: отправить статус в битве
         #TODO: получить флаг мастер боя - просто первый в группе?
@@ -97,9 +108,29 @@ do ->
         @sendBattleAnimation(data)
         return
 
+    # * Персонаж данного игрока сделал выбор в бою (ввод команды)
+    _.battleInputActionDone = () ->
+        action = BattleManager.inputtingAction()
+        @sendBattleInputAction(ANGameManager.myActorId(), action)
+        return
+
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
 
+    # * Отправить выбранное игроком (в битве) действие
+    _.sendBattleInputAction = (inputActorId, action) ->
+        ANNetwork.send(NMS.Battle("inputAction", { action, inputActorId }))
+        return
+
+    # * Отправить изменение состояния ввода
+    _.sendInputState = () ->
+        inputState = BattleManager._inputting
+        if BattleManager._currentActor?
+            inputActorId = BattleManager._currentActor.actorId()
+        else
+            inputActorId = null
+        ANNetwork.send(NMS.Battle("input", { inputState, inputActorId }))
+        return
 
     # * Отправить команду WindowLog на сервер
     _.sendWindowLogMessage = (cmd, text) ->
@@ -160,6 +191,31 @@ do ->
         catch e
             ANET.w e
         return
+
+    # * Пришло изменение состояние ввода
+    _.onBattleInputState = (inputState, inputActorId) ->
+        try
+            return unless $gameParty.inBattle()
+            BattleManager._inputting = inputState
+            if inputActorId == ANGameManager.myActorId()
+                BattleManager.nSetCurrentClientInput()
+            else
+                # * Если не мой персонаж, то никакого ввода
+                BattleManager.nClearClientInput()
+        catch e
+            ANET.w e
+            return
+
+    _.onBattleInputAction = (inputActorId, action) ->
+        try
+            return unless ANGameManager.isBattleMaster()
+            #TODO: Проверка что inputActorId = BattleManager._currentActor.actorId()
+            BattleManager.inputtingAction().setFromNetwork(action)
+            # * Далее (продолжить бой)
+            BattleManager.selectNextCommand()
+        catch e
+            ANET.w e
+            return
 
     _.onLogWindowMessage = (cmd, text) ->
         try

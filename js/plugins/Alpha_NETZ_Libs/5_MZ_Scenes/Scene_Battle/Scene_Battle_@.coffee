@@ -15,20 +15,27 @@ do ->
             @nOnBattleStarted()
         return
 
+     #TODO: Есть проблема, ввод доступен, пока ждём сервер battleMethod
+     #TODO: Может просто деактивировать все окна? Чтобы нельзя было выбирать действие
+
+    # * Игрок не может видеть команды "ввода" персонажей других игроков
     #@[ALIAS]
-    #ALIAS__isBusy = _.isBusy
-    #_.isBusy = ->
-    #    ALIAS__isBusy.call(@)
+    ALIAS__changeInputWindow = _.changeInputWindow
+    _.changeInputWindow = ->
+        ALIAS__changeInputWindow.call(@)
+        if ANNetwork.isConnected() && BattleManager.isInputting() && !$gameParty.isOneBattler()
+            if BattleManager.actor()?
+                @endCommandSelection() unless BattleManager.actor() == $gameParty.leader()
+        return
         
     #@[ALIAS]
-    #ALIAS__isActive = _.isActive
-    #_.isActive = ->
-    #    if ANNetwork.isConnected() && !$gameParty.isOneBattler()
-     #       return ALIAS__isActive.call(@) && !ANBattleManager.isShouldWaitServer()
-    #    else
-     #       return ALIAS__isActive.call(@)
-
-     #TODO: Есть проблема, ввод доступен, пока ждём сервер battleMethod
+    ALIAS__commandFight = _.commandFight
+    _.commandFight = ->
+        if ANNetwork.isConnected()
+            # * Игрок снова должен сделать выбор
+            BattleManager._isShouldWaitMyNetworkAction = true
+        ALIAS__commandFight.call(@)
+        return
 
     #@[ALIAS]
     ALIAS__updateBattleProcess = _.updateBattleProcess

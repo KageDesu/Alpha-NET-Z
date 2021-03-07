@@ -159,6 +159,18 @@ do ->
         catch e
             console.warn("event_battle_logMessage", e)
 
+    _.event_battle_input = (content) ->
+        try
+            ANBattleManager.onBattleInputState(content.inputState, content.inputActorId)
+        catch e
+            console.warn("event_battle_input", e)
+
+    _.event_battle_inputAction = (content) ->
+        try
+            ANBattleManager.onBattleInputAction(content.inputActorId, content.action)
+        catch e
+            console.warn("event_battle_inputAction", e)
+
     return
 # ■ END NetClientMethodsManager.coffee
 #---------------------------------------------------------------------------

@@ -39,7 +39,9 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/3_ANSyncDataManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/ANETCommon.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/BattleManager_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/BattleManager_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/ConfigManager_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Action_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_ActionResult_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_ActionResult_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actor_@.js"
@@ -251,6 +253,11 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
 
 
 

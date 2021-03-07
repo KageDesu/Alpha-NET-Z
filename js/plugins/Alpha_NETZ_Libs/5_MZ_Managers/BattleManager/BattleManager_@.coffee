@@ -16,15 +16,6 @@ do ->
         else
             return ALIAS__isTpb.call(@)
         
-    #@[ALIAS]
-    ###ALIAS__isBusy = _.isBusy
-    _.isBusy = ->
-        if ANNetwork.isConnected() && !$gameParty.isOneBattler()
-            return !ANBattleManager.isShouldWaitServer()
-        else
-            return ALIAS__isBusy.call(@)###
-        
-
     # * На данный момент в сетевом режиме всегда Active Time Battle
     # * (Эти два метода связаны)
     #@[ALIAS]
@@ -36,11 +27,21 @@ do ->
             return ALIAS__isActiveTpb.call(@)
         
     #@[ALIAS]
+    ALIAS__selectNextActor = _.selectNextActor
+    _.selectNextActor = ->
+        if ANNetwork.isConnected() && !ANGameManager.isBattleMaster()
+            @nSelectNextActorOnClient()
+        else
+            ALIAS__selectNextActor.call(@)
+        return
+
+    #@[ALIAS]
+    # * В сетевом режиме Update вызывается только на мастере боя!
     ALIAS__update = _.update
     _.update = (activeTime) ->
         ALIAS__update.call(@, activeTime)
-        $gameTroop.nUpdateBattleDataSync()
-        $gameParty.nUpdateBattleDataSync()
+        return unless ANNetwork.isConnected()
+        @nUpdateNetwork()
         return
 
     #TODO: test
