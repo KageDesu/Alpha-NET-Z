@@ -18,6 +18,11 @@ do ->
             ANBattleManager.battleInputActionDone()
             @_inputting = false
     
+    # * В стандартном тактическом режиме боя если нажать "отмена" (назад)
+    # * То мы можем поменять выбор предыдущего персонажа, но в сети,
+    # * мы не можем это сделать, поэтому просто "выходим" на меню группы
+    _.nSelectPreviousActorOnClient = -> @_currentActor = null
+
     _.nUpdateNetwork = ->
         ANBattleManager.updateInputChange()
         $gameTroop.nUpdateBattleDataSync()
