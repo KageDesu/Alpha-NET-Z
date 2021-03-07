@@ -15,6 +15,12 @@ do ->
     #@[DEFINES]
     _ = AA.Utils.ANET
 
+    # * Проверка, что комментарий является NET командой
+    _.isNetCommentCommand = (commentLine) ->
+        return false unless String.any(commentLine)
+        # * TODO: сделать через регулярное выражение
+        return commentLine.contains("[") and commentLine.contains("]")
+
     #TODO: Можно все все данные для сети через метод аналогичный передавать для безопасности
     # * Сохраняет Battler в определённый формат для отправки по сети
     _.packBattlerForNetwork = (battler) ->

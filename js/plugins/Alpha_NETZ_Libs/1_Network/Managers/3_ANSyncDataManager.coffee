@@ -148,8 +148,15 @@ do ->
 
     _._onPlayerActorObserverData = (id, content) ->
         try
+            # * Если событие перевело выбор персонажа в локальный режим
+            # * то ставим специальный флаг что сейчас идёт обращение только
+            # * к сетевому персонажу
+            if $gameTemp._nLocalActorMode is true
+                $gameTemp._nNetworkActorPickRequest = true
             player = ANGameManager.getPlayerDataById(id)
             actor = NetPlayerDataWrapper.getActorForPlayer(player)
+            # * На всякий случай сниму флаг
+            $gameTemp._nNetworkActorPickRequest = false
             return unless actor?
             @_convertActorEquipmens(content)
             actor.applyObserverData(content)

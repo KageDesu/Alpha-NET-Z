@@ -26,6 +26,7 @@ do ->
         _.setup = (list, eventId) ->
             ALIAS__setup.call(@, list, eventId)
             if ANNetwork.isConnected()
+                $gameTemp._nLocalActorMode = false
                 ANInterpreterManager.sendEventStarted(eventId)
                 @_nRunningCheckTimer = 0
                 @nClearCommandOptions()
@@ -36,6 +37,7 @@ do ->
         _.clear = ->
             ALIAS__clear.call(@)
             if ANNetwork.isConnected()
+                $gameTemp._nLocalActorMode = false
                 ANInterpreterManager.eventProcessExit()
                 @_nRunningCheckTimer = 0
                 @nClearCommandOptions()
@@ -70,6 +72,15 @@ do ->
         ALIAS__command301 = _.command301
         _.command301 = ->
             return ALIAS__command301.call(@, ...arguments)
+
+    #TODO: MV
+    #@[ALIAS]
+    ALIAS__command108 = _.command108
+    _.command108 = (params) ->
+        if ANNetwork.isConnected()
+            # * Проверить комментарий на наличие NET команд
+            @_nCheckNetComment(params[0])
+        return ALIAS__command108.call(@, params)
 
     return
 # ■ END Game_Interpreter.coffee

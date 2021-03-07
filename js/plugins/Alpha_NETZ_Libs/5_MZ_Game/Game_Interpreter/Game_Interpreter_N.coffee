@@ -96,6 +96,18 @@ do ->
             )
         return
 
+    # * Проверить комментарий на наличие NET команд
+    _._nCheckNetComment = (commentLine) ->
+        return unless ANET.Utils.isNetCommentCommand(commentLine)
+        if commentLine.contains("LOCAL_ACTOR")
+            "LOCAL ACTOR".p()
+            if commentLine.contains("END")
+                "END".p()
+                $gameTemp._nLocalActorMode = false
+            else
+                $gameTemp._nLocalActorMode = true
+        return
+
     return
 # ■ END Game_Interpreter.coffee
 #---------------------------------------------------------------------------
