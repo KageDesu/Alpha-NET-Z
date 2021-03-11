@@ -49,7 +49,7 @@ do ->
         # * Timing
         230,
         # * Scene Control
-        302, 303, 351, 352,
+        301, 302, 303, 351, 352,
         # * System Settings
         137,
         # * Meta

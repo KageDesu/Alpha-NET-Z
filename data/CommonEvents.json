@@ -9,5 +9,6 @@ null,
 {"id":7,"list":[{"code":0,"indent":0,"parameters":[]}],"name":"","switchId":1,"trigger":0},
 {"id":8,"list":[{"code":0,"indent":0,"parameters":[]}],"name":"","switchId":1,"trigger":0},
 {"id":9,"list":[{"code":0,"indent":0,"parameters":[]}],"name":"","switchId":1,"trigger":0},
-{"id":10,"list":[{"code":101,"indent":0,"parameters":["People2",6,0,2,""]},{"code":401,"indent":0,"parameters":["I speak this text to all players!"]},{"code":101,"indent":0,"parameters":["People2",6,0,2,""]},{"code":401,"indent":0,"parameters":["This is must start when player is free!"]},{"code":0,"indent":0,"parameters":[]}],"name":"VirtualMessage","switchId":1,"trigger":0}
+{"id":10,"list":[{"code":101,"indent":0,"parameters":["People2",6,0,2,""]},{"code":401,"indent":0,"parameters":["I speak this text to all players!"]},{"code":101,"indent":0,"parameters":["People2",6,0,2,""]},{"code":401,"indent":0,"parameters":["This is must start when player is free!"]},{"code":0,"indent":0,"parameters":[]}],"name":"VirtualMessage","switchId":1,"trigger":0},
+{"id":11,"list":[{"code":0,"indent":0,"parameters":[]}],"name":"","switchId":1,"trigger":0}
 ]
