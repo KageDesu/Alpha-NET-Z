@@ -5,6 +5,6 @@ null,
 {"id":3,"expanded":false,"name":"Second_Map","order":4,"parentId":2,"scrollX":654.5,"scrollY":689},
 {"id":4,"expanded":false,"name":"Events","order":6,"parentId":5,"scrollX":545.5,"scrollY":379},
 {"id":5,"expanded":true,"name":"Tests","order":5,"parentId":0,"scrollX":545.5,"scrollY":379},
-{"id":6,"expanded":false,"name":"Battle","order":7,"parentId":5,"scrollX":553.5,"scrollY":389},
+{"id":6,"expanded":false,"name":"Battle","order":7,"parentId":5,"scrollX":474.5,"scrollY":389},
 {"id":7,"expanded":false,"name":"CharacterSustomize","order":2,"parentId":1,"scrollX":0,"scrollY":0}
 ]

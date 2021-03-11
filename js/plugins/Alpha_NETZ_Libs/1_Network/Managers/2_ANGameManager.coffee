@@ -27,6 +27,7 @@ do ->
         @networkGameStarted = false
         @_waitMode = null
         @playersData = null
+        @battleData = null
 
     _.createMyPlayerData = ->
         # * Данные всех игроков в игре
@@ -46,7 +47,10 @@ do ->
     _.isMapMaster = -> @myPlayerData().isMapMaster is true
 
     #TODO: Пока упрощённый ваниант
-    _.isBattleMaster = -> ANNetwork.isMasterClient()
+    _.isBattleMaster = -> true
+        #TODO: only one battler
+        #ANNetwork.isMasterClient()
+
 
     _.isPlayerDataExists = (id) ->
         data = @playersData.find (p) -> p.id == id

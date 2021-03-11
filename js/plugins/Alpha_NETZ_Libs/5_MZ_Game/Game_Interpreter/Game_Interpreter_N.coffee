@@ -108,6 +108,27 @@ do ->
                 $gameTemp._nLocalActorMode = true
         return
 
+    # * Ждём ответ от сервера о начале битвы
+    _.nSetWaitBattleDataResponse = ->
+        @nSetWaitServer()
+        @_netWaitFlag = "battle"
+        return
+
+    # * Установить флаг ожидания сервера
+    _.nSetWaitServer = -> @_waitMode = "netServer"
+
+    # * Ожидание ответа от сервера
+    _.nUpdateWaitServerResponse = ->
+        waiting = ANNetwork.isBusy()
+        unless waiting
+            @_waitMode = ''
+            # * Если ждали битву, то вернутся на одну команду назад
+            if @_netWaitFlag == "battle"
+                if ANBattleManager.isBattleRegistred()
+                    @_index--
+                    @_netWaitFlag = ""
+        return waiting
+
     return
 # ■ END Game_Interpreter.coffee
 #---------------------------------------------------------------------------

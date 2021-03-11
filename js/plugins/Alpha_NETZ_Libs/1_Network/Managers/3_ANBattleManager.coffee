@@ -13,6 +13,8 @@ do ->
     #@[DEFINES]
     _ = ANBattleManager
 
+    _.isBattleRegistred = () -> ANGameManager.battleData?
+
     _.isShouldWaitServer = -> @_waitMode?
 
     _.setWait = (@_waitMode) ->
@@ -114,6 +116,11 @@ do ->
         @sendBattleInputAction(ANGameManager.myActorId(), action)
         return
 
+    # * Регистрация на битву
+    _.registerOnBattle = (battleId) ->
+        LOG.p("Try register battle: " + battleId)
+        @sendRegisterOnBattle(battleId)
+
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
 
@@ -157,8 +164,22 @@ do ->
         ANNetwork.send(NMS.Battle("battleMethodReceived"))
         return
 
+    _.sendRegisterOnBattle = (battleId) ->
+        ANNetwork.get(NMS.Battle("register", battleId),
+            (result) -> ANBattleManager.onBattleRegisterResult(result)
+            () -> #TODO: Что если timeout? Сейчас ничего, пропуск команды
+        )
+        return
+
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
+
+    _.onBattleRegisterResult = (result) ->
+        "REGISTER SUCCESS".p()
+        ANGameManager.battleData = result
+        console.info result
+
+        return
 
     # * С сервера пришла команда проиграть анимацию
     _.onBattleAnimation = (data) ->

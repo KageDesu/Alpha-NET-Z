@@ -54,6 +54,14 @@ do ->
                     @_nRunningCheckTimer = 0
             return
 
+        #@[ALIAS]
+        ALIAS__updateWaitMode = _.updateWaitMode
+        _.updateWaitMode = ->
+            if @_waitMode == 'netServer'
+                return @nUpdateWaitServerResponse()
+            else
+                return ALIAS__updateWaitMode.call(@)
+
     # * Выполнение команд в сети
     # -----------------------------------------------------------------------
     do ->
@@ -71,16 +79,24 @@ do ->
         #@[ALIAS]
         ALIAS__command301 = _.command301
         _.command301 = ->
+            if ANNetwork.isConnected()
+                unless ANBattleManager.isBattleRegistred()
+                    #TODO: in Utils
+                    battleId = "%1_%2_%3".format($gameMap.mapId(), @eventId(), @_index)
+                    ANBattleManager.registerOnBattle(battleId)
+                    @nSetWaitServer()
+                    return true
             return ALIAS__command301.call(@, ...arguments)
 
-    #TODO: MV
-    #@[ALIAS]
-    ALIAS__command108 = _.command108
-    _.command108 = (params) ->
-        if ANNetwork.isConnected()
-            # * Проверить комментарий на наличие NET команд
-            @_nCheckNetComment(params[0])
-        return ALIAS__command108.call(@, params)
+
+        #TODO: MV
+        #@[ALIAS]
+        ALIAS__command108 = _.command108
+        _.command108 = (params) ->
+            if ANNetwork.isConnected()
+                # * Проверить комментарий на наличие NET команд
+                @_nCheckNetComment(params[0])
+            return ALIAS__command108.call(@, params)
 
     return
 # ■ END Game_Interpreter.coffee

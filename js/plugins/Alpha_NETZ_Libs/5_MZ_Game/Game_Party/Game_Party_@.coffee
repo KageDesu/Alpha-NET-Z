@@ -11,6 +11,18 @@ do ->
     #TODO: battleMembers надо переделать, чтобы только тех, кто в бою возвращал
 
     #@[ALIAS]
+    ALIAS__battleMembers = _.battleMembers
+    _.battleMembers = ->
+        if ANNetwork.isConnected()
+            if ANGameManager.battleData?
+                return ANGameManager.battleData.actors.map (a) -> $gameActors.actor(a)
+            else
+                return [@leader()]
+        else
+            return ALIAS__battleMembers.call(@)
+        
+
+    #@[ALIAS]
     ALIAS__setupStartingMembers = _.setupStartingMembers
     _.setupStartingMembers = ->
         if ANNetwork.isConnected()
