@@ -84,7 +84,7 @@ do ->
                     #TODO: in Utils
                     battleId = "%1_%2_%3".format($gameMap.mapId(), @eventId(), @_index)
                     ANBattleManager.registerOnBattle(battleId)
-                    @nSetWaitServer()
+                    @nSetWaitBattleDataResponse()
                     return true
             return ALIAS__command301.call(@, ...arguments)
 

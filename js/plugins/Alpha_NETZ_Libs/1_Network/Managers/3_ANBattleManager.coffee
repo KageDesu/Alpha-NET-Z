@@ -50,6 +50,7 @@ do ->
         return
 
     _.updateInputChange = ->
+        return if $gameParty.isOneBattler()
         if @_lastBattleManagerInputActor != BattleManager._currentActor
             @_lastBattleManagerInputActor = BattleManager._currentActor
             @sendInputState()
@@ -69,6 +70,11 @@ do ->
         #TODO: получить флаг мастер боя - просто первый в группе?
         #TODO: это наверное через get?
         
+    _.onBattleEnd = ->
+        @sendBattleEnded(ANGameManager.battleData.battleId)
+        ANGameManager.battleData = null
+        return
+
     _.callBattleMethod = (battler, method, args) ->
         # * Если в бою только один игрок, то ничего не отправляем (чтобы не грузить сеть)
         return if $gameParty.isOneBattler()
@@ -147,6 +153,9 @@ do ->
     _.sendBattleStarted = ->
         ANNetwork.send(NMS.Battle("started"))
 
+    _.sendBattleEnded = (battleId) ->
+        ANNetwork.send(NMS.Battle("ended", battleId))
+
     _.sendBattleMethod = (methodName, id, args) ->
         data = {
             method: methodName,
@@ -178,7 +187,6 @@ do ->
         "REGISTER SUCCESS".p()
         ANGameManager.battleData = result
         console.info result
-
         return
 
     # * С сервера пришла команда проиграть анимацию

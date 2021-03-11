@@ -15,6 +15,15 @@ do ->
             @nOnBattleStarted()
         return
 
+
+    #@[ALIAS]
+    ALIAS__stop = _.stop
+    _.stop = ->
+        ALIAS__stop.call(@)
+        if ANNetwork.isConnected()
+            @nOnBattleEnd()
+        return
+
      #TODO: Есть проблема, ввод доступен, пока ждём сервер battleMethod
      #TODO: Может просто деактивировать все окна? Чтобы нельзя было выбирать действие
 

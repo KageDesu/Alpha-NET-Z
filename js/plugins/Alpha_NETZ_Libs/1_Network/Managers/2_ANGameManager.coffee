@@ -47,10 +47,9 @@ do ->
     _.isMapMaster = -> @myPlayerData().isMapMaster is true
 
     #TODO: Пока упрощённый ваниант
-    _.isBattleMaster = -> true
+    _.isBattleMaster = -> @battleData.actors[0] == @myActorId()
         #TODO: only one battler
         #ANNetwork.isMasterClient()
-
 
     _.isPlayerDataExists = (id) ->
         data = @playersData.find (p) -> p.id == id

@@ -171,6 +171,18 @@ do ->
         catch e
             console.warn("event_battle_inputAction", e)
 
+    _.event_battle_serverBattleData = (content) ->
+        try
+            # * Если этот клиент не участвует в битве, то ничего
+            return unless ANGameManager.battleData?
+            # * Данные битвы касаются моей битвы?
+            if ANGameManager.battleData.battleId == content.battleId
+                $gameTemp._previousNetBattleActors = [...ANGameManager.battleData.actors]
+                ANGameManager.battleData = content
+                # * Обновляем данные, затем вызывается уже event сцены битвы
+        catch e
+            console.warn("event_battle_serverBattleData", e)
+
     return
 # ■ END NetClientMethodsManager.coffee
 #---------------------------------------------------------------------------

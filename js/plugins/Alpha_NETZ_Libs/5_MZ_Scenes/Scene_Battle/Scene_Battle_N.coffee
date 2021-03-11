@@ -7,9 +7,25 @@ do ->
     #@[DEFINES]
     _ = Scene_Battle::
 
+    _.netOn_battle_serverBattleData = ->
+        "TTT".p()
+        $gamePlayer.refresh()
+        $gameMap.requestRefresh()
+        $gameTemp.requestBattleRefresh()
+        for battler in $gameParty.battleMembers()
+            unless $gameTemp._previousNetBattleActors.contains(battler.actorId())
+                battler.onBattleStart()
+        $gameTemp._previousNetBattleActors = []
+        return
+
     _.nOnBattleStarted = ->
         # * Отправляем на сервер, что мы начали бой
         ANBattleManager.onBattleStarted()
+        return
+    
+    _.nOnBattleEnd = ->
+        # * Отправляем на сервер, что мы покинули (закончили) бой
+        ANBattleManager.onBattleEnd()
         return
 
     _.nUpdateBattleProcess = ->
