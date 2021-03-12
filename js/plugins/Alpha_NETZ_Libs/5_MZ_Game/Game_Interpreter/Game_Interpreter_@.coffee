@@ -78,15 +78,20 @@ do ->
         # * Ждать ответ от сервера, если битва зарегестрированна, то начинать
         #@[ALIAS]
         ALIAS__command301 = _.command301
-        _.command301 = ->
+        _.command301 = (params) ->
             if ANNetwork.isConnected()
-                unless ANBattleManager.isBattleRegistred()
-                    #TODO: in Utils
-                    battleId = "%1_%2_%3".format($gameMap.mapId(), @eventId(), @_index)
-                    ANBattleManager.registerOnBattle(battleId)
+                ###unless ANBattleManager.isBattleRegistred()
+                    #TODO: В Utils
+                    # * Через команду 301 запускается всегда "одиночная" битва
+                    battleData = {
+                        battleId: ANNetwork.myId(),
+                        troopId: 
+                    }
+                    ANBattleManager.registerOnBattle(battleData)
                     @nSetWaitBattleDataResponse()
-                    return true
-            return ALIAS__command301.call(@, ...arguments)
+                    return true###
+                ANBattleManager.registerOnLocalBattle()
+            return ALIAS__command301.call(@, params)
 
 
         #TODO: MV

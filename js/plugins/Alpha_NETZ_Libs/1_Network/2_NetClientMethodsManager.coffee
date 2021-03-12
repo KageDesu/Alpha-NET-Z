@@ -175,6 +175,8 @@ do ->
         try
             # * Если этот клиент не участвует в битве, то ничего
             return unless ANGameManager.battleData?
+            # * Если я в локальной битве (сам), то меня не касается
+            return if ANGameManager.battleData.isLocal
             # * Данные битвы касаются моей битвы?
             if ANGameManager.battleData.battleId == content.battleId
                 $gameTemp._previousNetBattleActors = [...ANGameManager.battleData.actors]

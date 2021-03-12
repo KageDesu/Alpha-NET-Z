@@ -8,13 +8,13 @@ do ->
     _ = Scene_Battle::
 
     _.netOn_battle_serverBattleData = ->
-        "TTT".p()
         $gamePlayer.refresh()
         $gameMap.requestRefresh()
         $gameTemp.requestBattleRefresh()
         for battler in $gameParty.battleMembers()
             unless $gameTemp._previousNetBattleActors.contains(battler.actorId())
                 battler.onBattleStart()
+                battler.makeActions()
         $gameTemp._previousNetBattleActors = []
         return
 

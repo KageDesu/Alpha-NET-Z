@@ -134,6 +134,7 @@ do ->
             char?.applyObserverData(content)
         catch e
             ANET.w e
+            
         return
 
     _._onEventCharObserverData = (id, content) ->

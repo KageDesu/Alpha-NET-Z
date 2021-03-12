@@ -61,6 +61,14 @@ do ->
 
     #TODO: Если в бою только один, то ничего передавать на сервер не надо!
 
+    _.registerOnLocalBattle = ->
+        ANGameManager.battleData = {
+            isLocal: true
+            battleId: "local"
+            actors: [ANGameManager.myActorId()]
+        }
+        return
+
     _.onBattleStarted = ->
         @_battleMethodsPool = []
         @_lastBattleManagerInputValue = false
@@ -71,7 +79,8 @@ do ->
         #TODO: это наверное через get?
         
     _.onBattleEnd = ->
-        @sendBattleEnded(ANGameManager.battleData.battleId)
+        return if ANGameManager.battleData.isLocal
+        @sendBattleEnded()
         ANGameManager.battleData = null
         return
 
@@ -153,8 +162,8 @@ do ->
     _.sendBattleStarted = ->
         ANNetwork.send(NMS.Battle("started"))
 
-    _.sendBattleEnded = (battleId) ->
-        ANNetwork.send(NMS.Battle("ended", battleId))
+    _.sendBattleEnded = () ->
+        ANNetwork.send(NMS.Battle("ended"))
 
     _.sendBattleMethod = (methodName, id, args) ->
         data = {
