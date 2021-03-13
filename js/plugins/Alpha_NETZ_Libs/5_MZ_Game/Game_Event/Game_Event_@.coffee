@@ -43,34 +43,6 @@ do ->
             else
                 ALIAS__updateSelfMovement.call(@)
 
-
-    # * Запуск события
-    # -----------------------------------------------------------------------
-    do ->
-
-        #@[ALIAS]
-        ALIAS__setupPageSettings = _.setupPageSettings
-        _.setupPageSettings = ->
-            ALIAS__setupPageSettings.call(@)
-            if ANNetwork.isConnected()
-                @nCheckEventStartOptions()
-            return
-
-        #@[ALIAS]
-        ALIAS__clearPageSettings = _.clearPageSettings
-        _.clearPageSettings = ->
-            ALIAS__clearPageSettings.call(@)
-            @nStartOptions = null
-            return
-
-        #@[ALIAS]
-        ALIAS__start = _.start
-        _.start = ->
-            if ANNetwork.isConnected()
-                # * Если опции старта не проходят проверку, значит не запускаем
-                return unless @isPassStartOptions()
-            ALIAS__start.call(@)
-
     return
 # ■ END Game_Event.coffee
 #---------------------------------------------------------------------------

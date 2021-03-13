@@ -40,6 +40,7 @@ do ->
         return false if ANET.System.ForbiddenVirtualCommandsList.contains(@currentCommand().code)
         return true
 
+    #TODO: ЭТО ПЕРЕДЕЛАТЬ return нафиг не нужны!
     # * Проверка опций и выполнение команды в соответсвии с ними
     _.nProcessCommandWithOptions = ->
         try
@@ -108,12 +109,6 @@ do ->
                 $gameTemp._nLocalActorMode = true
         return
 
-    # * Ждём ответ от сервера о начале битвы
-    ###_.nSetWaitBattleDataResponse = ->
-        @nSetWaitServer()
-        @_netWaitFlag = "battle"
-        return###
-
     # * Установить флаг ожидания сервера
     ##_.nSetWaitServer = -> @_waitMode = "netServer"
 
@@ -130,6 +125,46 @@ do ->
         battleId = null unless String.any(battleId)
         BattleManager.nSetNetworkBattle(battleId)
         return
+
+
+    # * Сбросить все сетевые флаги \ настройки перед запуском очередного события
+    _.nClearFlags = () ->
+        # * Сброс сетевой битвы, если началось другое событие
+        BattleManager.nSetNetworkBattle(null)
+        $gameTemp._nLocalActorMode = false
+        @_nRunningCheckTimer = 0
+        @nClearCommandOptions()
+        return
+
+    # * Опции запуска события
+    # -----------------------------------------------------------------------
+    do ->
+        _.isHaveNetworkStartOptions = -> @nStartOptions?
+
+         # * Может ли данный игрок запустить это событие
+        _.isPassStartOptions = () ->
+            return true unless @isHaveNetworkStartOptions()
+            if @nIsLockedEvent()
+                return false if ANET.Utils.isEventStartedByAny(@eventId())
+            return ANET.Utils.isPassEventFilterOptions(@nStartOptions)
+
+        # * Закрытыми могут быть только события с собственным ID (т.е. события карты)
+        # TODO: Общие события не могут быть закрытыми??? МОГУТ! но запускать по другому без проверки на Lock
+        _.nIsLockedEvent = () -> @eventId() > 0 && @nStartOptions?.lockMode is "true"
+
+        _.nIsSharedEvent = () -> @nStartOptions?.sharedMode isnt "NO"
+
+        # * Есть ли опции (условия) запуска события для сети
+        _.nCheckEventStartOptions = ->
+            @nStartOptions = null # * сбрасываем
+            try
+                options = @_list?.find (line) ->
+                    line.code == 357 && line.parameters?[1] == "EventStartOptions"
+                @nStartOptions = options.parameters[3] if options?
+            catch e
+                ANET.w e
+                @nStartOptions = null
+            return
 
     return
 # ■ END Game_Interpreter.coffee

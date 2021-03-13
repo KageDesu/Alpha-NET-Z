@@ -73,6 +73,16 @@ do ->
             ANET.w e
             return false
 
+    # * Событие запущенно каким-либо игроком?
+    _.isEventStartedByAny = (eventId) ->
+        try
+            return ANGameManager.anotherPlayersOnMap().some (p) ->
+                NetPlayerDataWrapper.isOnEvent(p, eventId)
+        catch e
+            ANET.w e
+            # * В случае ошибки безопаснее вернуть true
+            return true
+
     return
 # ■ END ANET Common Utils Methods.coffee
 #---------------------------------------------------------------------------

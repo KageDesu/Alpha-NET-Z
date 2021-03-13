@@ -26,12 +26,12 @@ do ->
         _.setup = (list, eventId) ->
             ALIAS__setup.call(@, list, eventId)
             if ANNetwork.isConnected()
-                # * Сброс сетевой битвы, если началось другое событие
-                BattleManager.nSetNetworkBattle(null)
-                $gameTemp._nLocalActorMode = false
-                ANInterpreterManager.sendEventStarted(eventId)
-                @_nRunningCheckTimer = 0
-                @nClearCommandOptions()
+                @nCheckEventStartOptions()
+                unless @isPassStartOptions() # * Проверка опций запуска события
+                    @_list = [] # * Не будет выполняться
+                else
+                    ANInterpreterManager.sendEventStarted(eventId)
+                    @nClearFlags()
             return
         
         #@[ALIAS]
@@ -39,10 +39,7 @@ do ->
         _.clear = ->
             ALIAS__clear.call(@)
             if ANNetwork.isConnected()
-                $gameTemp._nLocalActorMode = false
                 ANInterpreterManager.eventProcessExit()
-                @_nRunningCheckTimer = 0
-                @nClearCommandOptions()
             return
 
         #@[ALIAS]

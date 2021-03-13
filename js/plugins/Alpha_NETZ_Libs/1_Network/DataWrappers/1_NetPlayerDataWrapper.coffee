@@ -36,6 +36,8 @@ do ->
 
     _.isCurrentPlayerActor = (actor, p) -> actor.actorId() == p.actorId
 
+    _.isOnEvent = (p, eventId) -> p.onEvent == eventId
+
     _.getRequestedNetworkState = (p) ->
         if p.scene == "menu"
             return 2
