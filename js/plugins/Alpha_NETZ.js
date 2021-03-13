@@ -49,12 +49,6 @@
  * @default true
  * @desc Can player select actor in lobby?
  * 
- * @param networkStartMap:s
- * @text Network Start
- * @type struct<LNetworkMap>
- * @default {"gameStartMap:i":"0","isNetworkGameAutoStart:b":"true"}
- * @desc Network game start map settings
- * 
  * @param globalData:s
  * @text Global Data
  * @type struct<LGlobalData>
@@ -146,7 +140,10 @@
  * @arg battleId
  * @text ID
  * @default
- * @desc Unique battle ID
+ * @desc Unique battle ID. Empty - not shared battle (by default)
+ * 
+ * 
+ * 
 
 
  */
@@ -163,23 +160,6 @@
 @param serverPort
 @text Port
 @default 3034
-
-*/
-
-/*~struct~LNetworkMap:
-
-@param gameStartMap:i
-@text Map ID
-@type number
-@min 0
-@default 0
-@desc Special start map ID for network game. 0 - default start map
-
-@param isNetworkGameAutoStart:b
-@text Auto Transfer?
-@type boolean
-@default true
-@desc Automatically transfer all players (when all ready) from network start map to default start map
 
 */
 

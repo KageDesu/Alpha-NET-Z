@@ -22,18 +22,6 @@ do ->
                 ANPlayersManager.sendPlayerMove()
         else
             ALIAS__moveStraight.call(@, d)
-
-    #@[ALIAS]
-    ALIAS__setupForNewGame = _.setupForNewGame
-    _.setupForNewGame = ->
-        ALIAS__setupForNewGame.call(@)
-        if ANGameManager.networkGameStarted is true
-            #@_createNetworkObserver()
-            if ANET.PP.networkGameStartMap() != 0
-                # * Телепортируемся на начальную карту мультиплеера
-                #(mapId, x, y, dir, fadeType)
-                @reserveTransfer(ANET.PP.networkGameStartMap(), 0, 0, 2, 0)
-        return
     
     #@[ALIAS]
     ALIAS__update = _.update

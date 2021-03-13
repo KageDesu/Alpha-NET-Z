@@ -157,9 +157,6 @@ do ->
     # * Начать игру (когда все уже определились с персонажами)
     _.startGame = ->
         "READY TO START GAME".p()
-        # * Отправляем на начальную карту игры (если были на начальной карты для сети)
-        if ANET.PP.networkGameStartMap() != 0 and ANET.PP.isNetworkGameAutoStart()
-            $gamePlayer.setupForNewGame()
         ANMapManager.sendInitialMapData()
         return
 

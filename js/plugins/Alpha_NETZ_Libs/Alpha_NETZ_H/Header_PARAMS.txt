@@ -38,12 +38,6 @@
 @default true
 @desc Can player select actor in lobby?
 
-@param networkStartMap:s
-@text Network Start
-@type struct<LNetworkMap>
-@default {"gameStartMap:i":"0","isNetworkGameAutoStart:b":"true"}
-@desc Network game start map settings
-
 @param globalData:s
 @text Global Data
 @type struct<LGlobalData>

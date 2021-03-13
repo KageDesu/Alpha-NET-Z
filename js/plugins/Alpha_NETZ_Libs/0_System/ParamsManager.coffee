@@ -18,13 +18,6 @@ do ->
         # * Можно ли выбирать персонажа себе
         isActorSelectionAllowed: -> @getParam("isActorSelectionAllowed", true)
 
-        # * Начальная карта для сетевого режима
-        #0 - Нет выделенной карты
-        networkGameStartMap: -> @_nStartMapId
-
-        # * Автоматически перемещает с начальной сетевой карты на игровую
-        isNetworkGameAutoStart: -> @_isNetworkGameAutoStart is true
-
         globalVariablesIds: -> @_globalVars
 
         globalSwitchesIds: -> @_globalSwitches
@@ -43,9 +36,6 @@ do ->
 
         # * Время обновления данных в битве (влияет на производительность)
         battleDataRefreshRate: -> 60
-
-        #TODO: Нужна комманда плагина, которая работает только на начальной карте
-        # и перемещает на начальную игровую карту (не Transfer, а on game start)
 
     ANET.link ParamsManager
     return
