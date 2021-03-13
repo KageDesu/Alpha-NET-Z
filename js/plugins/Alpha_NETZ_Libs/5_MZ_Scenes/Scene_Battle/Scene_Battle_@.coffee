@@ -7,14 +7,16 @@ do ->
     #@[DEFINES]
     _ = Scene_Battle::
 
-    #@[ALIAS]
-    ALIAS__start = _.start
+    #@[ALIAS, STORED]
+    _.ALIAS__NET_start = _.start
     _.start = ->
-        ALIAS__start.call(@)
-        if ANNetwork.isConnected()
-            @nOnBattleStarted()
+        # * Если бой в сетевом режиме и ещё не зарегестрирован, то сцена боя не отрисовывается
+        return if BattleManager.nIsNetworkBattle() && !ANBattleManager.isBattleRegistred()
+        # * Метод Start вызывается автоматически у SceneManager, поэтому когда
+        # * данные прийдут, сцена старт
+        _.ALIAS__NET_start.call(@)
+        @nOnBattleStarted() if ANNetwork.isConnected()
         return
-
 
     #@[ALIAS]
     ALIAS__stop = _.stop

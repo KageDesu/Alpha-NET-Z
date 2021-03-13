@@ -64,15 +64,6 @@ do ->
             @netDataObserver.addFields(@, ANET.System.BattlerObserverFields)
             return
 
-        #TODO: Теперь ActionResult передаётся непосредственно перед методом startDamagePopup
-        # * Этот метод вызывается во время битвы
-        _._updateBattleDataObserver = ->
-            # * У ActionResult свой обсервер, надо его синхронизировать тут
-            #@result().nUpdateObserver()
-            #if @result().isDataObserverHaveChanges == true
-            #    ANSyncDataManager.sendBattlerResultObserver(@)
-            return
-
         # * После битвы нет необходимости хранить observer
         _._nEndBattleObserver = ->
             # * Возвращаем режим проверки

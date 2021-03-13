@@ -167,6 +167,7 @@ do ->
 
     _._onBattlerObserverData = (battlerNetData, content) ->
         try
+            return unless $gameParty.inBattle()
             #"ON BATTLER OBSERVER DATA".p()
             battler = ANET.Utils.unpackBattlerFromNetwork(battlerNetData)
             return unless battler?
@@ -187,6 +188,7 @@ do ->
 
     _._onBattlerResultObserverData = (battlerNetData, content) ->
         try
+            return unless $gameParty.inBattle()
             #"ON BATTLER RESULT DATA".p()
             battler = ANET.Utils.unpackBattlerFromNetwork(battlerNetData)
             return unless battler?
@@ -197,13 +199,13 @@ do ->
 
     _._onBattleUnitsObserverData = (content) ->
         try
+            return unless $gameParty.inBattle()
             #"ON BATTLERS UNITS DATA".p()
             for netData in content
                 battler = ANET.Utils.unpackBattlerFromNetwork(netData[0])
                 if battler?
                     @_convertActorEquipmens(netData[1])
                     battler.applyObserverData(netData[1])
-                    #battler.result()?.applyObserverData(netData[2])
         catch e
             ANET.w e
         return

@@ -73,3 +73,14 @@
 @option Common Event
 @default Auto
 @desc How this command will be exectuted for other players. Read Wiki for more info
+
+@command SharedBattle
+@text Set Shared Battle
+@desc Make next Battle Processing command shared between all players
+
+@arg battleId
+@text ID
+@default
+@desc Unique battle ID. Empty - not shared battle (by default)
+
+

@@ -93,7 +93,7 @@ do ->
                     ANNetwork._isWaitServer = false
                     HUIManager.hideLoader()
                 LOG.p("Send, get!: " + msgName)
-                msg.setFrom(@socket.id).get(_onData, _onTimeout, 1000)
+                msg.setFrom(@socket.id).get(_onData, _onTimeout, 2000)
             return
 
         # * Отправить сообщение и вызвать callback, когда прийдёт ответ

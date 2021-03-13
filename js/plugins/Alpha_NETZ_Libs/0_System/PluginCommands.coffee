@@ -20,6 +20,14 @@ do ->
             catch e
                 ANET.w e
         )
+
+        PluginManager.registerCommand(pluginName, 'SharedBattle', (args) ->
+            try
+                this.nSetSharedBattle(args.battleId)
+            catch e
+                ANET.w e
+        )
+
         return
         
     registerPluginCommandsMV = ->

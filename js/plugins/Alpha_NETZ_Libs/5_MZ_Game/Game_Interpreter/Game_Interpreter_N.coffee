@@ -109,25 +109,27 @@ do ->
         return
 
     # * Ждём ответ от сервера о начале битвы
-    _.nSetWaitBattleDataResponse = ->
+    ###_.nSetWaitBattleDataResponse = ->
         @nSetWaitServer()
         @_netWaitFlag = "battle"
-        return
+        return###
 
     # * Установить флаг ожидания сервера
-    _.nSetWaitServer = -> @_waitMode = "netServer"
+    ##_.nSetWaitServer = -> @_waitMode = "netServer"
 
     # * Ожидание ответа от сервера
-    _.nUpdateWaitServerResponse = ->
+    ###_.nUpdateWaitServerResponse = ->
         waiting = ANNetwork.isBusy()
         unless waiting
             @_waitMode = ''
-            # * Если ждали битву, то вернутся на одну команду назад
-            if @_netWaitFlag == "battle"
-                if ANBattleManager.isBattleRegistred()
-                    @_index--
-                    @_netWaitFlag = ""
-        return waiting
+        return waiting###
+
+    # * Сделать следующую битву сетевой битвой (общей, расшаринной)
+    _.nSetSharedBattle = (battleId) ->
+        # * Если пустая строка, то Null
+        battleId = null unless String.any(battleId)
+        BattleManager.nSetNetworkBattle(battleId)
+        return
 
     return
 # ■ END Game_Interpreter.coffee

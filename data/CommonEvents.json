@@ -10,5 +10,5 @@ null,
 {"id":8,"list":[{"code":0,"indent":0,"parameters":[]}],"name":"","switchId":1,"trigger":0},
 {"id":9,"list":[{"code":0,"indent":0,"parameters":[]}],"name":"","switchId":1,"trigger":0},
 {"id":10,"list":[{"code":101,"indent":0,"parameters":["People2",6,0,2,""]},{"code":401,"indent":0,"parameters":["I speak this text to all players!"]},{"code":101,"indent":0,"parameters":["People2",6,0,2,""]},{"code":401,"indent":0,"parameters":["This is must start when player is free!"]},{"code":0,"indent":0,"parameters":[]}],"name":"VirtualMessage","switchId":1,"trigger":0},
-{"id":11,"list":[{"code":0,"indent":0,"parameters":[]}],"name":"","switchId":1,"trigger":0}
+{"id":11,"list":[{"code":357,"indent":0,"parameters":["Alpha_NETZ","SharedBattle","Set Shared Battle",{"battleId":"555"}]},{"code":657,"indent":0,"parameters":["ID = 555"]},{"code":301,"indent":0,"parameters":[0,3,true,true]},{"code":601,"indent":0,"parameters":[]},{"code":0,"indent":1,"parameters":[]},{"code":602,"indent":0,"parameters":[]},{"code":0,"indent":1,"parameters":[]},{"code":603,"indent":0,"parameters":[]},{"code":0,"indent":1,"parameters":[]},{"code":604,"indent":0,"parameters":[]},{"code":0,"indent":0,"parameters":[]}],"name":"NET Battle","switchId":1,"trigger":0}
 ]

@@ -30,6 +30,7 @@ do ->
         return
 
 
+    # * Отдельная реализация, чтобы передавать battleResult
     #@[ALIAS]
     ALIAS__startDamagePopup = _.startDamagePopup
     _.startDamagePopup = ->

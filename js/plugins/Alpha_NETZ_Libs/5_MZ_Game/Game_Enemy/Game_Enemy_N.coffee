@@ -20,7 +20,6 @@ do ->
     _.updateDataObserver = ->
         if $gameParty.inBattle() && ANGameManager.isBattleMaster()
             @_updateDataObserver()
-            @_updateBattleDataObserver()
         return
 
     _.dataObserverHaveChanges = ->

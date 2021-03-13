@@ -7,25 +7,23 @@ do ->
     #@[DEFINES]
     _ = BattleManager
 
-    # * На данный момент в сетевом режиме всегда Time Progress Battle
     #@[ALIAS]
-    ###ALIAS__isTpb = _.isTpb
-    _.isTpb = ->
+    ALIAS__setup = _.setup
+    _.setup = () ->
+        ALIAS__setup.call(@, ...arguments)
         if ANNetwork.isConnected()
-            return true
-        else
-            return ALIAS__isTpb.call(@)
-        ###
-    # * На данный момент в сетевом режиме всегда Active Time Battle
-    # * (Эти два метода связаны)
+            # * Только если данные боя не установлены, но проверка сетевой битвы
+            @nSetupNetworkBattle() unless ANBattleManager.isBattleRegistred()
+        return
+
     #@[ALIAS]
-    ##ALIAS__isActiveTpb = _.isActiveTpb
-    ###_.isActiveTpb = ->
-        if ANNetwork.isConnected()
-            return true
-        else
-            return ALIAS__isActiveTpb.call(@)###
-        
+    ALIAS__endBattle = _.endBattle
+    _.endBattle = () ->
+        ALIAS__endBattle.call(@, ...arguments)
+        # * Убрать флаг сетевой битвы
+        @nSetNetworkBattle(null) if ANNetwork.isConnected()
+        return
+
     #@[ALIAS]
     ALIAS__selectNextActor = _.selectNextActor
     _.selectNextActor = ->

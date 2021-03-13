@@ -62,6 +62,7 @@ do ->
     #TODO: Если в бою только один, то ничего передавать на сервер не надо!
 
     _.registerOnLocalBattle = ->
+        LOG.p("STARTED LOCAL BATTLE")
         ANGameManager.battleData = {
             isLocal: true
             battleId: "local"
@@ -74,9 +75,7 @@ do ->
         @_lastBattleManagerInputValue = false
         @_lastBattleManagerInputActor = null
         @sendBattleStarted()
-        #TODO: отправить статус в битве
-        #TODO: получить флаг мастер боя - просто первый в группе?
-        #TODO: это наверное через get?
+        return
         
     _.onBattleEnd = ->
         return if ANGameManager.battleData.isLocal
@@ -132,9 +131,9 @@ do ->
         return
 
     # * Регистрация на битву
-    _.registerOnBattle = (battleId) ->
-        LOG.p("Try register battle: " + battleId)
-        @sendRegisterOnBattle(battleId)
+    _.registerOnBattle = (battleData) ->
+        LOG.p("Try register battle: " + battleData.battleId)
+        @sendRegisterOnBattle(battleData)
 
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
@@ -182,10 +181,14 @@ do ->
         ANNetwork.send(NMS.Battle("battleMethodReceived"))
         return
 
-    _.sendRegisterOnBattle = (battleId) ->
-        ANNetwork.get(NMS.Battle("register", battleId),
+    _.sendRegisterOnBattle = (battleData) ->
+        ANNetwork.get(NMS.Battle("register", battleData),
             (result) -> ANBattleManager.onBattleRegisterResult(result)
-            () -> #TODO: Что если timeout? Сейчас ничего, пропуск команды
+            () ->
+                # * Снять флаг сетевой битвы (чтобы сцена Start выполнела)
+                BattleManager.nSetNetworkBattle(null)
+                # * Запускаем локальную битву (чтобы battleData существовал)
+                ANBattleManager.registerOnLocalBattle()
         )
         return
 
@@ -195,6 +198,11 @@ do ->
     _.onBattleRegisterResult = (result) ->
         "REGISTER SUCCESS".p()
         ANGameManager.battleData = result
+        # * Эта команда обязательно должны быть ниже этой ANGameManager.battleData = result
+        # * После регистрации на сетевую битву, устанавливается Troop
+        # * из сервера, чтобы у всех одинаковый был
+        BattleManager.setup(...result.options)
+        "SETUP".p(result.options)
         console.info result
         return
 

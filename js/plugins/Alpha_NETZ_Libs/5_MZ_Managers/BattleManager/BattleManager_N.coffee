@@ -7,6 +7,21 @@ do ->
     #@[DEFINES]
     _ = BattleManager
 
+    _.nSetNetworkBattle = (@netBattleId) ->
+
+    _.nIsNetworkBattle = -> @netBattleId?
+
+    _.nSetupNetworkBattle = ->
+        if @nIsNetworkBattle()
+            battleData = {
+                battleId: "1111",
+                options: [$gameTroop._troopId, this._canEscape, this._canLose]
+            }
+            ANBattleManager.registerOnBattle(battleData)
+        else
+            ANBattleManager.registerOnLocalBattle()
+        return
+
     _.nSelectNextActorOnClient = ->
         # * Если данный флаг == true, то игрок переключает меню ввод с группы на персонажа своего
         # * (Это если нажать Escape и появилось Party Commands, а затем снова на Fight)

@@ -15,7 +15,6 @@ do ->
         if $gameParty.inBattle()
             if ANGameManager.isBattleMaster()
                 @_updateDataObserver()
-                @_updateBattleDataObserver()
             else
                 # * Только приём данных
         else
@@ -29,6 +28,11 @@ do ->
         if $gameParty.inBattle()
             if ANGameManager.isBattleMaster()
                 @requestNetBattleDataPush()
+                # * Если только я в бою, то отправляю обычные данные
+                # * Чтобы другие игроки видели HP и MP
+                # TODO: Опция?
+                if $gameParty.isOneBattler()
+                    ANSyncDataManager.sendActorObserver()
         else
             # * Если не в бою, то только свои данные
             if @isMyNetworkActor()
