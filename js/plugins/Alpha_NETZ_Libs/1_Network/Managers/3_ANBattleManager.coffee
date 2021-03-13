@@ -13,9 +13,27 @@ do ->
     #@[DEFINES]
     _ = ANBattleManager
 
-    _.isBattleRegistred = () -> ANGameManager.battleData?
+    _.isBattleMaster = () ->
+        if @battleData?
+            return @battleData.actors[0] == ANGameManager.myActorId()
+        else
+            return $gameParty.inBattle()
+
+    _.isBattleRegistred = () -> @battleData?
+
+    _.isBattleLocal = () ->
+        if @battleData?
+            return @battleData.isLocal
+        else
+            return true
 
     _.isShouldWaitServer = -> @_waitMode?
+
+    _.battleMembers = ->
+        if @isBattleRegistred()
+            return @battleData.actors.map (a) -> $gameActors.actor(a)
+        else
+            return [$gameParty.leader()]
 
     _.setWait = (@_waitMode) ->
         @_waitPool = 0
@@ -59,15 +77,13 @@ do ->
             @sendInputState()
         return
 
-    #TODO: Если в бою только один, то ничего передавать на сервер не надо!
-
     _.registerOnLocalBattle = ->
-        LOG.p("STARTED LOCAL BATTLE")
-        ANGameManager.battleData = {
+        @battleData = {
             isLocal: true
             battleId: "local"
             actors: [ANGameManager.myActorId()]
-        }
+            }
+        LOG.p("STARTED LOCAL BATTLE")
         return
 
     _.onBattleStarted = ->
@@ -78,9 +94,9 @@ do ->
         return
         
     _.onBattleEnd = ->
-        return if ANGameManager.battleData.isLocal
+        @battleData = null
+        return if @isBattleLocal()
         @sendBattleEnded()
-        ANGameManager.battleData = null
         return
 
     _.callBattleMethod = (battler, method, args) ->
@@ -195,10 +211,21 @@ do ->
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
 
+    _.onBattleDataFromServer = (battleData) ->
+        # * Если этот клиент не участвует в битве, то ничего
+        return unless @isBattleRegistred()
+        # * Если я в локальной битве (сам), то меня не касается
+        return if @isBattleLocal()
+        # * Данные битвы касаются моей битвы?
+        if @battleData.battleId == battleData.battleId
+            $gameTemp._previousNetBattleActors = [...@battleData.actors]
+            @battleData = battleData
+        return
+
     _.onBattleRegisterResult = (result) ->
         "REGISTER SUCCESS".p()
-        ANGameManager.battleData = result
-        # * Эта команда обязательно должны быть ниже этой ANGameManager.battleData = result
+        @battleData = result
+        # * Эта команда обязательно должны быть ниже этой @battleData = result
         # * После регистрации на сетевую битву, устанавливается Troop
         # * из сервера, чтобы у всех одинаковый был
         BattleManager.setup(...result.options)

@@ -7,17 +7,11 @@ do ->
     #@[DEFINES]
     _ = Game_Party::
 
-
-    #TODO: battleMembers надо переделать, чтобы только тех, кто в бою возвращал
-
     #@[ALIAS]
     ALIAS__battleMembers = _.battleMembers
     _.battleMembers = ->
         if ANNetwork.isConnected()
-            if ANGameManager.battleData?
-                return ANGameManager.battleData.actors.map (a) -> $gameActors.actor(a)
-            else
-                return [@leader()]
+            return ANBattleManager.battleMembers()
         else
             return ALIAS__battleMembers.call(@)
         

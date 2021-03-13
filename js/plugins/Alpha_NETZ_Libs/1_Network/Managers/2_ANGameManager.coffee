@@ -27,7 +27,8 @@ do ->
         @networkGameStarted = false
         @_waitMode = null
         @playersData = null
-        @battleData = null
+        ANBattleManager.battleData = null
+        return
 
     _.createMyPlayerData = ->
         # * Данные всех игроков в игре
@@ -46,11 +47,8 @@ do ->
 
     _.isMapMaster = -> @myPlayerData().isMapMaster is true
 
-    _.isBattleMaster = ->
-        if @battleData?
-            return @battleData.actors[0] == @myActorId()
-        else
-            return $gameParty.inBattle()
+    # * Дублируется для удобства
+    _.isBattleMaster = -> ANBattleManager.isBattleMaster()
 
     _.isPlayerDataExists = (id) ->
         data = @playersData.find (p) -> p.id == id

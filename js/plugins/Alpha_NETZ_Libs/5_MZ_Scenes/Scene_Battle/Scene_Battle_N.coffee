@@ -9,8 +9,6 @@ do ->
 
     # * Когда пришли данные о битве от сервера (регистрация, новый участник)
     _.netOn_battle_serverBattleData = ->
-        # * Если бой не был отрисован, то нарисовать
-        #_.ALIAS__NET_start.call(@) unless @_netBattleStarted is true
         $gamePlayer.refresh()
         $gameMap.requestRefresh()
         $gameTemp.requestBattleRefresh()
@@ -23,8 +21,6 @@ do ->
         return
 
     _.nOnBattleStarted = ->
-        # * Ставим флаг что бой начался (это надо для netOn_battle_serverBattleData)
-        #@_netBattleStarted = true
         # * Отправляем на сервер, что мы начали бой
         ANBattleManager.onBattleStarted()
         return
