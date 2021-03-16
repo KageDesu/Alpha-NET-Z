@@ -18,8 +18,15 @@ do ->
     # * Проверка, что комментарий является NET командой
     _.isNetCommentCommand = (commentLine) ->
         return false unless String.any(commentLine)
-        # * TODO: сделать через регулярное выражение
-        return commentLine.contains("[") and commentLine.contains("]")
+        # * Все команды начинаются с буквы заглавной N, затем пробел и команда
+        return /N\s.+/.exec(commentLine)
+
+    _.getNetCommentCommand = (commentLine) ->
+        return "" unless @isNetCommentCommand(commentLine)
+        # * Возвращает первое слово после N
+        command = /N\s(\w+)/.exec(commentLine)[1]
+        return "" unless String.any(command)
+        return command
 
     #TODO: Можно все все данные для сети через метод аналогичный передавать для безопасности
     # * Сохраняет Battler в определённый формат для отправки по сети

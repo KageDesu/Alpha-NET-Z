@@ -98,14 +98,13 @@ do ->
 
     # * Проверить комментарий на наличие NET команд
     _._nCheckNetComment = (commentLine) ->
-        return unless ANET.Utils.isNetCommentCommand(commentLine)
-        if commentLine.contains("LOCAL_ACTOR")
-            "LOCAL ACTOR".p()
-            if commentLine.contains("END")
-                "END".p()
-                $gameTemp._nLocalActorMode = false
+        command = ANET.Utils.getNetCommentCommand(commentLine)
+        return unless String.any(command)
+        switch command
+            when "localActor"
+                @_nOnNetCommand_LocalActor(commentLine)
             else
-                $gameTemp._nLocalActorMode = true
+                console.warn("Unknown NET Comment command " + command)
         return
 
     # * Установить флаг ожидания сервера

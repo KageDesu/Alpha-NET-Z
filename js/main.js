@@ -61,6 +61,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Followers_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Interpreter_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Interpreter_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Interpreter_Ncmd.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Map_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Map_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Message_@.js"
@@ -255,6 +256,7 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
 
 
 
