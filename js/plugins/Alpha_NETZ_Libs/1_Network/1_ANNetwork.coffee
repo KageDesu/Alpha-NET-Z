@@ -49,7 +49,7 @@ do ->
             ANGameManager.reset()
             return
 
-        _.testConnection = ->
+        _.startConnection = ->
             ip = ANET.PP.serverIp()
             port = ANET.PP.serverPort()
             adr = 'http://' + ip + ":" + port
@@ -60,7 +60,7 @@ do ->
 
         _.setConnection = (callback) ->
             NetClientMethodsManager.setConnectionToMasterCallback callback
-            @testConnection()
+            @startConnection()
             return
 
         # * Просто отправить данные на сервер

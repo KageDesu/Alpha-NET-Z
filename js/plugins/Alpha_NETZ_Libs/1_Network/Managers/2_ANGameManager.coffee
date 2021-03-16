@@ -67,13 +67,20 @@ do ->
         @networkGameStarted = true
         $gameParty.setupNetworkGame()
 
+    # * Когда клиент переходит на новую (другую) карту (а не на туже самую)
+    _.onNewGameMapSetup = ->
+        # * На всякий случай и тут отключу
+        $gameTemp._nLocalActorMode = false
+        @_shouldWaitPlayerOnSameMap = ANNetwork.isSameMapMode()
+        return
+
     # * Когда на клиенте загрузилась карта
     _.onMapLoaded = ->
         # * Отправляем что мы на карте (загрузились)
         ANMapManager.sendMapLoaded()
         # * Отправляем начальные данные (позиция игрока)
         ANMapManager.sendInitialMapData()
-        if ANNetwork.isSameMapMode() || @networkGameStarted is true
+        if @_shouldWaitPlayerOnSameMap is true || @networkGameStarted is true
             @setWait('playersOnMap') # * Ждём игроков
         return
 
@@ -143,6 +150,7 @@ do ->
             when 'playersOnMap'
                 if @isAllPlayerOnSameMap()
                     @resetWait()
+                    @_shouldWaitPlayerOnSameMap = false
                     if @networkGameStarted == true
                         @bindingActors()
             when 'playersActors'

@@ -23,6 +23,8 @@ do ->
         # * Отправляем принудительно свои данные всем игрокам на карте
         ANSyncDataManager.sendPlayerObserver()
         ANPlayersManager.sendPlayerLocation()
+        if ANGameManager.isMapMaster()
+            @sendMapEventsInitialPositions()
         return
 
     _.sendEventMove = (eventId) ->
@@ -36,7 +38,13 @@ do ->
 
     # * Данную команду выполняет только мастер карты, когда кто-то подключается к карте
     _.sendMapEventsInitialPositions = () ->
-        #TODO: events for each sendEventMove(ID)
+        for ev in $gameMap.events()
+            continue unless ev?
+            eventId = ev.eventId()
+            setTimeout (->
+                    ANMapManager.sendEventMove(eventId)
+                ), 50 #TODO: Надо ли эту задержку?
+        return
 
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
@@ -54,8 +62,6 @@ do ->
     _.onInitialMapSync = ->
         try
             @sendInitialMapData()
-            if ANNetwork.isMasterClient()
-                @sendMapEventsInitialPositions()
         catch e
             ANET.w e
         return

@@ -10,6 +10,7 @@ do ->
     #?EVENT
     # * Когда соединение прервано, вызывается это событие
     _.onLostConnection = ->
+        HUIManager.hideLoader()
         SceneManager.goto(Scene_Title)
     
     #?EVENT

@@ -14,6 +14,8 @@ do ->
         # * Чтобы refreshNetwork не вызывался когда ещё Actor не создан
         if ANNetwork.isConnected()
             @refreshNetworkDummy = @refreshNetwork
+            if ANET.PP.playerActorNameType() > 0
+                @nSetupPlayerActorName()
         return
 
     #@[ALIAS]

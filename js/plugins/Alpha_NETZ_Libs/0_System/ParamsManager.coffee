@@ -22,6 +22,11 @@ do ->
 
         globalSwitchesIds: -> @_globalSwitches
 
+        # * Отображение имени игрока заместо имени персонажа
+        # * 0 - Не показывать, 1 - Name, 2 - Nickname
+        #?DINAMIC
+        playerActorNameType: -> 0
+
         # * Можно ли просматривать статус других игроков
         isOtherPlayersMenuStatusAllowed: -> true
 
@@ -52,7 +57,7 @@ do ->
 
     _._prepareParameters = ->
         @_prepareConnectionSettings()
-        @_prepareStartingMap()
+        @_preparePlayerActorName()
         @_prepareGlobalData()
 
     _._prepareConnectionSettings = ->
@@ -64,13 +69,15 @@ do ->
         @_port = p.serverPort
         return
 
-    _._prepareStartingMap = ->
-        p = @getParam("networkStartMap", {
-                gameStartMap: 0,
-                isNetworkGameAutoStart: true
-            })
-        @_nStartMapId = p.gameStartMap
-        @_isNetworkGameAutoStart = p.isNetworkGameAutoStart
+    _._preparePlayerActorName = ->
+        p = @getParam("playerActorNameType", "")
+        switch p
+            when "Instead Name"
+                @playerActorNameType = -> 1
+            when "Instead Nickname"
+                @playerActorNameType = -> 2
+            else
+                # * Ничего, так как 0 по умолчанию
         return
     
     _._prepareGlobalData = ->

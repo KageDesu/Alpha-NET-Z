@@ -19,6 +19,8 @@ do ->
     _.setup = (mapId) ->
         ALIAS__setup.call(@, mapId)
         if ANNetwork.isConnected()
+            # * Клиент переходит на новую карту
+            ANGameManager.onNewGameMapSetup()
             @setupNetworkCharacters()
         return
 

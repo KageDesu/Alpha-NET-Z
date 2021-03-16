@@ -12,7 +12,7 @@ do ->
     _.update = ->
         if ANNetwork.isBusy()
             ANGameManager.updateWaiting()
-            console.log("wait network...")
+            #console.log("wait network...")
         else
             ALIAS__update.call(@)
     

@@ -40,7 +40,6 @@ do ->
         return false if ANET.System.ForbiddenVirtualCommandsList.contains(@currentCommand().code)
         return true
 
-    #TODO: ЭТО ПЕРЕДЕЛАТЬ return нафиг не нужны!
     # * Проверка опций и выполнение команды в соответсвии с ними
     _.nProcessCommandWithOptions = ->
         try

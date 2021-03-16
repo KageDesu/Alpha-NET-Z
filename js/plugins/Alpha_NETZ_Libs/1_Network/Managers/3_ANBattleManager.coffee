@@ -94,9 +94,8 @@ do ->
         return
         
     _.onBattleEnd = ->
+        @sendBattleEnded() unless @isBattleLocal()
         @battleData = null
-        return if @isBattleLocal()
-        @sendBattleEnded()
         return
 
     _.callBattleMethod = (battler, method, args) ->

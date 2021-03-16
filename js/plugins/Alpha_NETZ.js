@@ -27,9 +27,9 @@
  * @param onlySameMap:b
  * @parent gameModeSettingsGroup
  * @type boolean
- * @text Only Same Map?
- * @default true
- * @desc Players can be only on same map?
+ * @text Wait Map Transfer?
+ * @default false
+ * @desc When player transferred to the new map he will wait until all players not transfered on same map.
  * 
  * @param playersSettingsGroup
  * @text Players Settings
@@ -48,6 +48,16 @@
  * @type boolean
  * @default true
  * @desc Can player select actor in lobby?
+ * 
+ * @param playerActorNameType
+ * @parent playersSettingsGroup
+ * @text Player Name for Actor
+ * @type select
+ * @option Not Show
+ * @option Instead Name
+ * @option Instead Nickname
+ * @default Instead Nickname
+ * @desc Show network player name instead of his Actor name (or nickname)
  * 
  * @param globalData:s
  * @text Global Data

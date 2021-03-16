@@ -40,6 +40,7 @@ do ->
             ALIAS__clear.call(@)
             if ANNetwork.isConnected()
                 ANInterpreterManager.eventProcessExit()
+                @nClearFlags()
             return
 
         #@[ALIAS]

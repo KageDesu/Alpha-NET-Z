@@ -19,6 +19,14 @@ do ->
 
     _.onConnect = ->
         LOG.p("Connected")
+        # * Проверка версии сервера и клиента на соответствие
+        ANNetwork.callback(NMS.Lobby("serverVerCheck", ANET.ServerRev),
+            (result) ->
+                unless result
+                    LOG.p("Client not match server version")
+                    window.alert("Please update Alpha NET Z plugin")
+                    ANNetwork.stop()
+        )
         @onConnectCallback(1) if @onConnectCallback?
 
     _.onDisconnect = ->

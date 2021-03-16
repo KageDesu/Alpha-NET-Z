@@ -57,6 +57,19 @@ do ->
             @dataObserverHaveChanges()
         return
 
+    # * Установить заместо имени (никнейма) персонажа имя сетевого игрока
+    _.nSetupPlayerActorName = ->
+        # * Устанавливаем только своему персонажу, так как myPlayerData есть в начале игры
+        # * Данные других персонажей прийдут сами с Observer сразу
+        return unless @actorId() == ANGameManager.myActorId()
+        playerData = ANGameManager.myPlayerData()
+        return unless playerData?
+        if ANET.PP.playerActorNameType() == 1
+            @_name = playerData.name
+        else if ANET.PP.playerActorNameType() == 2
+            @_nickname = playerData.name
+        return
+
     return
 # ■ END Game_Actor.coffee
 #---------------------------------------------------------------------------
