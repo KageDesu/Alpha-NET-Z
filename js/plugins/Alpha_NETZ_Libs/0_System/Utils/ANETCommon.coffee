@@ -24,7 +24,7 @@ do ->
     _.getNetCommentCommand = (commentLine) ->
         return "" unless @isNetCommentCommand(commentLine)
         # * Возвращает первое слово после N
-        command = /N\s(\w+)/.exec(commentLine)[1]
+        command = /N\s(!*\w+)/.exec(commentLine)[1]
         return "" unless String.any(command)
         return command
 

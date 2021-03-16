@@ -103,6 +103,10 @@ do ->
         switch command
             when "localActor"
                 @_nOnNetCommand_LocalActor(commentLine)
+            when "all"
+                @_nOnNetCommand_AllEventCommand(commentLine)
+            when "!me"
+                @_nOnNetCommand_SingleSelectorEventCommand(commentLine)
             else
                 console.warn("Unknown NET Comment command " + command)
         return
