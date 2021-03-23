@@ -12,8 +12,7 @@ do ->
 
         _._createNetworkObserver = ->
             @netDataObserver = new DataObserver()
-            #TODO: вынести в параметры плагина
-            @netDataObserver.setCheckInterval(400)
+            @netDataObserver.setCheckInterval(ANET.PP.playerDataRefreshRate())
             @_fillNetworkObserver()
             @netDataObserver.refreshAll(@)
 

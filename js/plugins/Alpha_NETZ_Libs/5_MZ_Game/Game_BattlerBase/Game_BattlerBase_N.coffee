@@ -20,7 +20,10 @@ do ->
             @netDataObserver.refreshAll(@)
 
         _._applyDataObserverInitialParameters = ->
-            @netDataObserver.setCheckMode()
+            # * Тут нужен Instante, чтобы данные на карте всегда были актуальны
+            # * Если CheckMode, то при помощи событий можно менять параметры ХП
+            # * всей группы и ХП других игроков будут отображаться не правильно
+            @netDataObserver.setInstanteMode()
             @netDataObserver.setCheckInterval(ANET.PP.playerDataRefreshRate())
             return
 
