@@ -131,8 +131,6 @@ do ->
 
     # * Сбросить все сетевые флаги \ настройки перед запуском очередного события
     _.nClearFlags = () ->
-        # * Сброс сетевой битвы, если началось другое событие
-        BattleManager.nSetNetworkBattle(null)
         $gameTemp._nLocalActorMode = false
         @_nRunningCheckTimer = 0
         @nClearCommandOptions()

@@ -26,6 +26,8 @@ do ->
         _.setup = (list, eventId) ->
             ALIAS__setup.call(@, list, eventId)
             if ANNetwork.isConnected()
+                # * Сброс сетевой битвы, если началось другое событие
+                BattleManager.nSetNetworkBattle(null)
                 @nCheckEventStartOptions()
                 unless @isPassStartOptions() # * Проверка опций запуска события
                     @_list = [] # * Не будет выполняться

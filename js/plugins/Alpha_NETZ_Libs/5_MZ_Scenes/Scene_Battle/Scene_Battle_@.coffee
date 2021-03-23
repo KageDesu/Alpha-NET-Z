@@ -11,7 +11,10 @@ do ->
     _.ALIAS__NET_start = _.start
     _.start = ->
         # * Если бой в сетевом режиме и ещё не зарегестрирован, то сцена боя не отрисовывается
-        return if BattleManager.nIsNetworkBattle() && !ANBattleManager.isBattleRegistred()
+        if ANNetwork.isConnected() &&
+            BattleManager.nIsNetworkBattle() &&
+                !ANBattleManager.isBattleRegistred()
+                    return
         # * Метод Start вызывается автоматически у SceneManager, поэтому когда
         # * данные прийдут, сцена старт
         _.ALIAS__NET_start.call(@)
