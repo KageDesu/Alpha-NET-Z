@@ -75,6 +75,21 @@ do ->
             battler.packForNetwork(),
             battler.result().getObserverDataForNetwork()
         )
+        return
+
+    _.sendBattlerSpriteObserver = (battler) ->
+        "SEND SPRITE".p()
+        return if $gameParty.isOneBattler()
+        return unless SceneManager._scene._spriteset?
+        spr = SceneManager._scene._spriteset.findTargetSprite(battler)
+        ob = spr.getObserverDataForNetwork()
+        console.info ob
+        @_sendObserverData(
+            'battlerSprite',
+            battler.packForNetwork(),
+            ob
+        )
+        return
 
     _._sendObserverData = (type, id, observerData) ->
         data = {
@@ -124,6 +139,8 @@ do ->
                 @_onBattlerResultObserverData(id, content)
             when 'battleUnits'
                 @_onBattleUnitsObserverData(content)
+            when 'battlerSprite'
+                @_onBattlerSpriteObserverData(id, content)
             else
                 LOG.p("From server: unknown observer data type: " + type)
                 return
@@ -206,6 +223,24 @@ do ->
                 if battler?
                     @_convertActorEquipmens(netData[1])
                     battler.applyObserverData(netData[1])
+        catch e
+            ANET.w e
+        return
+
+    _._onBattlerSpriteObserverData = (battlerNetData, content) ->
+        try
+            return unless SceneManager._scene._spriteset?
+            return unless $gameParty.inBattle()
+            #"ON BATTLER RESULT DATA".p()
+            battler = ANET.Utils.unpackBattlerFromNetwork(battlerNetData)
+            return unless battler?
+            spr = SceneManager._scene._spriteset.findTargetSprite(battler)
+            #battler.result()?.applyObserverData(content)
+            spr?.applyObserverData(content)
+            #spr._movementDuration = content._movementDuration
+            #spr._targetOffsetX = content._offsetX
+            #spr._targetOffsetY = content._offsetY
+            #debugger
         catch e
             ANET.w e
         return
