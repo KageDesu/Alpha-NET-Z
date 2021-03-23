@@ -104,9 +104,17 @@ do ->
             when "localActor"
                 @_nOnNetCommand_LocalActor(commentLine)
             when "all"
-                @_nOnNetCommand_AllEventCommand(commentLine)
+                @_nOnNetCommand_SingleSelectorEventCommand("All", commentLine)
             when "!me"
-                @_nOnNetCommand_SingleSelectorEventCommand(commentLine)
+                @_nOnNetCommand_SingleSelectorEventCommand("Me Except", commentLine)
+            when "master"
+                @_nOnNetCommand_SingleSelectorEventCommand("Master", commentLine)
+            when "!master"
+                @_nOnNetCommand_SingleSelectorEventCommand("Master Except", commentLine)
+            when "forActors"
+                @_nOnNetCommand_ActorListSelectorEventCommand(commentLine, true)
+            when "!forActors"
+                @_nOnNetCommand_ActorListSelectorEventCommand(commentLine, false)
             else
                 console.warn("Unknown NET Comment command " + command)
         return

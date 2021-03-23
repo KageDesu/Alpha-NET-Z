@@ -17,21 +17,12 @@ do ->
             $gameTemp._nLocalActorMode = true
         return
     
-    #input: "N all" | "N all [scope]" | "N all [scope] [mode]"
-    #scope: world, mode: virtual
-    _._nOnNetCommand_AllEventCommand = (commentLine) ->
-        { scope, mode } = @_nConvertEventCommandArgs(commentLine)
-        @_nSetAnyEventCommandOptions("All", "[]", scope, mode)
-        return
-
-    #TODO: ТУТ ОСТАНОВИЛСЯ, СОВМЕСТИТЬ КОМАНДЫ СЛЕКТОРЫ (без списка) В МЕТОД ОДИН
-    #(или можен не надо)
-
     #input: "N (selector)" | "N (selector) [scope]" | "N (selector) [scope] [mode]"
+    #selcetor: all, !me, master, !master
     #scope: world, mode: virtual
-    _._nOnNetCommand_SingleSelectorEventCommand = (commentLine) ->
+    _._nOnNetCommand_SingleSelectorEventCommand = (selector, commentLine) ->
         { scope, mode } = @_nConvertEventCommandArgs(commentLine)
-        @_nSetAnyEventCommandOptions("All", "[]", scope, mode)
+        @_nSetAnyEventCommandOptions(selector, "[]", scope, mode)
         return
 
     _._nConvertEventCommandArgs = (commentLine) ->
@@ -67,6 +58,18 @@ do ->
             "scope": scope,
             "whoSelector": selector
         }
+
+    _._nOnNetCommand_ActorListSelectorEventCommand = (commentLine, isInclude) ->
+        { scope, mode } = @_nConvertEventCommandArgs(commentLine)
+        regex = /forActors\s+([\d,\s*]*)/gm
+        resultList = regex.exec(commentLine)
+        return unless resultList?
+        return unless resultList[1]?
+        list = "[" + resultList[1] + "]"
+        selector = "Actor List"
+        selector += " Except" unless isInclude
+        @_nSetAnyEventCommandOptions(selector, list, scope, mode)
+        return
 
     return
 # ■ END Game_Interpreter.coffee

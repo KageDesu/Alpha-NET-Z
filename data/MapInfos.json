@@ -3,11 +3,11 @@ null,
 {"id":1,"expanded":true,"name":"Demo","order":8,"parentId":0,"scrollX":589.5,"scrollY":371.5},
 {"id":2,"expanded":true,"name":"First_Map","order":2,"parentId":0,"scrollX":864.5,"scrollY":758.5},
 {"id":3,"expanded":false,"name":"Second_Map","order":3,"parentId":2,"scrollX":816,"scrollY":624},
-{"id":4,"expanded":false,"name":"Events_via_NetPlugComs","order":5,"parentId":5,"scrollX":589.5,"scrollY":371.5},
+{"id":4,"expanded":false,"name":"Events_via_NetPlugComs","order":5,"parentId":5,"scrollX":495.5,"scrollY":380.5},
 {"id":5,"expanded":true,"name":"Tests","order":4,"parentId":0,"scrollX":589.5,"scrollY":371.5},
 {"id":6,"expanded":false,"name":"Battle","order":7,"parentId":5,"scrollX":597.5,"scrollY":389},
 {"id":7,"expanded":false,"name":"CharacterCustomize","order":1,"parentId":0,"scrollX":589.5,"scrollY":359},
-{"id":8,"expanded":false,"name":"Events_via_NetComments","order":6,"parentId":5,"scrollX":587.5,"scrollY":371.5},
+{"id":8,"expanded":false,"name":"Events_via_NetComments","order":6,"parentId":5,"scrollX":495.5,"scrollY":380.5},
 {"id":9,"expanded":false,"name":"Forest Town","order":9,"parentId":1,"scrollX":840.5,"scrollY":809},
 {"id":10,"expanded":false,"name":"Oasis","order":10,"parentId":1,"scrollX":610.5,"scrollY":625}
 ]
