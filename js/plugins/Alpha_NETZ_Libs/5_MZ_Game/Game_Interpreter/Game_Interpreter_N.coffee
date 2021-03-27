@@ -115,6 +115,10 @@ do ->
                 @_nOnNetCommand_ActorListSelectorEventCommand(commentLine, true)
             when "!forActors"
                 @_nOnNetCommand_ActorListSelectorEventCommand(commentLine, false)
+            when "start"
+                # * Это коммент опций запуска, просто пропускаем, чтобы ошибку не писать в консоль
+                # * Обрабатывается он отдельно, так как если условие ложно, событие не должно
+                # * Вообще запускаться, а эти команды обрабатываеются уже в запущенном событии
             else
                 console.warn("Unknown NET Comment command " + command)
         return
@@ -168,7 +172,11 @@ do ->
             try
                 options = @_list?.find (line) ->
                     line.code == 357 && line.parameters?[1] == "EventStartOptions"
-                @nStartOptions = options.parameters[3] if options?
+                if options?
+                    @nStartOptions = options.parameters[3]
+                else
+                    # * Меньший приоритет, т.е. параметр плагина главнее
+                    @nCheckEventStartOptionsFromCommentCommand()
             catch e
                 ANET.w e
                 @nStartOptions = null
