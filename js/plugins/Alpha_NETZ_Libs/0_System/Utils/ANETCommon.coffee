@@ -90,6 +90,74 @@ do ->
             # * В случае ошибки безопаснее вернуть true
             return true
 
+    # * Собрать опции для команды события по параметрам из комменатрия (аналог опций из команды плагина)
+    # * Список должен быть строкой! [1, 2, 3]
+    _.buildEventCommandOptions = (selector, list, scope, mode) ->
+        return {
+            "actorList": list,
+            "executeMode": mode,
+            "scope": scope,
+            "whoSelector": selector
+        }
+
+    # * Конвертировать из команды комменатрия в параметр команды плагина
+    _.convertEventCommandScopeAndMode = (commentLine) ->
+        # * SCOPE
+        if commentLine.contains "world"
+            scope = "All world"
+        else
+            scope = "Same map"
+        # * MODE
+        if commentLine.contains "virtual"
+            mode = "Virtual"
+        else if commentLine.contains "common"
+            mode = "Common Event"
+        else
+            mode = "Auto"
+        return { scope, mode }
+
+    # * Изъять список персонажей из комментария
+    # * Формат выходной [1, 2, 3....]
+    _.extractActorsListFromComment = (commentLine) ->
+        regex = /forActors\s+([\d,\s*]*)/gm
+        resultList = regex.exec(commentLine)
+        return "[]" unless resultList?
+        return "[]" unless resultList[1]?
+        list = "[" + resultList[1] + "]"
+        return list
+
+    _.parseEventStartOptionsFromCommentLine = (commentLine) ->
+        try
+            # * Стандартный набор
+            nStartOptions = {
+                lockMode: "false"
+                sharedMode: "No"
+                whoSelector: "All"
+                actorList: "[]"
+            }
+            if commentLine.contains("lock")
+                nStartOptions.lockMode = "true"
+            if commentLine.contains("shared")
+                nStartOptions.sharedMode = "Strict"
+                # * Только если есть флаг sharedMode
+                if commentLine.contains("optional")
+                    nStartOptions.sharedMode = "Optional"
+            if commentLine.contains("master")
+                if commentLine.contains("!")
+                    nStartOptions.whoSelector = "Master Except"
+                else
+                    nStartOptions.whoSelector = "Master"
+            else if commentLine.contains("forActors")
+                    if commentLine.contains("!")
+                        nStartOptions.whoSelector = "Actor List Except"
+                    else
+                        nStartOptions.whoSelector = "Actor List"
+                    nStartOptions.actorList = ANET.Utils.extractActorsListFromComment(commentLine)
+            return nStartOptions
+        catch e
+            ANET.w e
+            return null
+
     return
 # ■ END ANET Common Utils Methods.coffee
 #---------------------------------------------------------------------------
