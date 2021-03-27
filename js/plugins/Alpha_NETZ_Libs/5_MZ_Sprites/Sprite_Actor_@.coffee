@@ -12,7 +12,7 @@ do ->
     #@[ALIAS]
     ALIAS__retreat = _.retreat
     _.retreat = ->
-        if Network.isConnected()
+        if ANNetwork.isConnected()
             if $gameParty.leader() == @_battler
                 @startMove(300, 0, 30)
             else

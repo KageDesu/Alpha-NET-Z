@@ -1,10 +1,11 @@
 /*:
- * @plugindesc (v.0.1)%TYPE% Network System
+ * @plugindesc (v.0.2)%TYPE% Network System
  * @author Pheonix KageDesu
  * @target MZ
  * @url http://kdworkshop.net/
  *
  * @help
  *
- * This plugin version only for test purposes
+ * This plugin version only for preview and testing purposes
+ * Wiki: TODO:
  *

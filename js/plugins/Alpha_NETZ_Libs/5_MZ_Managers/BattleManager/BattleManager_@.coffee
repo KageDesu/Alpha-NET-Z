@@ -57,7 +57,7 @@ do ->
     #@[ALIAS]
     ALIAS__displayStartMessages = _.displayStartMessages
     _.displayStartMessages = ->
-        if Network.isConnected()
+        if ANNetwork.isConnected()
             # * EMPTY
         else
             ALIAS__displayStartMessages.call(@)
@@ -68,7 +68,7 @@ do ->
     #@[ALIAS]
     ALIAS__processEscape = _.processEscape
     _.processEscape = ->
-        if Network.isConnected()
+        if ANNetwork.isConnected()
             @_escapeRatio = 101
         return ALIAS__processEscape.call(@)
 

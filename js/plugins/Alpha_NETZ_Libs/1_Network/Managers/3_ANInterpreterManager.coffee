@@ -34,11 +34,17 @@ do ->
         return
 
     # * Выполнить виртуальную команду (list) вне очереди (не ожидая сцены или другого события)
-    _.startVirtualCommand = (list, eventId) ->
+    # * mapId - ID карты не текущей, а того, от кого пришла команда (нужно для Self.Switch)
+    _.startVirtualCommand = (list, eventId, mapId) ->
         try
-            virtualInter = new Game_Interpreter()
-            virtualInter.setup(list, eventId)
-            virtualInter.executeCommand() # * force execute
+            # * Self.Switch имеет отдельную обработку (так как mapId отличается)
+            if list[0].code == 123 && eventId > 0
+                key = [mapId, eventId, list[0].parameters[0]]
+                $gameSelfSwitches.setValue(key, list[0].parameters[1] == 0)
+            else # * Команда может быть только одна (всегда), поэтому else (больше команд нету)
+                virtualInter = new Game_Interpreter()
+                virtualInter.setup(list, eventId)
+                virtualInter.executeCommand() # * force execute
         catch e
             ANET.w e
         return
@@ -85,7 +91,6 @@ do ->
     _.onVirtualCommand = (data) ->
         try
             # * Если только на одой карте, то проверяем номер карты
-            #TODO: Требуется проверка (не тестировалось)
             if data.options.scope == "Same map"
                 return if $gameMap.mapId() != data.mapId
             # * Затем проверяем фильтр (для нас ли эта команда?)
@@ -95,13 +100,13 @@ do ->
             # * В зависимости от опции, запускаем в разных режимах
             switch data.options.executeMode
                 when "Virtual"
-                    _.startVirtualCommand(list, data.eventId)
+                    _.startVirtualCommand(list, data.eventId, data.mapId)
                 when "Common Event"
                     $gameTemp.reverseVirtualCommonEvent(event)
                 else #? AUTO
                     # * Некоторые команды можно выполнять сразу, не ожидая сцены (или другого события)
                     if _.isVirtualCommand(list[0].code)
-                        _.startVirtualCommand(list, data.eventId)
+                        _.startVirtualCommand(list, data.eventId, data.mapId)
                     else
                         # * Остальные идут как общее событие (приоритетное)
                         $gameTemp.reverseVirtualCommonEvent(event)

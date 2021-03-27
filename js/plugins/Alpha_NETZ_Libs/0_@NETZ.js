@@ -4,7 +4,7 @@ var Imported = Imported || {};
 Imported.Alpha_NETZ = true;
 
 var ANET = {};
-ANET.Version = 10; // 0.1.0
+ANET.Version = 20; // 0.2.0
 ANET.ServerRev = 100; // * Необходимая ревизия сервера
 
 // * Данный символ переопределяется в 1_DevSymbol_TEST как dev
@@ -31,7 +31,3 @@ if(!Imported.Alpha_Core) {
     } else
         alert("Alpha NETZ require Alpha_@Core plugin!");
 }
-
-
-// * Если игрок в бою, то его координаты не видно (когда другой игрок переходит на карту)
-// * Self.switch - all world virtual не работает!
