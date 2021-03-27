@@ -105,6 +105,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Title_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Title_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/SceneManager_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Actor_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Battler_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Battler_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Character_@.js"
@@ -259,6 +260,7 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
 
 
 

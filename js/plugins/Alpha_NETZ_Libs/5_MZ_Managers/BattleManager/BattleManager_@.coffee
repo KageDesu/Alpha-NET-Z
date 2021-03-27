@@ -51,12 +51,26 @@ do ->
         @nUpdateNetwork()
         return
 
-    #TODO: test
+
+    #TEMP
+    #TODO: Временно отключено начальное сообщение в бою
     #@[ALIAS]
     ALIAS__displayStartMessages = _.displayStartMessages
-    _.displayStartMessages = -> # * EMPTY
-        #ALIAS__displayStartMessages.call(@)
+    _.displayStartMessages = ->
+        if Network.isConnected()
+            # * EMPTY
+        else
+            ALIAS__displayStartMessages.call(@)
         
+    #TEMP
+    #TODO: Если шанс побега не сработал, будет баг
+    # * Временно шанс побега 100%
+    #@[ALIAS]
+    ALIAS__processEscape = _.processEscape
+    _.processEscape = ->
+        if Network.isConnected()
+            @_escapeRatio = 101
+        return ALIAS__processEscape.call(@)
 
     return
 # ■ END BattleManager.coffee

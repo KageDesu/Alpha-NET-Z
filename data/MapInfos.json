@@ -8,7 +8,7 @@ null,
 {"id":6,"expanded":false,"name":"Battle","order":7,"parentId":5,"scrollX":495.5,"scrollY":389},
 {"id":7,"expanded":false,"name":"CharacterCustomize","order":1,"parentId":0,"scrollX":487.5,"scrollY":371},
 {"id":8,"expanded":false,"name":"Events_via_NetComments","order":6,"parentId":5,"scrollX":495.5,"scrollY":371},
-{"id":9,"expanded":false,"name":"Forest Town","order":10,"parentId":1,"scrollX":538.5,"scrollY":810},
+{"id":9,"expanded":false,"name":"Forest Town","order":10,"parentId":1,"scrollX":1047.5,"scrollY":802},
 {"id":10,"expanded":false,"name":"Oasis","order":11,"parentId":1,"scrollX":610.5,"scrollY":625},
 {"id":11,"expanded":false,"name":"SharedEvents","order":8,"parentId":5,"scrollX":487.5,"scrollY":379}
 ]

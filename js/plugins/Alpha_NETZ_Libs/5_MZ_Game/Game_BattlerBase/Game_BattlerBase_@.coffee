@@ -29,6 +29,19 @@ do ->
             @netDataObserver.setInstanteMode()
         return
 
+    #TEMP
+    #TODO: Временное решение, так как нет проверки кто именно
+    # * Так как вещи другого игрока нет в инвентаре мастера боя, то
+    # * мы пропускаем проверку на наличие вещи в инвентаре $gameParty.hasItem(item)
+    #@[ALIAS]
+    ALIAS__meetsItemConditions = _.meetsItemConditions
+    _.meetsItemConditions = (item) ->
+        if ANNetwork.isConnected()
+            return @meetsUsableItemConditions(item)
+        else
+            return ALIAS__meetsItemConditions.call(@, item)
+        
+
     return
 # ■ END Game_BattlerBase.coffee
 #---------------------------------------------------------------------------
