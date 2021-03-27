@@ -123,15 +123,18 @@ do ->
                 console.warn("Unknown NET Comment command " + command)
         return
 
-    # * Установить флаг ожидания сервера
-    ##_.nSetWaitServer = -> @_waitMode = "netServer"
+    # * Ожидания пула игроков
+    _.nSetWaitPlayerPool = ->
+        @nPlayerPool = new PlayersWaitPool()
+        @_waitMode = "netPlayersPool"
+        return
 
-    # * Ожидание ответа от сервера
-    ###_.nUpdateWaitServerResponse = ->
-        waiting = ANNetwork.isBusy()
+    # * Ожидание готовности пула игроков
+    _.nUpdateWaitPlayersPool = ->
+        waiting = !@nPlayerPool.isReady()
         unless waiting
             @_waitMode = ''
-        return waiting###
+        return waiting
 
     # * Сделать следующую битву сетевой битвой (общей, расшаринной)
     _.nSetSharedBattle = (battleId) ->

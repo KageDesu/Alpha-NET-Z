@@ -83,6 +83,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETCharactersGroup.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NetMessages.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/ParamsManager.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/PlayersWaitPool.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/PluginCommands.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Base_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Base_N.js"
@@ -258,6 +259,7 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
 
 
 

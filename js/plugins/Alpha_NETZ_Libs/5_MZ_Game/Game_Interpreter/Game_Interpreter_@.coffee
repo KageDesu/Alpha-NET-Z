@@ -33,6 +33,7 @@ do ->
                     @_list = [] # * Не будет выполняться
                 else
                     ANInterpreterManager.sendEventStarted(eventId)
+                    #TODO: setupSharedMode
                     @nClearFlags()
             return
         
@@ -57,12 +58,12 @@ do ->
             return
 
         #@[ALIAS]
-        ###ALIAS__updateWaitMode = _.updateWaitMode
+        ALIAS__updateWaitMode = _.updateWaitMode
         _.updateWaitMode = ->
-            if @_waitMode == 'netServer'
-                return @nUpdateWaitServerResponse()
+            if @_waitMode == 'netPlayersPool'
+                return @nUpdateWaitPlayersPool()
             else
-                return ALIAS__updateWaitMode.call(@)###
+                return ALIAS__updateWaitMode.call(@)
 
     # * Выполнение команд в сети
     # -----------------------------------------------------------------------
