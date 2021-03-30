@@ -1,12 +1,13 @@
 /*:
- * @plugindesc (v.0.1)[PRO] Network System
+ * @plugindesc (v.0.2)[PRO] Network System
  * @author Pheonix KageDesu
  * @target MZ
  * @url http://kdworkshop.net/
  *
  * @help
  *
- * This plugin version only for test purposes
+ * This plugin version only for preview and testing purposes
+ * Wiki: TODO:
  *
 
  * @param ANETZ @text @desc
