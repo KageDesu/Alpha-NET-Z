@@ -22,6 +22,8 @@ do ->
         @_createRelativeParent()
         @_createLoadSpinner()
         @_createNotify()
+        # * Отключаем контекстное меню у новых элементов
+        Graphics._disableContextMenu()
         return
 
     _.isUnderMouse = -> @_isMouseHoverHtmlElement is true
