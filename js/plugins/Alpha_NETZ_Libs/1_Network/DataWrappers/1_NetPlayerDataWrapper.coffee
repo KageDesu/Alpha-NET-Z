@@ -18,7 +18,9 @@ do ->
         if String.any(ConfigManager.netPlayerName)
             plName = ConfigManager.netPlayerName
         else
-            plName =  "Player " + Math.randomInt(1000)
+            unless $gameTemp._tempPlayerNetworkName?
+                $gameTemp._tempPlayerNetworkName = "Player " + Math.randomInt(1000)
+            plName = $gameTemp._tempPlayerNetworkName
         return {
             id: ANNetwork.myId()
             name: plName

@@ -8,7 +8,17 @@ do ->
     _ = Game_Actor::
 
     # * Данный персонаж - мой сетевой персонаж (текущего игрока)
-    _.isMyNetworkActor = -> @isMyNetworkBattler()
+    _.isMyNetworkActor = ->
+        # * Тут сделано разделение специально, чтобы уменьшить проблемы с LocalActor
+        # * Суть в том, что при LocalActor могут отправляться данные всех персонажей,
+        # * так как проверка через leader() обращается в Game_Actors, а ID всегда на
+        # * своего персонажа (стоит Instance Mode, в этом ещё дело)
+        # * Пока отключил передачу СВОИХ данных в режиме Local
+        return false if $gameTemp._nLocalActorMode is true
+        if $gameParty.inBattle()
+            return @isMyNetworkBattler()
+        else
+            return @actorId() == ANGameManager.myActorId()
 
     _.updateDataObserver = ->
         # * Если в бою, то вся синхронизация идёт от мастера битвы

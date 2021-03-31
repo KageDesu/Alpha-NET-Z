@@ -23,6 +23,8 @@ class NETCharactersGroup
 
     update: -> c.update() for c in @characters()
 
+    isSomeoneCollided: (x, y) -> @characters().some (c) -> c.pos(x, y)
+
 #╒═════════════════════════════════════════════════════════════════════════╛
 # ■ NETCharactersGroup.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛

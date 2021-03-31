@@ -9,11 +9,16 @@ do ->
 
     # * Безопасное обновление карты, так как может вызываться когда пришли данные игроков (на любой сцене в любой момент)
     _.nSafeRefresh = ->
-        return if SceneManager.isSceneChanging()
-        return unless KDCore.Utils.isSceneMap()
-        return unless $dataMap?
-        @refresh()
+        try
+            return if SceneManager.isSceneChanging()
+            return unless KDCore.Utils.isSceneMap()
+            return unless $dataMap?
+            @refresh()
+        catch e
+            ANET.w e
         return
+
+    _.netCharsIsSomeoneCollided = (x, y) -> @_networkCharacters.isSomeoneCollided(x, y)
 
     _.netChars = -> @_networkCharacters.characters()
 

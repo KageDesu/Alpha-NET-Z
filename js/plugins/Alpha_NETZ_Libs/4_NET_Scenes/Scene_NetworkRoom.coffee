@@ -47,9 +47,10 @@ class Scene_NetworkRoom extends Scene_MenuBase
     #?EVENT
     # * Когда закрывается комната, вызывается это событие
     netOn_lobby_roomClosed: ->
-        # * Из этой сцены мы возвращаемся в сетевое меню
-        #SceneManager.goto(Scene_NetworkGameMenu)
-        @popScene()
+        # * Из этой сцены мы возвращаемся в сетевое меню (если мы не мастер)
+        # * Для мастера не надо, так как сцена и так закрывается сама и получается
+        # * что возврат происходит на Scene_Title
+        @popScene() unless @_shouldNotPopScene
 
     update: ->
         super()
@@ -62,6 +63,7 @@ class Scene_NetworkRoom extends Scene_MenuBase
         # * Если TRUE - значит мы переходим на сцену с игрой и не надо закрывать коммнату
         return if @_startingGameTransition is true
         if ANNetwork.isMasterClient()
+            @_shouldNotPopScene = true
             ANNetwork.closeRoom()
         else
             ANNetwork.leaveRoom()

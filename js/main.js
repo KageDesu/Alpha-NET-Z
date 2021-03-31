@@ -93,6 +93,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Equip_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Map_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Map_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Menu_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_MenuBase_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkGameMenu_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkGameMenu_1.js"
@@ -260,6 +261,7 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
 
 
 

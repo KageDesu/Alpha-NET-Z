@@ -1,5 +1,5 @@
 /*:
- * @plugindesc (v.0.2)%TYPE% Network System
+ * @plugindesc (v.0.3)%TYPE% Network System
  * @author Pheonix KageDesu
  * @target MZ
  * @url http://kdworkshop.net/
@@ -7,5 +7,5 @@
  * @help
  *
  * This plugin version only for preview and testing purposes
- * Wiki: TODO:
+ * Read before use: https://github.com/KageDesu/Alpha-NET-Z/wiki
  *

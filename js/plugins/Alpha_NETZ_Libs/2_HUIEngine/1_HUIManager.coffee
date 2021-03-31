@@ -183,9 +183,9 @@ do ->
     #@[ALIAS]
     ALIAS___onKeyDown = _._onKeyDown
     _._onKeyDown = (event) ->
-        # * Чтобы игнорировать стандартные кнопки Z и X во время ввода
+        # * Чтобы игнорировать стандартные кнопки Z, X, space во время ввода
         if HUIManager.isInputActive()
-            if event.keyCode == 90 || event.keyCode == 88
+            if event.keyCode == 90 || event.keyCode == 88 || event.keyCode == 32
                 @clear()
                 return
         ALIAS___onKeyDown.call(@, event)

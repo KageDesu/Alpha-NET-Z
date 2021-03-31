@@ -29,7 +29,10 @@ class Scene_NetworkGameMenu extends Scene_MenuBase
         super()
 
     refreshWelcomeText: ->
-        @_welcomeLine?.drawTextFull("Welcome, " + ANGameManager.myPlayerData().name)
+        try
+            @_welcomeLine?.drawTextFull("Welcome, " + ANGameManager.myPlayerData().name)
+        catch e
+            ANET.w e
 
     #?EVENT
     netOn_lobby_changePlayerName: ->

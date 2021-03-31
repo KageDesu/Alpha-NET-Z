@@ -16,6 +16,17 @@ do ->
         else
             ALIAS__setup.call(@)
     
+    # * Учёт коллизий с сетевыми игроками при движении событий
+    # * В этом методе, а не в NETCharactersGroup, чтобы было больше совместимости
+    #@[ALIAS]
+    ALIAS__isSomeoneCollided = _.isSomeoneCollided
+    _.isSomeoneCollided = (x, y) ->
+        if ANNetwork.isConnected()
+            $gameMap.netCharsIsSomeoneCollided(x, y)
+        else
+            return ALIAS__isSomeoneCollided.call(@, x, y)
+        
+
     return
 # ■ END Game_Followers.coffee
 #---------------------------------------------------------------------------

@@ -17,6 +17,21 @@ do ->
         actorId = ANGameManager.myPlayerData().actorId
         return $gameActors.actor(actorId)
 
+    #TODO: Есть метод onRefreshGameParty (в ANGameManager) -> путаница может быть
+    # * Этот метод вызывается когда группа была изменена (кто-то отключился)
+    _.nRefreshNetworkActors = ->
+        try
+            for actor in @members()
+                id = actor.actorId()
+                # * Ищем игрока для каждого Actor
+                playerForActor = ANGameManager.playersData.find (pl) -> pl.actorId == id
+                # * Если нету больше игрока с таким Actor, удаляем из партии
+                @removeActor(id) unless playerForActor?
+            return
+        catch e
+            ANET.w e
+    #TODO: Возможно это и на сцену битвы надо? (или там по другому работает)
+
     return
 # ■ END Game_Party.coffee
 #---------------------------------------------------------------------------

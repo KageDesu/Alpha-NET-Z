@@ -14,6 +14,7 @@ do ->
         ALIAS__onMapLoaded.call(@)
         if ANNetwork.isConnected()
             ANGameManager.onMapLoaded()
+            $gameParty.nRefreshNetworkActors()
         return
         
     #@[ALIAS]

@@ -10,26 +10,20 @@ do ->
     _._createNetworkCharacters = ->
         # * Отдельный массив для удобства
         @_networkCharacterSprites = []
-        # * Чтобы можно было удалять и добавлять, не меняя высоты слоя
-        # так как на tilemap есть спрайты которые должны быть выше персонажей
-        @_networkCharactersLayer = new Sprite()
-        @_networkCharactersLayer.z = 3
-        @_tilemap.addChild @_networkCharactersLayer
         @refreshNetworkCharacters()
         return
 
     _.refreshNetworkCharacters = ->
-        return unless @_networkCharactersLayer?
         for char in @_networkCharacterSprites
             @_removeNetCharInfo(char)
-            @_networkCharactersLayer.removeChild char
             @_characterSprites.delete char
+            @_tilemap.removeChild char
         @_networkCharacterSprites = []
         for char in $gameMap.netChars()
             spr = new Sprite_Character(char)
             @_characterSprites.push(spr)
             @_networkCharacterSprites.push(spr)
-            @_networkCharactersLayer.addChild spr
+            @_tilemap.addChild spr
         return
     
     # * Специальный слой для иконок статусов и имён сетевых персонажей

@@ -38,7 +38,7 @@ do ->
     _.setWait = (@_waitMode) ->
         @_waitPool = 0
         @_waitTimeout = 360
-        HUIManager.showLoader(500)
+        HUIManager.showLoader(1000)
 
     _.resetWait = ->
         @setWait(null)
@@ -55,6 +55,8 @@ do ->
         else
             if @_battleMethodsPool.length > 0
                 @_callBattleMethodOnServer(...@_battleMethodsPool.shift())
+            if HUIManager.isLoaderActive()
+                HUIManager.hideLoader()
         return
 
      # * Ожидание данных (игроков) от сервера
