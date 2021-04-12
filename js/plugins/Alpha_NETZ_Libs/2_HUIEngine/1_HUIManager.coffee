@@ -58,6 +58,8 @@ do ->
 
     _.removeInput = () ->
         return unless @_input?
+        # * Не всегда автоматически выключается, поэтому надо выключить флаг вручную
+        HUIManager._isMouseHoverHtmlElement = false
         document.getElementById("anetCanvasElements").removeChild(@_input)
         @_input = null
         return
@@ -143,7 +145,8 @@ do ->
     #@[DEFINES]
     _ = Scene_Map::
     
-    if KDCore.isMV()
+    #TODO: Временно отключил, так как пока нет HUI элементов на карте
+    ###if KDCore.isMV()
         #@[ALIAS]
         ALIAS__processMapTouch = _.processMapTouch
         _.processMapTouch = ->
@@ -156,7 +159,7 @@ do ->
         _.onMapTouch = ->
             return if HUIManager.isUnderMouse()
             ALIAS__onMapTouch.call(@)
-            return
+            return###
     
     return
 # ■ END Scene_Map.coffee

@@ -17,7 +17,7 @@ class Scene_NetworkSettings extends Scene_MenuBase
 
     update: ->
         super()
-        @popScene() if Input.isCancel()
+        @popScene() if Input.isCancel() || Input.isTriggered('ok')
 
 #╒═════════════════════════════════════════════════════════════════════════╛
 # ■ Scene_NetworkSettings.coffee

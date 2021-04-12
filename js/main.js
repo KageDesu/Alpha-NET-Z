@@ -113,6 +113,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Character_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Gauge_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_PlayerNetworkStatus.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Battle_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_BattleLog_@.js"
@@ -126,6 +127,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomPlayersList.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomsList.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_TitleCommand_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_TitleCommand_N.js"
 ];
 const effekseerWasmUrl = "js/libs/effekseer.wasm";
 
@@ -261,6 +263,9 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
 
 
 

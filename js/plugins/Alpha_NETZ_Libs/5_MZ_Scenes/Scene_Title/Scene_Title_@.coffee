@@ -40,7 +40,10 @@ do ->
         #@[ALIAS]
         ALIAS__calcWindowHeight = _.calcWindowHeight
         _.calcWindowHeight = (numLines, selectable) ->
-            numLines += 1 if @___isOneMoreCommand is true
+            if @___isOneMoreCommand is true
+                numLines += 1
+                # * Если одиночная игра не доступна, то нет одной позиции в меню (Новая ира)
+                numLines -= 1 unless ANET.PP.isSinglePlayerAllowed()
             ALIAS__calcWindowHeight.call(@, numLines, selectable)
 
         return

@@ -14,7 +14,7 @@ do ->
     _.nSetupNetworkBattle = ->
         if @nIsNetworkBattle()
             battleData = {
-                battleId: "1111",
+                battleId: @netBattleId,
                 options: [$gameTroop._troopId, this._canEscape, this._canLose]
             }
             ANBattleManager.registerOnBattle(battleData)
@@ -56,6 +56,27 @@ do ->
         # * Готов к отправке действия сразу (по умолчанию)
         # * Команда 'Fight' делает false (см nSelectNextActorOnClient)
         @_isShouldWaitMyNetworkAction = false
+
+    _.nRefreshSharedBattleState = ->
+        try
+            if SceneManager._scene.nRefreshSharedBattle?
+                SceneManager._scene.nRefreshSharedBattle()
+        catch e
+            ANET.w e
+        return
+
+    # * Если во время боя был удалён (вышел) сетевой игрок
+    # * Без этого метода, игра переключает (или зависат) ввод другого игрока (который вышел)
+    _.nSafeRemoveActor = ->
+        return unless @_phase == "input"
+        try
+            if @_currentActor != $gameParty.leader()
+                @selectNextActor()
+        catch e
+            ANET.w e
+
+    # * Можно ли клиенту (не BattleMaster) самостоятельно обновлять BattleManager
+    _.nIsLocalForceUpdatePhase = -> @isAborting() || @isBattleEnd()
 
     return
 # ■ END BattleManager.coffee

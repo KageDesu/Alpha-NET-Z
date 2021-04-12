@@ -20,6 +20,13 @@
 @default false
 @desc When player transferred to the new map he will wait until all players not transfered on same map.
 
+@param singlePlayerAllowed:b
+@parent gameModeSettingsGroup
+@type boolean
+@text New Game Allowed?
+@default true
+@desc If false, the menu item "New Game" will not be displayed in title menu
+
 @param playersSettingsGroup
 @text Players Settings
 
@@ -37,6 +44,13 @@
 @type boolean
 @default true
 @desc Can player select actor in lobby?
+
+@param isSinglePlayerStartAllowed:b
+@parent playersSettingsGroup
+@text One player start?
+@type boolean
+@default true
+@desc If in room only 1 player (host), he can start game alone?
 
 @param playerActorNameType
 @parent playersSettingsGroup

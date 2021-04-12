@@ -2,6 +2,7 @@ class Window_NetworkActorsList extends Window_Selectable
     constructor: (rect) ->
         super(rect)
         @setBackgroundType ANET.VD.getWindowBackgroundType()
+        @select(0)
 
     maxItems: -> @actorsForNetwork().length
 
@@ -9,7 +10,12 @@ class Window_NetworkActorsList extends Window_Selectable
 
     actorsForNetwork: -> ANET.PP.actorsForNetwork()
 
-    isCurrentItemEnabled: -> @isEnable(@index())
+    isCurrentItemEnabled: ->
+        try
+            return @isEnable(@index())
+        catch e
+            ANET.w e
+            return false
 
     selectedActorId: ->
         return 0 unless @isCurrentItemEnabled()

@@ -60,14 +60,15 @@ do ->
                 # * Только обновлять данные HP и MP другим игрокам
                 $gameParty.leader().updateDataObserver()
             else
-                # * Логика сетевого боя
+                # * Логика сетевого боя (общая для мастера и клиентов)
                 @nUpdateBattleProcess()
-                # * BattleManager update выполняет только мастер битвы
-                # * Иначе, выходим сразу из метода
-                return unless ANGameManager.isBattleMaster()
-                ANBattleManager.update()
-                # * Если ждём сервер, то тоже выходим из метода
-                return if ANBattleManager.isShouldWaitServer()
+                if ANGameManager.isBattleMaster()
+                    ANBattleManager.update()
+                    # * Если ждём сервер, то не обновляем BattleManager
+                    return if ANBattleManager.isShouldWaitServer()
+                else
+                    # * BattleManager update (ALIAS__updateBattleProcess) выполняет только мастер битвы
+                    return unless BattleManager.nIsLocalForceUpdatePhase()
         ALIAS__updateBattleProcess.call(@)
         return
     

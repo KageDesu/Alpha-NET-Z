@@ -59,8 +59,7 @@ do ->
         if data?
             return data
         else
-            #TODO: ANET.w
-            console.warn("Player data for " + id + " not finded!")
+            ANET.w("Player data for " + id + " not finded!")
         return null
 
     _.setupNewNetworkGame = ->
@@ -174,7 +173,9 @@ do ->
     _.sendSceneChanging = () ->
         sceneType = "unknown"
         # * Тут не учитывается наследовательность, определяется точный класс через ===
-        if SceneManager.isNextScene(Scene_Menu)
+        # * Чтобы на всех сценах, кроме карты была иконка, сделал через unless
+        # * Это лучше, чем проверять все все сцены
+        unless SceneManager.isNextScene(Scene_Map)
             sceneType = "menu"
         if SceneManager.isNextScene(Scene_Battle)
             sceneType = "battle"

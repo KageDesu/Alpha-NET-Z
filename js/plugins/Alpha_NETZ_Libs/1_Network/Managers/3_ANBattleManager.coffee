@@ -152,6 +152,12 @@ do ->
         LOG.p("Try register battle: " + battleData.battleId)
         @sendRegisterOnBattle(battleData)
 
+    # * Регистрация (вступление в битву) которая уже была начата
+    _._registerToExistsSharedBattle = ->
+        LOG.p("Join Shared battle")
+        $gameTemp._requestInitialSharedBattleRefresh = true
+        return
+
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
 
@@ -232,6 +238,7 @@ do ->
         BattleManager.setup(...result.options)
         "SETUP".p(result.options)
         console.info result
+        @_registerToExistsSharedBattle() unless @isBattleMaster()
         return
 
     # * С сервера пришла команда проиграть анимацию

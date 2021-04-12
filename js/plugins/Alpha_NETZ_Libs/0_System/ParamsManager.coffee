@@ -18,6 +18,12 @@ do ->
         # * Можно ли выбирать персонажа себе
         isActorSelectionAllowed: -> @getParam("isActorSelectionAllowed", true)
 
+        # * Можно ли начать сетевую игру одному
+        isSingleActorNetworkGameAllowed: -> @getParam("isSinglePlayerStartAllowed", true)
+
+        # * Доступна ли обычная локальная Новая игра
+        isSinglePlayerAllowed: -> @getParam("singlePlayerAllowed", true)
+
         globalVariablesIds: -> @_globalVars
 
         globalSwitchesIds: -> @_globalSwitches

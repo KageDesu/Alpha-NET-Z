@@ -206,6 +206,10 @@ do ->
                 if battler?
                     @_convertActorEquipmens(netData[1])
                     battler.applyObserverData(netData[1])
+            # * Игрок только присоединился, нужен дополнительный refresh графики
+            if $gameTemp._requestInitialSharedBattleRefresh is true
+                BattleManager.nRefreshSharedBattleState()
+                $gameTemp._requestInitialSharedBattleRefresh = false
         catch e
             ANET.w e
         return

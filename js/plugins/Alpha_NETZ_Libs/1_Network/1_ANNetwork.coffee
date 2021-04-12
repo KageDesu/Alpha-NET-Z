@@ -164,7 +164,7 @@ do ->
             id: ANET.VD.getGameVersion(),
             title: $dataSystem.gameTitle,
             version: if KDCore.isMZ() then 0 else 1,
-            maxPlayers: 4,
+            maxPlayers: ANET.PP.actorsForNetwork().length,
             mode: 0 #TODO: Deprecated
         }
 

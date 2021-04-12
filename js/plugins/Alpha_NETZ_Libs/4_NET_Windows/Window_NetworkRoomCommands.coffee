@@ -35,6 +35,8 @@ do ->
     _._isAllPlayersSelectActors = -> ANGameManager.playersData.every (pl) -> pl.actorId != 0
 
     _._isStartEnabled = ->
+        unless ANET.PP.isSingleActorNetworkGameAllowed()
+            return false if ANGameManager.playersData.length == 1
         # * Надо выбрать персонажа, потом можно начинать игру
         if ANET.PP.isActorSelectionAllowed()
             return @_isAllPlayersSelectActors()

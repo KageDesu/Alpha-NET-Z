@@ -81,7 +81,8 @@ do ->
 
     _._updateBackButton = ->
         return if KDCore.isMV()
-        @_cancelButton.visible = !HUIManager.isLoaderActive()
+        # * Тут может быть вылет, если нет проверки null (?)
+        @_cancelButton?.visible = !HUIManager.isLoaderActive()
 
     
     return

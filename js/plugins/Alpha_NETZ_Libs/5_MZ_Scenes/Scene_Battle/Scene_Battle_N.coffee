@@ -8,16 +8,22 @@ do ->
     _ = Scene_Battle::
 
     # * Когда пришли данные о битве от сервера (регистрация, новый участник)
+    # * Этот метод выполняется на клиентах, которые УЖЕ в битве (а не на тех, кто присоединился)
     _.netOn_battle_serverBattleData = ->
-        $gamePlayer.refresh()
-        $gameMap.requestRefresh()
-        $gameTemp.requestBattleRefresh()
         # * Для всех новых, надо выполнять некоторые методы
         for battler in $gameParty.battleMembers()
             unless $gameTemp._previousNetBattleActors.contains(battler.actorId())
                 battler.onBattleStart()
                 battler.makeActions()
+        # * Всех старых, надо удалить из битвы
+        for battlerId in $gameTemp._previousNetBattleActors
+            unless ANBattleManager.battleData.actors.contains(battlerId)
+                $gameParty.removeActor(battlerId)
+                BattleManager.nSafeRemoveActor()
         $gameTemp._previousNetBattleActors = []
+        $gamePlayer.refresh()
+        $gameMap.requestRefresh()
+        $gameTemp.requestBattleRefresh()
         return
 
     _.nOnBattleStarted = ->
@@ -38,6 +44,10 @@ do ->
             for enemy in $gameTroop.members()
                 enemy.updateDataObserver()
         return
+
+    _.nRefreshSharedBattle = ->
+        # * Обновить спрайты врагов
+        @_spriteset.nRefreshNetBattle()
 
     return
 # ■ END Scene_Battle.coffee
