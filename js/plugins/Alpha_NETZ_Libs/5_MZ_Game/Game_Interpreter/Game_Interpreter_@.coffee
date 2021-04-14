@@ -33,7 +33,7 @@ do ->
                     @_list = [] # * Не будет выполняться
                 else
                     ANInterpreterManager.sendEventStarted(eventId)
-                    #TODO: setupSharedMode
+                    @nPrepareSharedEvent() if @nIsEventIsShared()
                     @nClearFlags()
             return
         

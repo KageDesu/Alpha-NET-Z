@@ -131,8 +131,14 @@ do ->
 
     # * Ожидание готовности пула игроков
     _.nUpdateWaitPlayersPool = ->
+        # * Пул надо обновлять (таймер внутри на повторную отправку)
+        @nPlayerPool.update()
+        if @nIsSharedEventWaitPoolCancelled()
+            "STOP WAITING PLAYERS : IS CANCELED!".p()
+            return true # * Сразу выход из ожидания, если ожидание было преврано
         waiting = !@nPlayerPool.isReady()
         unless waiting
+            "STOP WAITING PLAYERS : IS READY".p()
             @_waitMode = ''
         return waiting
 
