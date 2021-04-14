@@ -1,5 +1,5 @@
 /*:
- * @plugindesc (v.0.3)%TYPE% Network System
+ * @plugindesc (v.0.4)%TYPE% Network System
  * @author Pheonix KageDesu
  * @target MZ
  * @url http://kdworkshop.net/
@@ -8,4 +8,10 @@
  *
  * This plugin version only for preview and testing purposes
  * Read before use: https://github.com/KageDesu/Alpha-NET-Z/wiki
+ *
+ * Required content:
+ *  - plugin Alpha_@Core.js
+ *  - plugin SocketIO.js
+ *  - file css\anet.css
+ *  - folder img\Alpha\*all files*
  *

@@ -20,6 +20,7 @@ do ->
         else
             unless $gameMap.isEventRunning()
                 _.sendEventEnded()
+                _.resetSharedEvent()
         return
 
     # * Дополнительная проверка что статус игрока соответсвует событию (запущено или нет)
@@ -51,6 +52,36 @@ do ->
 
     # * Выполнить комадну виртуально?
     _.isVirtualCommand = (commandCode) -> !ANET.System.NonVirtualCommandsList.contains(commandCode)
+
+
+    # * Сброс общего события
+    _.resetSharedEvent = ->
+        @_sharedInterpreter = null
+        @_sharedEventMaster = false
+        return
+
+    # * Когда игрок запускает общее событие, оно регестрируется этим методом
+    # * ссылка на сам interpreter и флаг - является ли игрок мастером - кто первый запустил
+    _.setupSharedInterpreter = (@_sharedInterpreter, @_sharedEventMaster) ->
+        return unless @_sharedInterpreter?
+        LOG.p("Shared event registred " + @_sharedInterpreter.eventId())
+        # * Если не мастер, то значит надо отправить мастеру, что этот клиент зарегестрировался
+        unless @_sharedEventMaster
+            @sendSharedEventRegisteredDone()
+        return
+
+    # * Является ли данный клиент мастером общего события
+    _.isSharedEventMaster = -> @isSharedEventIsRunning() and @_sharedEventMaster is true
+
+    _.isSharedEventIsRunning = -> @_sharedInterpreter? && $gameMap.isEventRunning()
+
+    # * Отмена ожидания игроков (когда Shared mode == optional)
+    _.forceCancelSharedEvent = ->
+        return unless @isSharedEventMaster()
+        LOG.p("Shared event force cancelled")
+        "SEND ALL CANCEL EVENT".p()
+        #TODO: Отправить всем
+
 
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
@@ -84,6 +115,30 @@ do ->
         ANNetwork.send(NMS.Event("virtualEventCommand", data))
         return
 
+    # * Отправка запроса чтобы все начали общее событие
+    # * Игрок запустил общее событие и будет теперь ждать всех игроков (на карте)
+    _.sendSharedEventRequireRegister = ->
+        # * Только мастер может это отправить
+        # * Плюс эта проверка гарантирует, что мы запустили событие
+        return unless @isSharedEventMaster()
+        data = {
+            mapId: $gameMap.mapId(),
+            eventId: @_sharedInterpreter.eventId()
+        }
+        ANNetwork.send(NMS.Event("registerOnShared", data))
+        return
+
+    # * Отправка ответа, что клиент зарегестрировался на общем событии
+    _.sendSharedEventRegisteredDone = ->
+        return if @isSharedEventMaster()
+        data = {
+            mapId: $gameMap.mapId(),
+            eventId: @_sharedInterpreter.eventId()
+            actorId: ANGameManager.myActorId()
+        }
+        ANNetwork.send(NMS.Event("registerDone", data))
+        return
+
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
 
@@ -102,14 +157,42 @@ do ->
                 when "Virtual"
                     _.startVirtualCommand(list, data.eventId, data.mapId)
                 when "Common Event"
-                    $gameTemp.reverseVirtualCommonEvent(event)
+                    $gameTemp.reserveVirtualCommonEvent(event)
                 else #? AUTO
                     # * Некоторые команды можно выполнять сразу, не ожидая сцены (или другого события)
                     if _.isVirtualCommand(list[0].code)
                         _.startVirtualCommand(list, data.eventId, data.mapId)
                     else
                         # * Остальные идут как общее событие (приоритетное)
-                        $gameTemp.reverseVirtualCommonEvent(event)
+                        $gameTemp.reserveVirtualCommonEvent(event)
+        catch e
+            ANET.w e
+        return
+
+    _.onRegisterOnSharedEventRequest = (mapId, eventId) ->
+        try
+            # * Если карта другая, то пропускаем это сообщение
+            return if $gameMap.mapId() != mapId
+            # * Если общее событие уже запущено (не важно какое), игнорируем
+            return if _.isSharedEventIsRunning()
+            $gameTemp.reserveNetworkSharedEvent(eventId)
+            return
+        catch e
+            ANET.w e
+        return
+
+    _.onRegisterOnSharedEventResponse = (mapId, eventId, actorId) ->
+        try
+            # * Если карта другая, то пропускаем это сообщение
+            return if $gameMap.mapId() != mapId
+            # * Мы не мастер, игнорируем
+            return unless _.isSharedEventMaster()
+            # * ID событий не совпадают, игнорируем
+            return if _._sharedInterpreter.eventId() != eventId
+            # * Регестрируем ответ в пуле общего события
+            LOG.p("Actor " + actorId + " registered on Event")
+            #TODO: Нарушение закона Деметры
+            _._sharedInterpreter.nPlayerPool.onAnswer(actorId)
         catch e
             ANET.w e
         return

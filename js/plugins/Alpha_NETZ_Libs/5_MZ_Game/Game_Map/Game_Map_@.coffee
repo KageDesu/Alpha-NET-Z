@@ -38,6 +38,16 @@ do ->
         if ANNetwork.isConnected()
             @refreshNetworkCharacters()
 
+
+    #@[ALIAS]
+    ALIAS__setupStartingEvent = _.setupStartingEvent
+    _.setupStartingEvent = ->
+        if ANNetwork.isConnected()
+            if $gameTemp.isNetworkSharedEventReserved()
+                return @nSetupNetworkSharedEvent()
+        return ALIAS__setupStartingEvent.call(@)
+        
+
     return
 # ■ END Game_Map.coffee
 #---------------------------------------------------------------------------

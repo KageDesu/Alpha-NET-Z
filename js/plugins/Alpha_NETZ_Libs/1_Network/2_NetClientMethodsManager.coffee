@@ -187,6 +187,22 @@ do ->
         catch e
             console.warn("event_battle_serverBattleData", e)
 
+    _.event_event_registerOnShared = (content) ->
+        try
+            "SHARED EVENT IN".p()
+            { mapId, eventId } = content
+            ANInterpreterManager.onRegisterOnSharedEventRequest(mapId, eventId)
+        catch e
+            console.warn("event_event_registerOnShared", e)
+
+    _.event_event_registerDone = (content) ->
+        try
+            "SHARED EVENT ANSWER".p()
+            { mapId, eventId, actorId } = content
+            ANInterpreterManager.onRegisterOnSharedEventResponse(mapId, eventId, actorId)
+        catch e
+            console.warn("event_event_registerDone", e)
+
     return
 # ■ END NetClientMethodsManager.coffee
 #---------------------------------------------------------------------------

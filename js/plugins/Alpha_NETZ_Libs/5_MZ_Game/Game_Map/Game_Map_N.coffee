@@ -34,6 +34,18 @@ do ->
     _.refreshNetworkCharacters = ->
         @_networkCharacters.refresh()
 
+    # * Запуск общего события (которое пришло от сервера)
+    _.nSetupNetworkSharedEvent = ->
+        try
+            event = @event($gameTemp.retrieveNetworkSharedEvent())
+            return false unless event?
+            $gameTemp._nSharedEventOuterStartFlag = true
+            event.start()
+            return true
+        catch e
+            ANET.w e
+        return false
+
     return
 # ■ END Game_Map.coffee
 #---------------------------------------------------------------------------

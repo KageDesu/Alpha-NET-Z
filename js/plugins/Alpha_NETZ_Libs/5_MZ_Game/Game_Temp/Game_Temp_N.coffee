@@ -12,7 +12,17 @@ do ->
     # -----------------------------------------------------------------------
     do ->
 
-        _.reverseVirtualCommonEvent = (list) ->
+        _.reserveNetworkSharedEvent = (@_reservedNetworkSharedEvent) ->
+
+        _.isNetworkSharedEventReserved = -> @_reservedNetworkSharedEvent >= 1
+
+        # * Забираем (и сразу очищаем)
+        _.retrieveNetworkSharedEvent = ->
+            eventId = @_reservedNetworkSharedEvent
+            @_reservedNetworkSharedEvent = 0
+            return eventId
+
+        _.reserveVirtualCommonEvent = (list) ->
             @_virtualEventQueue.push(list)
 
         _.isVirtualCommonEventReserved = ->

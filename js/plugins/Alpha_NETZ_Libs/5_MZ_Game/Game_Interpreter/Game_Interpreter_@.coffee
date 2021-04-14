@@ -62,6 +62,8 @@ do ->
         _.updateWaitMode = ->
             if @_waitMode == 'netPlayersPool'
                 return @nUpdateWaitPlayersPool()
+            else if @_waitMode == 'netNextCommand'
+                return @nUpdateWaitServerNextCommandPermission()
             else
                 return ALIAS__updateWaitMode.call(@)
 

@@ -20,7 +20,8 @@ class PlayersWaitPool
     register: ->
         @resetTimer()
         console.log "SEND"
-        #TODO: SEND
+        ANInterpreterManager.sendSharedEventRequireRegister()
+        return
 
     # * Ответ от сервера
     onAnswer: (actorId) -> @_playersReady[actorId] = true
@@ -32,10 +33,10 @@ class PlayersWaitPool
             @register() unless @isReady()
         return
 
-    isReady: -> false
-        #for pl, value of @_playersReady
-        #    # * Если хоть одно значение false, значит не готов
-        #    return false if value is false
-        #return true
+    isReady: ->
+        for pl, value of @_playersReady
+            # * Если хоть одно значение false, значит не готов
+            return false if value is false
+        return true
 
     resetTimer: -> @_repeatTimer = 60
