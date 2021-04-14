@@ -118,6 +118,11 @@ do ->
 
     # * Ожидание разрешения от сервера на запуск следующей команды
     _.nUpdateWaitServerNextCommandPermission = ->
+        # * Сервер закрыл общее событие (отменил ожидание старта)
+        # * В GameTemp, потому что может отменить, как тут ещё и не стартует это событие
+        if $gameTemp._shouldForceExitSharedEvent == true
+            @terminate()
+            return true
         waiting = !@_canContinueSharedEvent
         unless waiting
             "CAN PROCESS TO NEXT COMMAND".p()

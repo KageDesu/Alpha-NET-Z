@@ -115,6 +115,11 @@ do ->
                 @_nOnNetCommand_ActorListSelectorEventCommand(commentLine, true)
             when "!forActors"
                 @_nOnNetCommand_ActorListSelectorEventCommand(commentLine, false)
+            when "wait"
+                if ANInterpreterManager.isSharedEventIsRunning()
+                    @nRequestSyncedNextEventCommand()
+                else
+                    console.warn("N wait can be used only in Shared Events")
             when "start"
                 # * Это коммент опций запуска, просто пропускаем, чтобы ошибку не писать в консоль
                 # * Обрабатывается он отдельно, так как если условие ложно, событие не должно

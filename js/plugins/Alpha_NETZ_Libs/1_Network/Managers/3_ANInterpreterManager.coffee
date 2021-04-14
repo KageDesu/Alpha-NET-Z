@@ -63,6 +63,10 @@ do ->
     # * Когда игрок запускает общее событие, оно регестрируется этим методом
     # * ссылка на сам interpreter и флаг - является ли игрок мастером - кто первый запустил
     _.setupSharedInterpreter = (@_sharedInterpreter, @_sharedEventMaster) ->
+        # * Сброс флага необходимости закрытия (для клиентов)
+        $gameTemp._shouldForceExitSharedEvent = false
+        # * Нельзя, если уже зарезервированно общее событие от сервера
+        return if $gameTemp.isNetworkSharedEventReserved()
         return unless @_sharedInterpreter?
         LOG.p("Shared event registred " + @_sharedInterpreter.eventId())
         return
@@ -78,7 +82,7 @@ do ->
         LOG.p("Shared event force cancelled")
         "SEND ALL CANCEL EVENT".p()
         #TODO: Отправить всем
-
+        #TODO: Надо будет проверять чтобы косяков не было!!!
 
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
