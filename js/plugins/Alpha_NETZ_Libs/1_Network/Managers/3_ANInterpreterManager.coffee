@@ -65,9 +65,6 @@ do ->
     _.setupSharedInterpreter = (@_sharedInterpreter, @_sharedEventMaster) ->
         return unless @_sharedInterpreter?
         LOG.p("Shared event registred " + @_sharedInterpreter.eventId())
-        # * Если не мастер, то значит надо отправить мастеру, что этот клиент зарегестрировался
-        unless @_sharedEventMaster
-            @sendSharedEventRegisteredDone()
         return
 
     # * Является ли данный клиент мастером общего события
@@ -124,6 +121,8 @@ do ->
         data = {
             mapId: $gameMap.mapId(),
             eventId: @_sharedInterpreter.eventId()
+            index: @_sharedInterpreter.nSyncWaitCommandData.index
+            indent: @_sharedInterpreter.nSyncWaitCommandData.indent
         }
         ANNetwork.send(NMS.Event("registerOnShared", data))
         return
@@ -135,8 +134,20 @@ do ->
             mapId: $gameMap.mapId(),
             eventId: @_sharedInterpreter.eventId()
             actorId: ANGameManager.myActorId()
+            index: @_sharedInterpreter.nSyncWaitCommandData.index
+            indent: @_sharedInterpreter.nSyncWaitCommandData.indent
         }
         ANNetwork.send(NMS.Event("registerDone", data))
+        return
+
+    # * Мастер отправляет клиентам, что можно продолжать выполнение
+    _.sendSharedEventReadyToContinue = ->
+        return unless @isSharedEventMaster()
+        data = {
+            mapId: $gameMap.mapId(),
+            eventId: @_sharedInterpreter.eventId()
+        }
+        ANNetwork.send(NMS.Event("sharedCanContinue", data))
         return
 
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
@@ -169,8 +180,15 @@ do ->
             ANET.w e
         return
 
-    _.onRegisterOnSharedEventRequest = (mapId, eventId) ->
+    # * Когда пришёл запрос с сервера, что надо начать общее событие
+    _.onRegisterOnSharedEventRequest = (data) ->
         try
+            {
+                mapId,
+                eventId,
+                index,
+                indent
+            } = data
             # * Если карта другая, то пропускаем это сообщение
             return if $gameMap.mapId() != mapId
             # * Если общее событие уже запущено (не важно какое), игнорируем
@@ -181,20 +199,43 @@ do ->
             ANET.w e
         return
 
-    _.onRegisterOnSharedEventResponse = (mapId, eventId, actorId) ->
+    # * Когда клиент на необходимой команде общего события
+    _.onRegisterOnSharedEventResponse = (data) ->
         try
+            {
+                mapId,
+                eventId,
+                actorId,
+                index,
+                indent
+            } = data
             # * Если карта другая, то пропускаем это сообщение
             return if $gameMap.mapId() != mapId
             # * Мы не мастер, игнорируем
             return unless _.isSharedEventMaster()
             # * ID событий не совпадают, игнорируем
             return if _._sharedInterpreter.eventId() != eventId
-            # * Регестрируем ответ в пуле общего события
-            LOG.p("Actor " + actorId + " registered on Event")
-            #TODO: Нарушение закона Деметры
-            _._sharedInterpreter.nPlayerPool.onAnswer(actorId)
+            # * Регестрируем ответ
+            _._sharedInterpreter.nOnSyncedEventCommandResponse(index, indent, actorId)
         catch e
             ANET.w e
         return
+
+    # * Когда все игроки "готовы" и можно продолжать выполнение общего события
+    _.onContinueSharedEvent = (data) ->
+        try
+            {
+                mapId,
+                eventId
+            } = data
+            # * Если карта другая, то пропускаем это сообщение
+            return if $gameMap.mapId() != mapId
+             # * Мы мастер, игнорируем (выполнение у мастера от пула внутри события)
+            return if _.isSharedEventMaster()
+            # * ID событий не совпадают, игнорируем
+            return if _._sharedInterpreter.eventId() != eventId
+            _._sharedInterpreter.nAllowContinueSharedEvent()
+        catch e
+            ANET.w e
 
     return

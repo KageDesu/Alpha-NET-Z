@@ -190,18 +190,23 @@ do ->
     _.event_event_registerOnShared = (content) ->
         try
             "SHARED EVENT IN".p()
-            { mapId, eventId } = content
-            ANInterpreterManager.onRegisterOnSharedEventRequest(mapId, eventId)
+            ANInterpreterManager.onRegisterOnSharedEventRequest(content)
         catch e
             console.warn("event_event_registerOnShared", e)
 
     _.event_event_registerDone = (content) ->
         try
             "SHARED EVENT ANSWER".p()
-            { mapId, eventId, actorId } = content
-            ANInterpreterManager.onRegisterOnSharedEventResponse(mapId, eventId, actorId)
+            ANInterpreterManager.onRegisterOnSharedEventResponse(content)
         catch e
             console.warn("event_event_registerDone", e)
+
+    _.event_event_sharedCanContinue = (content) ->
+        try
+            "SHARED EVENT CAN CONTINUE".p()
+            ANInterpreterManager.onContinueSharedEvent(content)
+        catch e
+            console.warn("event_event_sharedCanContinue", e)
 
     return
 # ■ END NetClientMethodsManager.coffee
