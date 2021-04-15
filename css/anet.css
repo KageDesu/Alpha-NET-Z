@@ -492,3 +492,30 @@
 .form__field:invalid {
     box-shadow: none;
 }
+
+.speech-bubble {
+    filter: drop-shadow(-1px -1px 2px rgba(0, 0, 0, 0.1)) drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.15));
+    margin: 1rem;
+    margin-bottom: 40px;
+    margin-top: 25%;
+    padding: 1.5rem 2rem;
+    position: relative;
+    font-family: "Source Sans Pro", sans-serif;
+    font-size: 2.2rem;
+    font-weight: 400;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.65);
+    color: rgb(209, 223, 21);
+}
+
+.speech-bubble cite {
+    position: absolute;
+    bottom: 0.8rem;
+    right: 2.4rem;
+    font-size: 1rem;
+    font-style: normal;
+    text-align: right;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+    color: white;
+}

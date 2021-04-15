@@ -58,6 +58,8 @@ do ->
     _.resetSharedEvent = ->
         @_sharedInterpreter = null
         @_sharedEventMaster = false
+        # * На всякий случай
+        @hideWaitPlayersOnSharedEvent()
         return
 
     # * Когда игрок запускает общее событие, оно регестрируется этим методом
@@ -82,9 +84,21 @@ do ->
         LOG.p("Shared event force cancelled")
         "SEND ALL CANCEL EVENT".p()
         @sendForceCancelSharedEvent()
-        #sharedForceCancel
-        #TODO: Отправить всем
-        #TODO: Надо будет проверять чтобы косяков не было!!!
+        @hideWaitPlayersOnSharedEvent()
+        return
+
+    _.showWaitPlayersOnSharedEvent = ->
+        @hideWaitPlayersOnSharedEvent()
+        #TODO: Вынести все строки в параметры
+        text = "Waiting players"
+        text2 = ""
+        if @isSharedEventMaster() && @_sharedInterpreter.nIsSharedEventCanBeForceCancelled()
+            text2 = "Press ESC to cancel"
+        HUIManager?.showWaitingInfo(text, text2, 1000)
+        return
+
+    _.hideWaitPlayersOnSharedEvent = ->
+        HUIManager?.hideWaitingInfo()
 
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================

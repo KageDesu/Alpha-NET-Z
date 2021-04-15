@@ -14,6 +14,18 @@ do ->
             ANET.w e
             return false
 
+    _.nIsEventIsSharedAndStrict = ->
+        try
+            return @nIsEventIsShared() && @nStartOptions.sharedMode.contains("Strict")
+        catch e
+            ANET.w e
+            return false
+
+    _.nIsSharedEventCanBeForceCancelled = ->
+        # * Нельзя отменить "Strict" общее событие
+        # * Только в самом начале можно отменить, когда событие ещё не стартовало
+        return !@nIsEventIsSharedAndStrict() && @nSyncWaitCommandData.index == 0
+
     _.nPrepareSharedEvent = ->
         # * Сбрасываем на всякий случай
         @nPlayerPool = null
@@ -35,11 +47,8 @@ do ->
     # * Игрок отменил ожидания других игроков (события должно закрыться сразу)
     _.nIsSharedEventWaitPoolCancelled = ->
         try
-            # * Нельзя отменить "Strict" общее событие
-            return if @nStartOptions.sharedMode.contains("Strict")
-            # * Только в самом начале можно отменить, когда событие ещё не стартовало
-            return if @nSyncWaitCommandData.index > 0
-            if Input.isTriggered('cancel')
+            return unless @nIsSharedEventCanBeForceCancelled()
+            if Input.isCancel()
                 # * Прерываем событие сразу (не запускаем)
                 # * Очищаем ввод, чтобы меню сразу не выскочело после нажатия Esc
                 Input.clear()
@@ -52,8 +61,6 @@ do ->
 
     # * Следующая команда события должна быть синхронизированна
     _.nRequestSyncedNextEventCommand = ->
-        #TODO: Надо визуально ожидание рисовать, как было в Alpha NET
-        #TODO: Game Событие отправить? Или напрямую или сцена сама проверяем?
         @nSyncWaitCommandData = {
             index: @_index
             indent: @_indent
@@ -62,6 +69,7 @@ do ->
             @nSetWaitPlayerPool()
         else
             @nSetWaitStartNextCommandFromServer()
+        ANInterpreterManager.showWaitPlayersOnSharedEvent()
         return
 
     # * Когда пришли данные от клиента
@@ -86,6 +94,8 @@ do ->
             # * Не пересоздаём, так как нам важно учитывать только тех игроков на карте
             # * которые были во время запуска события, а не подключились позже
             @nPlayerPool.reset()
+        # * Отправляем на сервер запрос
+        @nPlayerPool.register()
         @_waitMode = "netPlayersPool"
         return
 
@@ -98,8 +108,10 @@ do ->
             return true # * Сразу выход из ожидания, если ожидание было преврано
         waiting = !@nPlayerPool.isReady()
         unless waiting
+            # * Теперь событие продолжается (мастер)
             "STOP WAITING PLAYERS : IS READY".p()
             ANInterpreterManager.sendSharedEventReadyToContinue()
+            ANInterpreterManager.hideWaitPlayersOnSharedEvent()
             @nClearSharedSyncEventCommandWait()
             @_waitMode = ''
         return waiting
@@ -131,6 +143,7 @@ do ->
             return true
         waiting = !@_canContinueSharedEvent
         unless waiting
+            # * Событие продолжается (клиент)
             "CAN PROCESS TO NEXT COMMAND".p()
             @_waitMode = ''
         else
@@ -146,6 +159,7 @@ do ->
         @_canContinueSharedEvent = true
         # * Чтобы сброс переменной не произошёл снова
         @_nRepeatAnswerToServerTimer = -1
+        ANInterpreterManager.hideWaitPlayersOnSharedEvent()
         return
 
     return

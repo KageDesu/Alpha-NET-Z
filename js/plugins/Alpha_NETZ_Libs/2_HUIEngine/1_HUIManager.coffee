@@ -29,25 +29,64 @@ do ->
     _.isUnderMouse = -> @_isMouseHoverHtmlElement is true
 
     _.showLoader = (delay = 200) ->
-        return if @isLoaderActive()
-        @_loaderThread = setTimeout (->
-                unless document.getElementById("anetLoader")
-                    document.body.appendChild(HUIManager._loader)
-            ), delay
+        try
+            return if @isLoaderActive()
+            @_loaderThread = setTimeout (->
+                    unless document.getElementById("anetLoader")
+                        document.body.appendChild(HUIManager._loader)
+                ), delay
+        catch e
+            console.warn(e)
         return
     
     _.hideLoader = ->
-        return unless @isLoaderActive()
-        clearTimeout(@_loaderThread)
-        @_loaderThread = null
-        if document.getElementById("anetLoader")
-            document.body.removeChild(@_loader)
+        try
+            return unless @isLoaderActive()
+            clearTimeout(@_loaderThread)
+            @_loaderThread = null
+            if document.getElementById("anetLoader")
+                document.body.removeChild(@_loader)
+        catch e
+            console.log(e)
+        return
 
     _.isLoaderActive = -> @_loaderThread?
 
-    _.notifyError = (msg) -> @_notify.error(msg)
+    _.showWaitingInfo = (text, text2, delay = 200) ->
+        try
+            return if @isWaitingInfoActive()
+            @_waitingInfoThread = setTimeout (->
+                HUIManager._createWaitPlayersAlert(text, text2)
+                ), delay
+        catch e
+            console.warn(e)
+        return
 
-    _.notifySucess = (msg) -> @_notify.success(msg)
+    _.hideWaitingInfo = ->
+        try
+            return unless @isWaitingInfoActive()
+            clearTimeout(@_waitingInfoThread)
+            @_waitingInfoThread = null
+            if @_waitPlayers?
+                document.getElementById("anetCanvasElements").removeChild(@_waitPlayers)
+                @_waitPlayers = null
+        catch e
+            console.warn(e)
+        return
+
+    _.isWaitingInfoActive = -> @_waitingInfoThread?
+
+    _.notifyError = (msg) ->
+        try
+            @_notify.error(msg)
+        catch e
+            console.warn(e)
+
+    _.notifySucess = (msg) ->
+        try
+            @_notify.success(msg)
+        catch e
+            console.warn(e)
 
     _.isInputActive = -> @_input?
 
@@ -110,6 +149,17 @@ do ->
         )
         return
 
+    # * Информация при ожидании других игроков (или другая информация, ожидание сервера)
+    _._createWaitPlayersAlert = (text, extraText) ->
+        @_waitPlayers = document.createElement("blockquote")
+        @_waitPlayers.id = "anetWaitPlayersAlert"
+        @_waitPlayers.classList.add("speech-bubble")
+        htmlCode =
+            "<p>" + text + "</p>" + "<cite>" + extraText + "</cite>"
+        @_waitPlayers.insertAdjacentHTML('beforeend', htmlCode)
+        @_canvasRelativeElements.appendChild(@_waitPlayers)
+        return
+
     # * Элемент родитель, который будет изменяться вместе с размерами Canvas
     # * Это позволит сохранять фиксированные позиции HTML элементов не зависимо от размера окна игры
     _._createRelativeParent = ->
@@ -120,7 +170,6 @@ do ->
         return
 
     _._createInputField = (placeholder) ->
-
         @_input = document.createElement("div")
         @_input.id = "anetInput"
         @_input.addEventListener("mouseenter", () -> HUIManager._isMouseHoverHtmlElement = true)
