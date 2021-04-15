@@ -81,6 +81,8 @@ do ->
         return unless @isSharedEventMaster()
         LOG.p("Shared event force cancelled")
         "SEND ALL CANCEL EVENT".p()
+        @sendForceCancelSharedEvent()
+        #sharedForceCancel
         #TODO: Отправить всем
         #TODO: Надо будет проверять чтобы косяков не было!!!
 
@@ -152,6 +154,16 @@ do ->
             eventId: @_sharedInterpreter.eventId()
         }
         ANNetwork.send(NMS.Event("sharedCanContinue", data))
+        return
+
+    # * Когда мастер общего события отменяет общее событие (на стадии ожидания игроков)
+    _.sendForceCancelSharedEvent = ->
+        return unless @isSharedEventMaster()
+        data = {
+            mapId: $gameMap.mapId(),
+            eventId: @_sharedInterpreter.eventId()
+        }
+        ANNetwork.send(NMS.Event("sharedForceCancel", data))
         return
 
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
@@ -239,6 +251,33 @@ do ->
             # * ID событий не совпадают, игнорируем
             return if _._sharedInterpreter.eventId() != eventId
             _._sharedInterpreter.nAllowContinueSharedEvent()
+        catch e
+            ANET.w e
+
+    # * Когда мастер общего события отменил его
+    _.onSharedEventForceCancelFromServer = (data) ->
+        try
+            {
+                mapId,
+                eventId
+            } = data
+            # * Если карта другая, то пропускаем это сообщение
+            return if $gameMap.mapId() != mapId
+            # * Мы мастер, игнорируем
+            return if _.isSharedEventMaster()
+            if _.isSharedEventIsRunning()
+                # * ID событий не совпадают, игнорируем
+                return if _._sharedInterpreter.eventId() != eventId
+                # * Ставим глобальны флаг (обаботка идёт внутри Game_Event)
+                $gameTemp._shouldForceExitSharedEvent = true
+            else
+                # * Если событие ещё не было запущено (например этот клиент был в меню)
+                # * Надо проверить не стоит ли событие в очереди на запуск
+                if $gameTemp.isNetworkSharedEventReserved()
+                    # * Если ID событий совпадает
+                    if eventId == $gameTemp._reservedNetworkSharedEvent
+                        $gameTemp.retrieveNetworkSharedEvent() # * Забираем без выполнения
+                return
         catch e
             ANET.w e
 

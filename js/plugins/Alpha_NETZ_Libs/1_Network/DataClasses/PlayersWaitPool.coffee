@@ -5,21 +5,16 @@
 
 class PlayersWaitPool
     constructor: () ->
-        # * Добавляем себя как готового
-        @_playersReady = {
-            myActorId: true
-        }
-        # * Добавляем всех игроков как изначально не готовых
-        for pl in ANGameManager.anotherPlayersOnMap()
-            @_playersReady[pl.actorId] = false
-        
-        @resetTimer()
+        # * Запоминается при создании, чтобы можно было сбросить
+        # * Это нужно, чтобы если игрок новый переместился на карту, его
+        # * не добавили в ожидание, если на этой карте уже запущено общее событие
+        @_anotherPlayers = ANGameManager.anotherPlayersOnMap()
+        @reset()
         return
 
     # * Зарегестрировать (отправить на сервер)
     register: ->
         @resetTimer()
-        console.log "SEND"
         ANInterpreterManager.sendSharedEventRequireRegister()
         return
 
@@ -40,3 +35,17 @@ class PlayersWaitPool
         return true
 
     resetTimer: -> @_repeatTimer = 60
+
+    # * Сбросить до нового ожидания
+    reset: ->
+        # * Добавляем себя как готового всегда (тут не важент именно ID)
+        # * В принципе можно и не добавлять, так как важнее другие игроки
+        @_playersReady = {
+            myActorId: true
+        }
+        # * Добавляем всех игроков как изначально не готовых
+        for pl in @_anotherPlayers
+            @_playersReady[pl.actorId] = false
+        
+        @resetTimer()
+        return

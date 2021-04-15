@@ -35,15 +35,16 @@ do ->
     # * Игрок отменил ожидания других игроков (события должно закрыться сразу)
     _.nIsSharedEventWaitPoolCancelled = ->
         try
-            #TODO: Кнопку в параметры? (Потом)
-            #TODO: if option is not strict
-            #TODO: ТОЛЬКО В САМОМ НАЧАЛЕ!
+            # * Нельзя отменить "Strict" общее событие
+            return if @nStartOptions.sharedMode.contains("Strict")
+            # * Только в самом начале можно отменить, когда событие ещё не стартовало
+            return if @nSyncWaitCommandData.index > 0
             if Input.isTriggered('cancel')
                 # * Прерываем событие сразу (не запускаем)
                 # * Очищаем ввод, чтобы меню сразу не выскочело после нажатия Esc
                 Input.clear()
-                @terminate()
                 ANInterpreterManager.forceCancelSharedEvent()
+                @terminate()
                 return true
         catch e
             ANET.w e
@@ -79,7 +80,12 @@ do ->
     # * Ожидания пула игроков
     _.nSetWaitPlayerPool = ->
         "START POOL".p()
-        @nPlayerPool = new PlayersWaitPool()
+        unless @nPlayerPool?
+            @nPlayerPool = new PlayersWaitPool()
+        else
+            # * Не пересоздаём, так как нам важно учитывать только тех игроков на карте
+            # * которые были во время запуска события, а не подключились позже
+            @nPlayerPool.reset()
         @_waitMode = "netPlayersPool"
         return
 

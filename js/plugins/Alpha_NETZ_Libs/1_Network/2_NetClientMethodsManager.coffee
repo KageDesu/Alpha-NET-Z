@@ -208,6 +208,13 @@ do ->
         catch e
             console.warn("event_event_sharedCanContinue", e)
 
+    _.event_event_sharedForceCancel = (content) ->
+        try
+            "SHARED EVENT FORCE CANCELLED".p()
+            ANInterpreterManager.onSharedEventForceCancelFromServer(content)
+        catch e
+            console.warn("event_event_sharedForceCancel", e)
+
     return
 # ■ END NetClientMethodsManager.coffee
 #---------------------------------------------------------------------------
