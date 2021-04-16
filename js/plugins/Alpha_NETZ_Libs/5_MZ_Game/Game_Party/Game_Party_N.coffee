@@ -26,7 +26,9 @@ do ->
                 # * Ищем игрока для каждого Actor
                 playerForActor = ANGameManager.playersData.find (pl) -> pl.actorId == id
                 # * Если нету больше игрока с таким Actor, удаляем из партии
-                @removeActor(id) unless playerForActor?
+                unless playerForActor?
+                    @removeActor(id)
+                    ANGameManager.anotherPlayerLeaveGame(id)
             return
         catch e
             ANET.w e

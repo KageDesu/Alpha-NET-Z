@@ -167,6 +167,13 @@ do ->
         ANMapManager.sendInitialMapData()
         return
 
+    # * Когда игрок покидает игру (disconnect)
+    _.anotherPlayerLeaveGame = (actorId) ->
+        LOG.p("Player leave game")
+        ceId = ANET.PP.getPlayerLeaveGameCommonEventId()
+        $gameTemp.reserveCommonEvent(ceId) if ceId > 0
+        return
+
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
 

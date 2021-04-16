@@ -24,6 +24,8 @@ do ->
         # * Доступна ли обычная локальная Новая игра
         isSinglePlayerAllowed: -> @getParam("singlePlayerAllowed", true)
 
+        getPlayerLeaveGameCommonEventId: -> @getParam("playerLeaveGameCommonEvent", 0)
+
         globalVariablesIds: -> @_globalVars
 
         globalSwitchesIds: -> @_globalSwitches

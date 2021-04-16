@@ -215,6 +215,22 @@ do ->
         catch e
             console.warn("event_event_sharedForceCancel", e)
 
+    _.event_game_userCommand = (content) ->
+        try
+            "CUSTOM COMMAND IN".p()
+            { name, data } = content
+            nAPI.onCustomCommand(name, data)
+        catch e
+            console.warn("event_game_userCommand", e)
+
+    _.event_game_customCommandLink = (content) ->
+        try
+            "CUSTOM LINK IN".p()
+            { name, commonEventId } = content
+            $gameSystem?.nRegisterCustomCommandCE(name, commonEventId)
+        catch e
+            console.warn("event_game_userCommand", e)
+
     return
 # ■ END NetClientMethodsManager.coffee
 #---------------------------------------------------------------------------

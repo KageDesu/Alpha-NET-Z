@@ -62,6 +62,13 @@
 @default Instead Nickname
 @desc Show network player name instead of his Actor name (or nickname)
 
+@param playerLeaveGameCommonEvent:int
+@parent playersSettingsGroup
+@text On Player Disconnect CE
+@type common_event
+@default 0
+@desc That common event will be called when somebody leave (disconnect) game. 0 - nothing
+
 @param globalData:s
 @text Global Data
 @type struct<LGlobalData>
