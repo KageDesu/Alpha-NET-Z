@@ -28,6 +28,11 @@ do ->
 
     _.isUnderMouse = -> @_isMouseHoverHtmlElement is true
 
+    # * Когда происходит смена сцены в игре
+    # * (надо убирать лишние элементы, которые не могут переходить на другую сцену)
+    _.onGameSceneChanged = ->
+        @hideWaitingInfo()
+
     _.showLoader = (delay = 200) ->
         try
             return if @isLoaderActive()

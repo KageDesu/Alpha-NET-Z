@@ -150,16 +150,17 @@ do ->
 
          # * Может ли данный игрок запустить это событие
         _.isPassStartOptions = () ->
-            return true unless @isHaveNetworkStartOptions()
-            if @nIsLockedEvent()
-                return false if ANET.Utils.isEventStartedByAny(@eventId())
-            return ANET.Utils.isPassEventFilterOptions(@nStartOptions)
+            # * Если это общее событие и запускаетс от сервера, то по любому можно запускать
+            if @nIsEventIsShared() && $gameTemp._nSharedEventOuterStartFlag is true
+                return true
+            else
+                return true unless @isHaveNetworkStartOptions()
+                if @nIsLockedEvent()
+                    return false if ANET.Utils.isEventStartedByAny(@eventId())
+                return ANET.Utils.isPassEventFilterOptions(@nStartOptions)
 
         # * Закрытыми могут быть только события с собственным ID (т.е. события карты)
-        # TODO: Общие события не могут быть закрытыми??? МОГУТ! но запускать по другому без проверки на Lock
         _.nIsLockedEvent = () -> @eventId() > 0 && @nStartOptions?.lockMode is "true"
-
-        _.nIsSharedEvent = () -> @nStartOptions?.sharedMode isnt "NO"
 
         # * Есть ли опции (условия) запуска события для сети
         _.nCheckEventStartOptions = ->

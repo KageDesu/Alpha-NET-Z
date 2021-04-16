@@ -223,6 +223,8 @@ do ->
             return if $gameMap.mapId() != mapId
             # * Если общее событие уже запущено (не важно какое), игнорируем
             return if _.isSharedEventIsRunning()
+            # * Это событие уже начато, т.е. этот клиент опоздал (пришёл с другой карты)
+            return if index != 0
             $gameTemp.reserveNetworkSharedEvent(eventId)
             return
         catch e
@@ -260,6 +262,8 @@ do ->
             } = data
             # * Если карта другая, то пропускаем это сообщение
             return if $gameMap.mapId() != mapId
+            # * Если общее событие не запущено, игнорируем
+            return unless _.isSharedEventIsRunning()
              # * Мы мастер, игнорируем (выполнение у мастера от пула внутри события)
             return if _.isSharedEventMaster()
             # * ID событий не совпадают, игнорируем

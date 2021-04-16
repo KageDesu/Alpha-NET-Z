@@ -9,14 +9,14 @@ do ->
 
     _.nIsEventIsShared = ->
         try
-            return @nStartOptions?.sharedMode != "No"
+            return @isHaveNetworkStartOptions() && @nStartOptions.sharedMode != "No"
         catch e
             ANET.w e
             return false
 
     _.nIsEventIsSharedAndStrict = ->
         try
-            return @nIsEventIsShared() && @nStartOptions.sharedMode.contains("Strict")
+            return @nIsEventIsShared() && @nStartOptions.sharedMode?.contains("Strict")
         catch e
             ANET.w e
             return false
@@ -27,17 +27,19 @@ do ->
         return !@nIsEventIsSharedAndStrict() && @nSyncWaitCommandData.index == 0
 
     _.nPrepareSharedEvent = ->
-        # * Сбрасываем на всякий случай
-        @nPlayerPool = null
         ANInterpreterManager.resetSharedEvent()
         "PREPARE SHARED MOD".p(@_eventId)
         unless $gameTemp._nSharedEventOuterStartFlag?
+            # * Сброс пула игроков
+            @nPlayerPool = null
             # * Регестрируем общее событие (второй аргумент флаг - мастер этот клиент?)
             ANInterpreterManager.setupSharedInterpreter(@, true)
             # * Запускаем пул игроков (на карте)
             @nRequestSyncedNextEventCommand()
         else
             "OUUTER START".p()
+            # * Сброс флага
+            $gameTemp._nSharedEventOuterStartFlag = null
             # * Отправим, что мы зарегестрировались на этом событии
             ANInterpreterManager.setupSharedInterpreter(@, false)
             # * Ждём разрешение на старт следующей команды (от сервера, мастера общего события)
@@ -118,7 +120,6 @@ do ->
 
     # * Очистить пул и данные команды на синхронизацию
     _.nClearSharedSyncEventCommandWait = ->
-        @nPlayerPool = null
         @nSyncWaitCommandData = null
         return
 

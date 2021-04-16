@@ -8,7 +8,7 @@ class PlayersWaitPool
         # * Запоминается при создании, чтобы можно было сбросить
         # * Это нужно, чтобы если игрок новый переместился на карту, его
         # * не добавили в ожидание, если на этой карте уже запущено общее событие
-        @_anotherPlayers = ANGameManager.anotherPlayersOnMap()
+        @_anotherPlayersIds = ANGameManager.anotherPlayersOnMap().map (pl) -> pl.actorId
         @reset()
         return
 
@@ -18,6 +18,19 @@ class PlayersWaitPool
         ANInterpreterManager.sendSharedEventRequireRegister()
         return
 
+    # * Проверить, что игроки, которые в пуле, онлайн (не отключились)
+    checkPool: ->
+        playersOnMap = ANGameManager.anotherPlayersOnMap()
+        for id in @_anotherPlayersIds
+            # * Если игрока больше нет на карте, мы его удаляем из пула
+            player = playersOnMap.find (pl) -> pl.actorId == id
+            unless player?
+                @_anotherPlayersIds.delete(id)
+                # * Игрок отключился, делаем ему true, чтобы можно было продолжить событие
+                # * (в следующей команде он уже участвовать не будет, так как будет Reset)
+                @_playersReady[id] = true
+        return
+
     # * Ответ от сервера
     onAnswer: (actorId) -> @_playersReady[actorId] = true
 
@@ -25,7 +38,9 @@ class PlayersWaitPool
         if @_repeatTimer >= 0
             @_repeatTimer--
         else
-            @register() unless @isReady()
+            unless @isReady()
+                @checkPool()
+                @register()
         return
 
     isReady: ->
@@ -44,8 +59,8 @@ class PlayersWaitPool
             myActorId: true
         }
         # * Добавляем всех игроков как изначально не готовых
-        for pl in @_anotherPlayers
-            @_playersReady[pl.actorId] = false
+        for id in @_anotherPlayersIds
+            @_playersReady[id] = false
         
         @resetTimer()
         return
