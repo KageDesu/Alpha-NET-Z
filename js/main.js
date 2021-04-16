@@ -113,7 +113,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Battler_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Character_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Character_N.js"
-,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Gauge_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Gauge_@_MZ.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_PlayerNetworkStatus.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Battle_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_@.js"
@@ -265,6 +265,10 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
 
 
 

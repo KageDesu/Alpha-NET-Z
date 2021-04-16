@@ -38,6 +38,12 @@ class Scene_NetworkGameMenu extends Scene_MenuBase
     netOn_lobby_changePlayerName: ->
         @refreshWelcomeText()
 
+    #?EVENT
+    # * Когда игрок выходит или входит в комнату
+    # * Этот метод тут, чтобы перекрыть Scene_MenuBase реализацию
+    # * Так как пока нет необходимости $gameParty менять
+    netOn_lobby_refreshRoomData: -> # * NOTHING
+
 do ->
 
     #@[DEFINES]

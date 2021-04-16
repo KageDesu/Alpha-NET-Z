@@ -10,7 +10,7 @@
  * Read before use: https://github.com/KageDesu/Alpha-NET-Z/wiki
  *
  * Required content:
- *  - plugin Alpha_@Core.js
+ *  - plugin Alpha_Core.js
  *  - plugin SocketIO.js
  *  - file css\anet.css
  *  - folder img\Alpha\*all files*
