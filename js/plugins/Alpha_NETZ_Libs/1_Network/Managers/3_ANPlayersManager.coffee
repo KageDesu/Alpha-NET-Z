@@ -59,7 +59,7 @@ do ->
 
     _.onPlayerMove = (id, moveData) ->
         try
-            return if SceneManager.isSceneChanging()
+            return if SceneManager.isBusyForNetworkData()
             char = $gameMap.networkCharacterById(id)
             char?.moveStraightFromServer(moveData)
         catch e

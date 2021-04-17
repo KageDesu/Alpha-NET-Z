@@ -84,6 +84,7 @@ do ->
         ALIAS__command108 = _.command108
         _.command108 = (params) ->
             if ANNetwork.isConnected()
+                params = @_params if KDCore.isMV()
                 # * Проверить комментарий на наличие NET команд
                 @_nCheckNetComment(params[0])
             return ALIAS__command108.call(@, params)

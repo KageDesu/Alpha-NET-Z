@@ -22,7 +22,7 @@ do ->
     # * Когда пришло какое-либо сообщение от сервера
     #?EVENT
     _.onServerEvent = (name) ->
-        return if SceneManager.isSceneChanging()
+        return if SceneManager.isBusyForNetworkData()
         eventMethod = "netOn_" + name
         if @[eventMethod]?
             console.log("Call scene callback for event " + name)

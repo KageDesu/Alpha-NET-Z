@@ -153,7 +153,11 @@ do ->
             @send(NMS.Lobby("leaveRoom", @room.name))
             return
         
-
+        # * Запросить данные о игроках в комнате
+        _.requestRoomRefresh = ->
+            return unless @isConnected()
+            @send(NMS.Lobby("getRoomData"))
+            return
 
     # * HELPERS ====================================================
     

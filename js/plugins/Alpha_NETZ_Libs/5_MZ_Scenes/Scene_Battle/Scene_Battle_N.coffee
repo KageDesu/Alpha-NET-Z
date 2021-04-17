@@ -23,7 +23,7 @@ do ->
         $gameTemp._previousNetBattleActors = []
         $gamePlayer.refresh()
         $gameMap.requestRefresh()
-        $gameTemp.requestBattleRefresh()
+        $gameTemp.requestBattleRefresh() if KDCore.isMZ()
         return
 
     _.nOnBattleStarted = ->

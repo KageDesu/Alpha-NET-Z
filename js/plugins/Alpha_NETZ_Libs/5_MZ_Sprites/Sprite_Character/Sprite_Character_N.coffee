@@ -26,7 +26,7 @@ do ->
         @netStateIcon.setupNETCharacter(@_character)
         try
             # * Не лучший способ
-            SceneManager._scene._spriteset.addNetworkStatusIconForCharacter(@netStateIcon)
+            SceneManager._scene._spriteset?.addNetworkStatusIconForCharacter(@netStateIcon)
         catch e
             ANET.w e
         return

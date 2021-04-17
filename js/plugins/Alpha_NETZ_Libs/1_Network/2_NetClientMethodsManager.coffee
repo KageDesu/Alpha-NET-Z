@@ -75,7 +75,7 @@ do ->
         ANGameManager.onPlayerName(content.who, content.name)
 
     _.event_lobby_refreshRoomData = (content) ->
-        return if SceneManager.isSceneChanging()
+        return if SceneManager.isBusyForNetworkData()
         ANGameManager.onRoomPlayers(content.playersData)
         ANNetwork.onRoomDataFromServer(content.room)
 

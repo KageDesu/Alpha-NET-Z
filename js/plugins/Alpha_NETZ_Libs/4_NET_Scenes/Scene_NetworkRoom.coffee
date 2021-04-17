@@ -11,6 +11,19 @@ class Scene_NetworkRoom extends Scene_MenuBase
         if ANET.PP.isActorSelectionAllowed()
             @createActorSelectWindow()
         @refreshRoom()
+        return
+
+    start: ->
+        super()
+        ANNetwork.requestRoomRefresh()
+        # * Так как есть искуственная задержка загрузки сцены на MV
+        if KDCore.isMV()
+            setTimeout (->
+                    try
+                        ANNetwork.requestRoomRefresh()
+                    catch
+                ), 300
+        return
 
     isBottomHelpMode: -> false
 

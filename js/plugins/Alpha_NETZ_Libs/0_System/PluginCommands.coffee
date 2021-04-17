@@ -16,14 +16,14 @@ do ->
     registerPluginCommandsMZ = (pluginName) ->
         PluginManager.registerCommand(pluginName, 'EventCommandSelector', (args) ->
             try
-                this.nSetCommandOptions(args)
+                @nSetCommandOptions(args)
             catch e
                 ANET.w e
         )
 
         PluginManager.registerCommand(pluginName, 'SharedBattle', (args) ->
             try
-                this.nSetSharedBattle(args.battleId)
+                @nSetSharedBattle(args.battleId)
             catch e
                 ANET.w e
         )
@@ -31,8 +31,10 @@ do ->
         return
         
     registerPluginCommandsMV = ->
-        #TODO: Game_Interpreter.prototype.pluginCommand
-
-
+        try
+            # * Этот метод только для MV существует
+            ANET.registerMVPluginCommands()
+        catch e
+            ANET.w e
 
     return
