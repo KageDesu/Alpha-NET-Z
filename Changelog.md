@@ -1,0 +1,23 @@
+## Changelog
+
+### Version 0.4
+**(17.04.2021)**
+
+#### New features
+- [Shared Events](https://github.com/KageDesu/Alpha-NET-Z/wiki/Shared-Events) _(Now you can create cutscenes)_  
+- [Script calls user API](https://github.com/KageDesu/Alpha-NET-Z/wiki/Script-calls-User-API) _(Now you can create custom commands to server as game developer and plugin developer)_  
+
+#### New plugin parameters:
+- `One player start?`  
+- `New Game Allowed?`  
+- `On Player Disconnect CE`   
+
+#### Bugs fixes:
+- Game crush in actor select screen if press `Ok` and not select any actor
+- Player name change scene not exit by `Ok`
+- Sometimes after changing Room or Player name mouse movement not works in game  
+- Wrong players count limit in room
+- Sometimes game crushes if leave and join room
+- Menu state icon above player disappear if player change main menu scene to another menu scene (items, skills, equips)  
+- Shared battle: wrong enemies count for different players  
+- Shared battle: when the first player select an action (attack, magic, item, or defend), and then the second player choose escape, the game then freeze for the first player
