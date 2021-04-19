@@ -1,30 +1,20 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Temp.coffee
+# ■ Window_BattleLog.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Temp::
+    _ = Window_BattleLog::
 
-
-    # * В MV нету метода retrieveCommonEvent
     #@[ALIAS]
-    ALIAS__reservedCommonEvent = _.reservedCommonEvent
-    _.reservedCommonEvent = ->
-        if @isVirtualCommonEventReserved()
-            return @_virtualEventQueue.shift()
-        else
-            return ALIAS__reservedCommonEvent.call(@)
-
-    # * В MV нету метода requestBattleRefresh
-    _.requestBattleRefresh = ->
-        @_needsBattleRefresh = true if $gameParty.inBattle()
-
-    _.isBattleRefreshRequested = -> @_needsBattleRefresh == true
-
-    _.clearBattleRefreshRequest = -> @_needsBattleRefresh = false
+    ALIAS__showNormalAnimation = _.showNormalAnimation
+    _.showNormalAnimation = (targets, animationId, mirror) ->
+        ALIAS__showNormalAnimation.call(@, targets, animationId, mirror)
+        if @isNeedSendLogToServer() and KDCore.isMV()
+            ANBattleManager.sendWindowLogAnimation(targets, animationId, mirror)
+        return
     
     return
-# ■ END Game_Temp.coffee
+# ■ END Window_BattleLog.coffee
 #---------------------------------------------------------------------------

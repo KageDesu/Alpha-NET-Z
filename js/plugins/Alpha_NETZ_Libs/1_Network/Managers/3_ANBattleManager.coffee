@@ -144,6 +144,8 @@ do ->
     # * Персонаж данного игрока сделал выбор в бою (ввод команды)
     _.battleInputActionDone = () ->
         action = BattleManager.inputtingAction()
+        # * Логика боя в MV другая, поэтому доп. проверка
+        return unless action? and KDCore.isMV()
         @sendBattleInputAction(ANGameManager.myActorId(), action)
         return
 
@@ -290,6 +292,7 @@ do ->
     _.onBattleInputAction = (inputActorId, action) ->
         try
             return unless ANGameManager.isBattleMaster()
+            #TODO: Тут есть проблема в MV версии
             #TODO: Проверка что inputActorId = BattleManager._currentActor.actorId()
             BattleManager.inputtingAction().setFromNetwork(action)
             # * Далее (продолжить бой)

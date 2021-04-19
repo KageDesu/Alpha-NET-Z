@@ -28,6 +28,9 @@ do ->
         if @_isShouldWaitMyNetworkAction == true
             # * Выбираем только своего персонажа снова (а не первого)
             @_currentActor = $gameParty.leader()
+            if KDCore.isMV()
+                @_actorIndex = @myNetworkActorIndex()
+                $gameTemp._isBattleSceneShouldBeRefreshed = true
             @_isShouldWaitMyNetworkAction = false
         else
             ANBattleManager.battleInputActionDone()
@@ -49,10 +52,14 @@ do ->
         @_inputting = false
         @_currentActor = null
         @_isShouldWaitMyNetworkAction = true
+        @startTurn() if KDCore.isMV()
+        return
 
     _.nSetCurrentClientInput = ->
         $gameParty.makeActions() # * Чтобы был inputting action
         @_currentActor = $gameParty.leader()
+        if KDCore.isMV()
+            @_actorIndex = @myNetworkActorIndex()
         # * Готов к отправке действия сразу (по умолчанию)
         # * Команда 'Fight' делает false (см nSelectNextActorOnClient)
         @_isShouldWaitMyNetworkAction = false

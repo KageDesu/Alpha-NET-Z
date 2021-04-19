@@ -1,30 +1,21 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Game_Temp.coffee
+# ■ Window_BattleStatus.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 do ->
 
     #@[DEFINES]
-    _ = Game_Temp::
+    _ = Window_BattleStatus::
 
-
-    # * В MV нету метода retrieveCommonEvent
     #@[ALIAS]
-    ALIAS__reservedCommonEvent = _.reservedCommonEvent
-    _.reservedCommonEvent = ->
-        if @isVirtualCommonEventReserved()
-            return @_virtualEventQueue.shift()
-        else
-            return ALIAS__reservedCommonEvent.call(@)
-
-    # * В MV нету метода requestBattleRefresh
-    _.requestBattleRefresh = ->
-        @_needsBattleRefresh = true if $gameParty.inBattle()
-
-    _.isBattleRefreshRequested = -> @_needsBattleRefresh == true
-
-    _.clearBattleRefreshRequest = -> @_needsBattleRefresh = false
+    ALIAS__update = _.update
+    _.update = ->
+        ALIAS__update.call(@)
+        if $gameTemp.isBattleRefreshRequested()
+            @refresh()
+            $gameTemp.clearBattleRefreshRequest()
+        return
     
     return
-# ■ END Game_Temp.coffee
+# ■ END Window_BattleStatus.coffee
 #---------------------------------------------------------------------------

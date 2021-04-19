@@ -51,6 +51,20 @@ do ->
         ALIAS__commandFight.call(@)
         return
 
+    # * Должен идти перед переопределением общим, поэтому в этом файле
+    if KDCore.isMV()
+        #@[ALIAS]
+        ALIAS__updateBattleProcess = _.updateBattleProcess
+        _.updateBattleProcess = ->
+            if ANNetwork.isConnected()
+                if !@isAnyInputWindowActive() ||
+                        BattleManager.isAborting() ||
+                            BattleManager.isBattleEnd()
+                    @changeInputWindow()
+                BattleManager.update() # * Надо обновлять не зависимо от условия вверху
+            else
+                ALIAS__updateBattleProcess.call(@)
+
     #@[ALIAS]
     ALIAS__updateBattleProcess = _.updateBattleProcess
     _.updateBattleProcess = ->
