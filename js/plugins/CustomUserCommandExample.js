@@ -17,5 +17,5 @@ nAPI.onCustomCommand = function (name, data) {
 
 
 // MORE INFO IN GUIDE:
-
+// https://github.com/KageDesu/Alpha-NET-Z/wiki/Script-calls-User-API
 

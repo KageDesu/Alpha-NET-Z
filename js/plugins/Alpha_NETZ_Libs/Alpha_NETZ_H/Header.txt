@@ -1,7 +1,7 @@
 /*:
  * @plugindesc (v.0.4)%TYPE% Network System
  * @author Pheonix KageDesu
- * @target MZ
+ * @target %TARGET%
  * @url http://kdworkshop.net/
  *
  * @help
