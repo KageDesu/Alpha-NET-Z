@@ -18,6 +18,9 @@ class PlayersWaitPool
         ANInterpreterManager.sendSharedEventRequireRegister()
         return
 
+    # * Только один игрок (мастер события) запустил событие (один на карте или в игре)
+    isSinglePool: -> @_anotherPlayersIds.length == 0
+
     # * Проверить, что игроки, которые в пуле, онлайн (не отключились)
     checkPool: ->
         playersOnMap = ANGameManager.anotherPlayersOnMap()

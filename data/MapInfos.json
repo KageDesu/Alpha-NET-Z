@@ -10,6 +10,6 @@ null,
 {"id":8,"expanded":false,"name":"Events_via_NetComments","order":6,"parentId":5,"scrollX":448.5,"scrollY":392.5},
 {"id":9,"expanded":false,"name":"Forest Town","order":11,"parentId":1,"scrollX":995.5,"scrollY":839},
 {"id":10,"expanded":false,"name":"Oasis","order":12,"parentId":1,"scrollX":610.5,"scrollY":625},
-{"id":11,"expanded":false,"name":"SharedEvents","order":8,"parentId":5,"scrollX":501,"scrollY":392.5},
+{"id":11,"expanded":false,"name":"SharedEvents","order":8,"parentId":5,"scrollX":493,"scrollY":364.5},
 {"id":12,"expanded":false,"name":"nAPI (script calls)","order":9,"parentId":5,"scrollX":1131,"scrollY":466}
 ]

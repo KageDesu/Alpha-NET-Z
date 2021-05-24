@@ -180,6 +180,17 @@ do ->
         ANNetwork.send(NMS.Event("sharedForceCancel", data))
         return
 
+    _.sendChoiceSelection = (index, action) ->
+        return unless @isSharedEventMaster()
+        data = {
+            mapId: $gameMap.mapId(),
+            eventId: @_sharedInterpreter.eventId()
+            index: index,
+            action: action
+        }
+        ANNetwork.send(NMS.Event("sharedChoice", data))
+        return
+
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
 
@@ -298,5 +309,29 @@ do ->
                 return
         catch e
             ANET.w e
+
+    # * Когда мастер общего события сменил выбор (или действие выбора) в окне выбора вариантов в сообщении
+    _.onSharedEventChoiceActionFromServer = (data) ->
+        try
+            {
+                mapId,
+                eventId,
+                action,
+                index
+            } = data
+            # * Если карта другая, то пропускаем это сообщение
+            return if $gameMap.mapId() != mapId
+            # * Если клиент не в общем событии, пропускаем
+            return unless _.isSharedEventIsRunning()
+            # * ID событий не совпадают, игнорируем
+            return if _._sharedInterpreter.eventId() != eventId
+            # * Задаём глобальные данные
+            $gameTemp.nSelectionActionFromNetwork = {
+                action, index
+            }
+            LOG.p("Shared Choice accepted from server")
+        catch e
+            ANET.w e
+
 
     return

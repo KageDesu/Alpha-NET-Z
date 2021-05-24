@@ -215,6 +215,13 @@ do ->
         catch e
             console.warn("event_event_sharedForceCancel", e)
 
+    _.event_event_sharedChoice = (content) ->
+        try
+            "SHARED EVENT CHOICE ACTION".p()
+            ANInterpreterManager.onSharedEventChoiceActionFromServer(content)
+        catch e
+            console.warn("event_event_sharedForceCancel", e)
+
     _.event_game_userCommand = (content) ->
         try
             "CUSTOM COMMAND IN".p()

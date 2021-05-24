@@ -121,6 +121,8 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_BattleLog_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_BattleLog_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_ChoiceList_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_ChoiceList_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuCommand_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuStatus_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuStatus_N.js"
@@ -129,6 +131,8 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomCommands.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomPlayersList.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomsList.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_Selectable_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_Selectable_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_TitleCommand_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_TitleCommand_N.js"
 ];
@@ -266,6 +270,11 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
 
 
 

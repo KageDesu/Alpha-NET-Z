@@ -163,6 +163,14 @@ do ->
         ANInterpreterManager.hideWaitPlayersOnSharedEvent()
         return
 
+    # * Следующий выбор (команда 102) будет в режиме "только мастер события"
+    _.nRequestMasterOnlyChoicesModeForNextChoice = ->
+        # * Если Пул игроков пустой, то не задаём флаг, чтобы сервер лишний раз не грузить
+        return if @nPlayerPool? and @nPlayerPool.isSinglePool()
+        "Shared Event Choices in Master only mode".p()
+        $gameTemp.nRequireChoiceOnlyForMaster = true
+        return
+
     return
 # ■ END Game_Interpreter.coffee
 #---------------------------------------------------------------------------
