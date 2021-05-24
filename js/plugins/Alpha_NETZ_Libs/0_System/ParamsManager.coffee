@@ -1,5 +1,4 @@
 # * Класс которые работает с параметрами и командами плагина
-
 do ->
     class ParamsManager extends KDCore.ParamLoader
         constructor: () ->
@@ -13,6 +12,7 @@ do ->
         isOnlySameMapMode: -> @getParam("onlySameMap", true)
 
         # * Набор персонажей Actors для сетевой игры
+        #?VERSION
         actorsForNetwork: -> @getParam("actorsForNetwork", [1, 2, 3, 4])
 
         # * Можно ли выбирать персонажа себе
@@ -50,6 +50,8 @@ do ->
         # * Время обновления данных в битве (влияет на производительность)
         battleDataRefreshRate: -> 60
 
+        isRoomFilterON: -> ANET.isPro() && @getParam("roomFilter", false)
+
     ANET.link ParamsManager
     return
 
@@ -68,6 +70,7 @@ do ->
         @_preparePlayerActorName()
         @_prepareGlobalData()
 
+    #?VERSION
     _._prepareConnectionSettings = ->
         p = @getParam("connection", {
             serverIp: "195.161.41.20",

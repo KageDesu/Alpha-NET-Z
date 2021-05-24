@@ -1,5 +1,7 @@
+#$[ENCODE]
+
 #@[GLOBAL]
-NetClientMethodsManager = ->
+window.NetClientMethodsManager = ->
 
 #╒═════════════════════════════════════════════════════════════════════════╛
 # ■ NetClientMethodsManager.coffee
@@ -13,7 +15,7 @@ do ->
     LOG.on()
 
     #@[DEFINES]
-    _ = NetClientMethodsManager
+    _ = window.NetClientMethodsManager
 
     _.setConnectionToMasterCallback = (@onConnectCallback) ->
 

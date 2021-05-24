@@ -5,7 +5,7 @@
 @text Connection
 @type struct<LConnectionSettings>
 @default {"serverIp":"195.161.41.20","serverPort":"3034"}
-@desc If you don't have own server, don't change this settings
+@desc [PRO] If you don't have own server, don't change this settings
 
 
 @param spacer|gamesettings @text‏‏‎ ‎@desc ===============================================
@@ -27,6 +27,15 @@
 @default true
 @desc If false, the menu item "New Game" will not be displayed in title menu
 
+@param roomFilter:b
+@parent gameModeSettingsGroup
+@type boolean
+@text Rooms Filter?
+@on ON
+@off OFF
+@default false
+@desc [PRO] If filter is ON, you can see only this (same) game rooms in lobby
+
 @param playersSettingsGroup
 @text Players Settings
 
@@ -36,7 +45,7 @@
 @type actor[]
 @text Actors
 @default ["1","2","3","4"]
-@desc Available actors for network game players
+@desc Available actors for network game players. More than 2 - PRO only.
 
 @param isActorSelectionAllowed:b
 @parent playersSettingsGroup

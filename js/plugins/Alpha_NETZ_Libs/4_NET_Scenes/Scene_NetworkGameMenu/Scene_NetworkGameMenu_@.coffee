@@ -22,6 +22,8 @@ class Scene_NetworkGameMenu extends Scene_MenuBase
         super()
         @_updateBackButton()
         @_updateRandomJoin() #2
+        @_playerCountRefreshThread?.update()
+        return
 
     stop: ->
         HUIManager.removeInput()
@@ -34,9 +36,19 @@ class Scene_NetworkGameMenu extends Scene_MenuBase
         catch e
             ANET.w e
 
+    refreshPlayersCountText: (count = 0) ->
+        try
+            return unless @_playerCountText?
+            @_playerCountText.clear()
+            @_playerCountText.drawTextFull("Players on server: " + count)
+        catch e
+            ANET.w e
+
     #?EVENT
     netOn_lobby_changePlayerName: ->
         @refreshWelcomeText()
+        @_playerCountRefreshThread?.call()
+        return
 
     #?EVENT
     # * Когда игрок выходит или входит в комнату
@@ -83,6 +95,8 @@ do ->
         @_createNetworkMenu() #1
         @_createWelcomeText() #1
         HUIManager.showInput("Room Name...")
+        @_createServerPlayerCountText()
+        @_createPlayerCountRefreshThread()
         return
 
     _._updateBackButton = ->

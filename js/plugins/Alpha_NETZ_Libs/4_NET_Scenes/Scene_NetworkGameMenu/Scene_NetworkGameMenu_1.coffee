@@ -30,6 +30,28 @@ do ->
         @_commandsWindow.setHandler 'settings', @commandSettings.bind(@)
         @addWindow @_commandsWindow
 
+    _._createServerPlayerCountText = ->
+        @_playerCountText = KDCore.Sprite.FromBitmap(280, 40)
+        @_playerCountText.bitmap.fontSize = 18
+        @_playerCountText.x = Graphics.width / 2 - @_playerCountText.bitmap.width / 2
+        @_playerCountText.y = @_commandsWindow.y + @_commandsWindow.height + 20
+        @addChild @_playerCountText
+
+    _._createPlayerCountRefreshThread = ->
+        refreshMethod = ->
+            #return if SceneManager.isSceneChanging()
+            ANNetwork.callback(NMS.Lobby("playersCountOnServ"),
+                    (count) =>
+                        try
+                            return if SceneManager.isSceneChanging()
+                            @refreshPlayersCountText(count)
+                        catch e
+                            ANET.w(e)
+                    )
+        @_playerCountRefreshThread = new KDCore.TimedUpdate(300, refreshMethod.bind(@))
+        @_playerCountRefreshThread.call()
+        return
+
     _.commandCreateRoomMenu = ->
         @_lastRoomName = HUIManager.getInputValue()
         unless String.any(@_lastRoomName)

@@ -1,7 +1,9 @@
 # * Данный класс отвечает за синхронизацию и обработку интерпретера и команд события
 
+#$[ENCODE]
+
 #@[GLOBAL]
-ANInterpreterManager = ->
+window.ANInterpreterManager = ->
 
 do ->
 
@@ -11,7 +13,7 @@ do ->
     LOG.on()
 
     #@[DEFINES]
-    _ = ANInterpreterManager
+    _ = window.ANInterpreterManager
 
     # * Когда закончелось событие
     _.eventProcessExit = ->

@@ -4,6 +4,8 @@
 #---------------------------------------------------------------------------
 do ->
 
+    #TODO: ПРОВЕРИТЬ НА MV
+
     #@[DEFINES]
     _ = Window_ChoiceList::
 
@@ -15,10 +17,17 @@ do ->
         else
             return ALIAS__isCursorMovable.call(@)
 
+    #@[ALIAS]
+    ALIAS__isOkEnabled = _.isOkEnabled
+    _.isOkEnabled = ->
+        return false if @nIsNetworkSelection() && !ANInterpreterManager.isSharedEventMaster()
+        return ALIAS__isOkEnabled.call(@)
 
-    #TODO: Может через это, заместо Handling перекрывать?
-    #isOkEnabled
-    #isCancelEnabled
+    #@[ALIAS]
+    ALIAS__isCancelEnabled = _.isCancelEnabled
+    _.isCancelEnabled = ->
+        return false if @nIsNetworkSelection() && !ANInterpreterManager.isSharedEventMaster()
+        return ALIAS__isCancelEnabled.call(@)
 
     #@[ALIAS]
     ALIAS__update = _.update
@@ -27,17 +36,18 @@ do ->
         @nUpdateNetworkSelection() if @nIsNetworkSelection()
         return
 
+    # * Можно это тоже, но не обязательно, и так выбор не может сделать второй игрок
     #@[ALIAS]
-    ALIAS__processHandling = _.processHandling
-    _.processHandling = ->
-        return if @nIsNetworkSelection() && !ANInterpreterManager.isSharedEventMaster()
-        return ALIAS__processHandling.call(@)
+    #ALIAS__processHandling = _.processHandling
+    #_.processHandling = ->
+    #    return if @nIsNetworkSelection() && !ANInterpreterManager.isSharedEventMaster()
+    #    return ALIAS__processHandling.call(@)
         
     #@[ALIAS]
-    ALIAS__processTouch = _.processTouch
-    _.processTouch = ->
-        return if @nIsNetworkSelection() && !ANInterpreterManager.isSharedEventMaster()
-        return ALIAS__processTouch.call(@)
+    #ALIAS__processTouch = _.processTouch
+    #_.processTouch = ->
+    #    return if @nIsNetworkSelection() && !ANInterpreterManager.isSharedEventMaster()
+    #    return ALIAS__processTouch.call(@)
 
     #@[ALIAS]
     ALIAS__select = _.select

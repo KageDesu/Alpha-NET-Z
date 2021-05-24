@@ -2,6 +2,7 @@
 # ■ NetMessage.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
+#$[ENCODE]
 #@[GLOBAL]
 class NetMessage
     constructor: (@socket) ->
@@ -112,6 +113,7 @@ class NetMessage
             onSuccess.apply(@, args)
 
 #@[EXTENDD]
-NMS = NetMessage
+window.NMS = NetMessage
+window.NetMessage = NetMessage
 # ■ END NetMessage.coffee
 #---------------------------------------------------------------------------

@@ -1,7 +1,9 @@
 # * Данный класс отвечает за синхронизацию и обработку данных в бою
 
+#$[ENCODE]
+
 #@[GLOBAL]
-ANBattleManager = ->
+window.ANBattleManager = ->
 
 do ->
 
@@ -11,7 +13,7 @@ do ->
     LOG.on()
 
     #@[DEFINES]
-    _ = ANBattleManager
+    _ = window.ANBattleManager
 
     _.isBattleMaster = () ->
         if @battleData?

@@ -1,7 +1,9 @@
 # * Данный класс хранит сетевые методы игры
 
+#$[ENCODE]
+
 #@[GLOBAL]
-ANGameManager = ->
+window.ANGameManager = ->
 
 do ->
 
@@ -11,7 +13,7 @@ do ->
     LOG.on()
 
     #@[DEFINES]
-    _ = ANGameManager
+    _ = window.ANGameManager
 
     _.isShouldWaitServer = -> @_waitMode?
 

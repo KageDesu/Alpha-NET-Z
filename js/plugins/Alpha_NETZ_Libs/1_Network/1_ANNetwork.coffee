@@ -1,10 +1,12 @@
 # * Данный класс отвечает за подключение и хранит общие методы отправки и обработки команд
 
+#$[ENCODE]
+
 #@[GLOBAL]
-ANNetwork = ->
+window.ANNetwork = ->
 
 #@[EXTEND]
-window.NET = ANNetwork
+window.NET = window.ANNetwork
 
 do ->
 
@@ -14,7 +16,7 @@ do ->
     LOG.on()
 
     #@[DEFINES]
-    _ = ANNetwork
+    _ = window.ANNetwork
 
     _.isConnected = -> @socket?
 

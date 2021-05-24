@@ -135,6 +135,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_Selectable_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_TitleCommand_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_TitleCommand_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/zScene_NetworkRoomsList_PRO.js"
 ];
 const effekseerWasmUrl = "js/libs/effekseer.wasm";
 
@@ -270,6 +271,20 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

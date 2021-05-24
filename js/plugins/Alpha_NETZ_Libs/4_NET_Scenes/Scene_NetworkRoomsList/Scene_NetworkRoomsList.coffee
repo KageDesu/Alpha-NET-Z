@@ -14,7 +14,11 @@ class Scene_NetworkRoomsList extends Scene_MenuBase
         return
 
     refreshRooms: ->
+        @applyFilterToRooms() if ANET.PP.isRoomFilterON()
         @_roomsListWindow.refreshRooms(@roomsList)
+
+    #?VERSION
+    applyFilterToRooms: ->
 
     update: ->
         super()

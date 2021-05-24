@@ -5,7 +5,7 @@ Imported.Alpha_NETZ = true;
 
 var ANET = {};
 ANET.Version = 50; // 0.5.0
-ANET.ServerRev = 111; // * Необходимая ревизия сервера
+ANET.ServerRev = 110; // * Необходимая ревизия сервера
 
 // * Данный символ переопределяется в 1_DevSymbol_TEST как dev
 ANET._define = 'build'; // * По умолчанию -> сборка

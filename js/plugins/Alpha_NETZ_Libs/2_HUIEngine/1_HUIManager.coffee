@@ -6,13 +6,14 @@
 
 #<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-HUIManager = ->
+#$[ENCODE]
 
+window.HUIManager = ->
 
 do ->
 
     #@[DEFINES]
-    _ = HUIManager
+    _ = window.HUIManager
 
     #TODO: Есть проблемы с позиционированнием, надо динамически менять свойства элемента
 

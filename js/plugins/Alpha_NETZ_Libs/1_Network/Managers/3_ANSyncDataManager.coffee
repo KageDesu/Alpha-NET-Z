@@ -1,8 +1,10 @@
 # * Данный класс отвечает за методы передачи, обработки и
 # * синхронизации игровых данных (и Observers)
 
+#$[ENCODE]
+
 #@[GLOBAL]
-ANSyncDataManager = ->
+window.ANSyncDataManager = ->
 
 do ->
 
@@ -12,7 +14,7 @@ do ->
     LOG.on()
 
     #@[DEFINES]
-    _ = ANSyncDataManager
+    _ = window.ANSyncDataManager
 
     #? КОМАНДЫ ЗАПРОСЫ (посылаются на сервер)
     # * ===============================================================
