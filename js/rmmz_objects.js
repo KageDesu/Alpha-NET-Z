@@ -1,5 +1,5 @@
 //=============================================================================
-// rmmz_objects.js v1.2.0
+// rmmz_objects.js v1.2.1
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -7845,6 +7845,7 @@ Game_Character.prototype.processRouteEnd = function() {
     } else if (this._moveRouteForcing) {
         this._moveRouteForcing = false;
         this.restoreMoveRoute();
+        this.setMovementSuccess(false);
     }
 };
 

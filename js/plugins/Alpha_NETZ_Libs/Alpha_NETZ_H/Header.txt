@@ -1,17 +1,20 @@
 /*:
- * @plugindesc (v.0.4)%TYPE% Network System
+ * @plugindesc (v.0.5)%TYPE% Multiplayer for RPG Maker
  * @author Pheonix KageDesu
  * @target %TARGET%
- * @url http://kdworkshop.net/
+ * @url https://kdworkshop.net/plugins/alpha-net-z/
  *
  * @help
  *
- * This plugin version only for preview and testing purposes
- * Read before use: https://github.com/KageDesu/Alpha-NET-Z/wiki
+ * Alpha NET Z plugin is still in development
+ *
+ * WebPage: https://kdworkshop.net/plugins/alpha-net-z/
+ * Documentation: https://github.com/KageDesu/Alpha-NET-Z/wiki
  *
  * Required content:
  *  - plugin Alpha_Core.js
  *  - plugin SocketIO.js
  *  - file css\anet.css
  *  - folder img\Alpha\*all files*
+ *
  *

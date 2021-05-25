@@ -1,5 +1,5 @@
 //=============================================================================
-// rmmz_core.js v1.2.0
+// rmmz_core.js v1.2.1
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -192,7 +192,7 @@ Utils.RPGMAKER_NAME = "MZ";
  * @type string
  * @constant
  */
-Utils.RPGMAKER_VERSION = "1.2.0";
+Utils.RPGMAKER_VERSION = "1.2.1";
 
 /**
  * Checks whether the current RPG Maker version is greater than or equal to
@@ -720,6 +720,7 @@ Graphics.hideScreen = function() {
 Graphics.resize = function(width, height) {
     this._width = width;
     this._height = height;
+    this._app.renderer.resize(width, height);
     this._updateAllElements();
 };
 
@@ -3100,8 +3101,8 @@ Tilemap.Renderer.prototype._createShader = function() {
 
     return new PIXI.Shader(PIXI.Program.from(vertexSrc, fragmentSrc), {
         uSampler0: 0,
-        uSampler1: 1,
-        uSampler2: 2,
+        uSampler1: 0,
+        uSampler2: 0,
         uProjectionMatrix: new PIXI.Matrix()
     });
 };

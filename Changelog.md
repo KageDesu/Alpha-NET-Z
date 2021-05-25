@@ -1,5 +1,21 @@
 ## Changelog
 
+### Version 0.5
+**(25.05.2021)**
+
+#### New features
+- Now you can control who can make choice (all players or only one) in [Shared Events](https://github.com/KageDesu/Alpha-NET-Z/wiki/Shared-Events)
+- In lobby added a player counter on the server 
+
+#### New plugin parameters:
+- `Rooms Filter?`  
+
+#### Plugins support:
+- Added `Visual Choices` plugin support  
+- Added `Mobile Controls` plugin support (diagonal movement)  
+- Added `VPlayer` plugin support
+
+
 ### Version 0.4
 **(17.04.2021)**
 
