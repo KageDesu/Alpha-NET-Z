@@ -46,7 +46,6 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_ActionResult_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_ActionResult_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actor_@.js"
-,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actor_AN.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actor_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Actors_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Battler_@.js"
@@ -81,6 +80,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Unit_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Variables_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Variables_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Input_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/nAPI.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETCharacter.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETCharactersGroup.js"
@@ -111,8 +111,6 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/SceneManager_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/SceneManager_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Actor_@.js"
-,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Battler_@.js"
-,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Battler_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Character_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Character_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Gauge_@_MZ.js"
@@ -272,6 +270,14 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 
 
 

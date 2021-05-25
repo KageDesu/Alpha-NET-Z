@@ -147,7 +147,8 @@ do ->
     _.battleInputActionDone = () ->
         action = BattleManager.inputtingAction()
         # * Логика боя в MV другая, поэтому доп. проверка
-        return unless action? and KDCore.isMV()
+        if KDCore.isMV()
+            return unless action?
         @sendBattleInputAction(ANGameManager.myActorId(), action)
         return
 
