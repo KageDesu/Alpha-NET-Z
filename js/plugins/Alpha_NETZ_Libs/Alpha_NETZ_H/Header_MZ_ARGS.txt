@@ -23,7 +23,7 @@
 @text Lock Event?
 @type boolean
 @default false
-@desc If true - event will be locked while exectuted. Nobody can't start locked event
+@desc If true - event will be locked while executed. Nobody can't start locked event
 
 @arg sharedMode
 @text Shared Mode
@@ -31,7 +31,7 @@
 @option No
 @option Strict
 @option Optional
-@desc [No implemented!] Shared event - starts for all players simultaneously, synchronized commands execution
+@desc Shared event - starts for all players simultaneously, synchronized commands execution
 @default No
 
 
