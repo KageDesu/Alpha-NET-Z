@@ -84,7 +84,10 @@ do ->
         # * Если загрузка
         if ANET.Utils.isLoadGameRoom()
             # * Ждём игроков (Только при параметре)
-            @setWait('playersOnMap') if @_shouldWaitPlayerOnSameMap is true
+            if @_shouldWaitPlayerOnSameMap is true
+                @setWait('playersOnMap')
+            else
+                @bindingActors() # * Присвоение персонажей
         else
             # * Ждём игроков (при параметре и если новая игра (чтобы начать события например))
             if @_shouldWaitPlayerOnSameMap is true || @networkGameStarted is true
@@ -130,7 +133,7 @@ do ->
     _.bindingActors = ->
         "START BINDING ACTORS".p()
         @networkGameStarted = false
-        if ANET.PP.isActorSelectionAllowed()
+        if ANET.PP.isActorSelectionAllowed() || ANET.Utils.isLoadGameRoom()
             @actorBingingFromSelection()
         else
             @staticActorBinging()
