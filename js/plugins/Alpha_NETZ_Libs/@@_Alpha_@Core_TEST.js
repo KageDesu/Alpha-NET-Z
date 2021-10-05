@@ -1,10 +1,12 @@
 /*:
- * @plugindesc (v.0.1) Alpha Core Plugin
+ * @plugindesc (v.0.2) Alpha Core Plugin
  * @author Pheonix KageDesu
- * @target MZ
- * @url https://kagedesuworkshop.blogspot.com
+ * @target MZ MV
+ * @url https://kdworkshop.net/
  *
  * @help
+ * Core plugin for Alpha NET Z and Alpha ABS Z plugins
+ * Should be above NETZ and AABSZ plugins
  *
 
  * 
@@ -21,7 +23,7 @@ Imported.Alpha_Core = true;
 // * ALPHA FAMILY PLUGINS GLOBAL DEFINITION
 var AA = AA || {};
 AA.Core = AA.Core || {};
-AA.Core.version = 0.1;
+AA.Core.version = 0.3;
 
 AA.Utils = {};
 
@@ -47,12 +49,13 @@ AA.link = function (library) {
 // * LIBRARY WITH MZ AND MZ SUPPORT
 //! {OUTER FILE}
 
-//?rev 17.02.21
+//?rev 18.09.21
 var KDCore;
 
 KDCore = KDCore || {};
 
-KDCore._fileVersion = '2.4.9';
+// * Двузначные числа нельзя в версии, сравнение идёт по первой цифре поулчается
+KDCore._fileVersion = '2.6';
 
 if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
   // * ПРОПУСКАЕМ ЗАГРУЗКУ, так как уже загруженна более новая
@@ -117,6 +120,23 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
     };
     Array.prototype.isEmpty = function() {
       return this.length === 0;
+    };
+    // * Ищет элемент, у которого поле ID == id
+    Array.prototype.getById = function(id) {
+      return this.getByField('id', id);
+    };
+    // * Ищет элемент, у которого поле FIELD (имя поля) == value
+    Array.prototype.getByField = function(field, value) {
+      var e;
+      try {
+        return this.find(function(item) {
+          return item[field] === value;
+        });
+      } catch (error1) {
+        e = error1;
+        console.warn(e);
+        return null;
+      }
     };
     // * Number Extension
     //------------------------------------------------------------------------------
@@ -192,7 +212,7 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
     Sprite.prototype._getProperFullRect = function(rx, ry) {
       var height, width, x, y;
       width = this.width * Math.abs(this.scale.x);
-      height = this.width * Math.abs(this.scale.y);
+      height = this.height * Math.abs(this.scale.y);
       x = rx - this.anchor.x * width;
       y = ry - this.anchor.y * height;
       if (this.anchor.x === 0 && this.scale.x < 0) {
@@ -262,8 +282,6 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
     };
     // * Input Extension
     //------------------------------------------------------------------------------
-
-    //TODO: Gamepad support
     Input.KeyMapperPKD = {};
 //Numbers
     for (i = l = 48; l <= 57; i = ++l) {
@@ -313,6 +331,272 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       //?NEW
       TouchInput.toPoint = function() {
         return new KDCore.Point(TouchInput.x, TouchInput.y);
+      };
+    })();
+    (function() {      // * Input Extension: KDGamepad
+      //------------------------------------------------------------------------------
+      // * Поддержка расширенного управления через геймпад (свой модуль)
+      var ALIAS___updateGamepadState, _;
+      //@[DEFINES]
+      _ = Input;
+      // * Активировать работу модуля KDGamepad
+      _.activateExtendedKDGamepad = function() {
+        return _._kdIsGamepadExtended = true;
+      };
+      //@[ALIAS]
+      ALIAS___updateGamepadState = _._updateGamepadState;
+      _._updateGamepadState = function(gamepad) {
+        if (Input._kdIsGamepadExtended === true) {
+          KDGamepad.update();
+        }
+        if ((typeof $gameTemp !== "undefined" && $gameTemp !== null ? $gameTemp.__kdgpStopDefaultGamepad : void 0) === true) {
+          return;
+        }
+        // * Режим перемещения без DPad
+        // * В оригинале игрок также ходит по DPad клавишам, что может быть не удобно
+        // * например при работе с инвентарём
+        if (KDGamepad.isNoDPadMoving()) {
+          if (KDGamepad.isDPadAny()) {
+            Input.clear();
+            return;
+          }
+        }
+        ALIAS___updateGamepadState.call(this, gamepad);
+      };
+      window.KDGamepad = function() {
+        return new Error("This is static class");
+      };
+      window.addEventListener("gamepadconnected", function(event) {
+        var e;
+        try {
+          return KDGamepad.refresh();
+        } catch (error1) {
+          // * Можно напрямую
+          //unless KDGamepad.isExists()
+          //    if event.gamepad? and event.gamepad.mapping == 'standard'
+          //        KDGamepad.init(event.gamepad)
+          e = error1;
+          KDCore.warning(e);
+          return KDGamepad.stop();
+        }
+      });
+      window.addEventListener("gamepaddisconnected", function(event) {
+        var e;
+        if (!KDGamepad.isExists()) {
+          return;
+        }
+        try {
+          if ((event.gamepad != null) && event.gamepad === KDGamepad.gamepad) {
+            return KDGamepad.stop();
+          }
+        } catch (error1) {
+          e = error1;
+          KDCore.warning(e);
+          return KDGamepad.stop();
+        }
+      });
+      KDGamepad.stopDefaultGamepad = function() {
+        $gameTemp.__kdgpStopDefaultGamepad = true;
+      };
+      KDGamepad.resumeDefaultGamepad = function() {
+        $gameTemp.__kdgpStopDefaultGamepad = null;
+      };
+      // * Ссылка на геймпад
+      KDGamepad.gamepad = null;
+      // * Подключён ли Gamepad ?
+      KDGamepad.isExists = function() {
+        return KDGamepad.gamepad != null;
+      };
+      // * Инициализация состояния кнопок
+      // * Этот метод вызывается автоматически из Refresh или при подключении Gamepad
+      KDGamepad.init = function(gamepad) {
+        KDGamepad.gamepad = gamepad;
+        this._isActive = true;
+        this.buttonNames = [
+          'A', // 0
+          'B', // 1
+          'X', // 2
+          'Y', // 3
+          'LB', // 4
+          'RB', // 5
+          'LTrigger', // 6
+          'RTrigger', // 7
+          'Back', // 8
+          'Start', // 9
+          'LStick', // 10
+          'RStick', // 11
+          'dUp', // 12
+          'dDown', // 13
+          'dLeft', // 14
+          'dRight' // 15
+        ];
+        this.reset();
+      };
+      // * Аналог Input.clear
+      KDGamepad.clear = function() {
+        return KDGamepad.reset();
+      };
+      // * Сбросить состояние кнопок
+      KDGamepad.reset = function() {
+        this.leftStick = {
+          x: 0,
+          y: 0
+        };
+        this.rightStick = {
+          x: 0,
+          y: 0
+        };
+        this.buttons = {};
+        this.buttonsPressed = {};
+        this.prevButtons = {};
+      };
+      
+      // * Остановить учёт геймпада
+      KDGamepad.stop = function() {
+        KDGamepad.reset();
+        KDGamepad.gamepad = null;
+      };
+      // * Функция проверки что нажата кнопка на геймпаде
+      KDGamepad._buttonPressed = function(gamepad, index) {
+        var b, e;
+        try {
+          if (!gamepad || !gamepad.buttons || index >= gamepad.buttons.length) {
+            return false;
+          }
+          b = gamepad.buttons[index];
+          if (b == null) {
+            return false;
+          }
+          if (typeof b === 'object') {
+            // * Можно упростить
+            return b.pressed;
+          }
+          return b === 1.0;
+        } catch (error1) {
+          e = error1;
+          KDCore.warning(e);
+          return false;
+        }
+      };
+      // * Каждый кадр (обновление состояний)
+      KDGamepad.update = function() {
+        var e, gp, isDown, len, name, q, ref;
+        if (!KDGamepad.isActive()) {
+          return;
+        }
+        KDGamepad.refresh();
+        if (!KDGamepad.isExists()) {
+          return;
+        }
+        try {
+          gp = KDGamepad.gamepad;
+          ref = this.buttonNames;
+          // * Проверка состояний кнопок
+          for (i = q = 0, len = ref.length; q < len; i = ++q) {
+            name = ref[i];
+            this.buttons[name] = false;
+            isDown = KDGamepad._buttonPressed(gp, i);
+            if (isDown === true) {
+              this.prevButtons[name] = true;
+            } else {
+              // * Срабатываение только при нажал - отпустил
+              if (this.prevButtons[name] === true) {
+                this.buttons[name] = true;
+                this.prevButtons[name] = false;
+              }
+            }
+          }
+          // * Проверка стиков
+          this.leftStick.x = gp.axes[0];
+          this.leftStick.y = gp.axes[1];
+          this.rightStick.x = gp.axes[2];
+          this.rightStick.y = gp.axes[3];
+        } catch (error1) {
+          e = error1;
+          KDCore.warning(e);
+          KDGamepad.stop();
+        }
+      };
+      // * Обновить и проверить состояние Gamepad
+      // * Надо каждый раз это вызывать
+      KDGamepad.refresh = function() {
+        var e, gamepads, gp, isGamepadRefreshed, q, ref;
+        try {
+          isGamepadRefreshed = false;
+          if (navigator.getGamepads) {
+            gamepads = navigator.getGamepads();
+          } else if (navigator.webkitGetGamepads) {
+            gamepads = navigator.webkitGetGamepads();
+          }
+          if (gamepads != null) {
+            for (i = q = 0, ref = gamepads.length; (0 <= ref ? q < ref : q > ref); i = 0 <= ref ? ++q : --q) {
+              gp = gamepads[i];
+              if ((gp != null) && gp.mapping === 'standard') {
+                isGamepadRefreshed = true;
+                if (KDGamepad.buttonNames != null) {
+                  KDGamepad.gamepad = gp;
+                } else {
+                  KDGamepad.init(gp);
+                }
+                break;
+              }
+            }
+          }
+          if (!isGamepadRefreshed) {
+            // * Если не был найден не один gamepad - отключаем систему
+            KDGamepad.stop();
+          }
+        } catch (error1) {
+          e = error1;
+          KDCore.warning(e);
+          KDGamepad.stop();
+        }
+      };
+      // * Любое нажатие кнопки
+      KDGamepad.isKeyAny = function(name) {
+        return KDGamepad.isKey(name) || KDGamepad.isKeyPressed(name);
+      };
+      // * Нажата ли кнопка (trigger нажал - отпустил)
+      KDGamepad.isKey = function(name) {
+        if (!KDGamepad.isExists()) {
+          return false;
+        }
+        if (this.buttons == null) {
+          return false;
+        }
+        return this.buttons[name] === true;
+      };
+      // * Нажата ли кнопка (continues зажата)
+      KDGamepad.isKeyPressed = function(name) {
+        if (!KDGamepad.isExists()) {
+          return false;
+        }
+        if (this.buttons == null) {
+          return false;
+        }
+        return this.prevButtons[name] === true;
+      };
+      KDGamepad.isDPadAny = function() {
+        return KDGamepad.isKeyAny("dLeft") || KDGamepad.isKeyAny("dRight") || KDGamepad.isKeyAny("dUp") || KDGamepad.isKeyAny("dDown");
+      };
+      KDGamepad.isActive = function() {
+        return this._isActive === true;
+      };
+      // * Временно отключить обработку KDGamepad
+      KDGamepad.setActive = function(_isActive) {
+        this._isActive = _isActive;
+        if (KDGamepad.isActive()) {
+          KDGamepad.refresh();
+        } else {
+          KDGamepad.stop();
+        }
+      };
+      // * Отключить перемещение игрока на DPad
+      KDGamepad.setNoDPadMovingMode = function(_noDpadMoving) {
+        this._noDpadMoving = _noDpadMoving;
+      };
+      return KDGamepad.isNoDPadMoving = function() {
+        return this._noDpadMoving === true;
       };
     })();
     // * Window_Base Extension
@@ -1154,7 +1438,7 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
     }).call(this);
     // * Utils
     //------------------------------------------------------------------------------
-    KDCore.Utils = {};
+    KDCore.Utils = KDCore.Utils || {};
     (function() {
       var _;
       _ = KDCore.Utils;
@@ -1226,6 +1510,31 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
           console.warn(e);
         }
         return null;
+      };
+      _.getEventCommentValueArray = function(commentCode, list) {
+        var comment, comments, e, item;
+        try {
+          comments = [];
+          if (list && list.length > 1) {
+            i = 0;
+            while (i < list.length) {
+              item = list[i++];
+              if (!item) {
+                continue;
+              }
+              if (item.code === 108) {
+                comment = item.parameters[0];
+                if (comment.contains(commentCode)) {
+                  comments.push(comment);
+                }
+              }
+            }
+          }
+        } catch (error1) {
+          e = error1;
+          console.warn(e);
+        }
+        return comments;
       };
       _.getPositionPointFromJSON = function(jsonSettings) {
         return _.convertPositionPointFromJSON(jsonSettings.position);
@@ -1445,6 +1754,7 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
         this._disabled = false;
         this._infoData = null;
         this._isNeedShowText = false;
+        return;
       }
 
       isMouseInButton() {
@@ -2148,7 +2458,7 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
             return s;
           } catch (error1) {
             e = error1;
-            KDCore.warning('Something wrong with Text Settings!', e);
+            console.warn('Something wrong with Text Settings!', e);
             return KDCore.Sprite.FromBitmap(60, 30);
           }
         }
@@ -2178,16 +2488,51 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
         this._isTriggered = false;
         // * Когда произошло нажатие на кнопку
         this._handler = null;
+        this._isCanBeClicked = true;
+        this._isManualHoverMode = false;
+        this._isManualSelected = false;
         this._loadBitmaps(filename, isFull, sourceFolder);
         this._setImageState(0);
         this._createThread();
       }
 
+      setManualHover() {
+        return this._isManualHoverMode = true;
+      }
+
+      disableManualHover() {
+        return this._isManualHoverMode = false;
+      }
+
+      setManualSelected(_isManualSelected) {
+        this._isManualSelected = _isManualSelected;
+      }
+
+      enableClick() {
+        return this._isCanBeClicked = true;
+      }
+
+      disableClick() {
+        return this._isCanBeClicked = false;
+      }
+
+      desaturate() {
+        this.filters = [new PIXI.filters.ColorMatrixFilter()];
+        this.filters[0].desaturate();
+      }
+
       isMouseIn() {
-        return this.inPosition(TouchInput);
+        if (this._isManualHoverMode === true) {
+          return this._isManualSelected;
+        } else {
+          return this.inPosition(TouchInput);
+        }
       }
 
       isActive() {
+        if (this._isCanBeClicked === false) {
+          return false;
+        }
         if (this.parent != null) {
           return this.parent.visible === true && this.visible === true;
         } else {
@@ -2302,7 +2647,12 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       };
       //?[DYNAMIC]
       _._updateMain = function() {
-        return this._updateMouseLogic();
+        this._updateMouseLogic();
+        if (!this.isActive()) {
+          if (($gameTemp.kdButtonUnderMouse != null) && $gameTemp.kdButtonUnderMouse === this) {
+            return $gameTemp.kdButtonUnderMouse = null;
+          }
+        }
       };
       _._updateMouseLogic = function() {
         this.hoverThread.update();
@@ -2312,21 +2662,22 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
         if (!this.isActive()) {
           return;
         }
-        if (this.isDisabled()) {
-          return;
-        }
         // * чтобы эффект нажатия не прекратить
         if (this._isTriggered === true) {
           return;
         }
         if (this.isMouseIn()) {
           if (this._lastState !== 1) {
-            this._setImageState(1);
+            if (!this.isDisabled()) {
+              this._setImageState(1);
+            }
             $gameTemp.kdButtonUnderMouse = this;
           }
         } else {
           if (this._lastState !== 0) {
-            this._setImageState(0);
+            if (!this.isDisabled()) {
+              this._setImageState(0);
+            }
             if ($gameTemp.kdButtonUnderMouse === this) {
               $gameTemp.kdButtonUnderMouse = null;
             }
@@ -2530,11 +2881,39 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
         this._y = _y;
       };
     })();
-    (function() {      // * Right mouse pressed
-      // * Определение когда правая (вторая) кнопка мыши зажата и удерживается
+    (function() {      // * VirtualInput для RPG Maker MV
       //$[OVER]
       //TouchInput.getMousePosition = ->
       //    new KDCore.Point(TouchInput._x, TouchInput._y)
+      var ALIAS__clear, ALIAS__update, _;
+      if (KDCore.isMZ()) {
+        return;
+      }
+      //@[DEFINES]
+      _ = Input;
+      //@[ALIAS]
+      ALIAS__clear = _.clear;
+      _.clear = function() {
+        ALIAS__clear.call(this);
+        return this._virtualButton = null;
+      };
+      //@[ALIAS]
+      ALIAS__update = _.update;
+      _.update = function() {
+        ALIAS__update.call(this);
+        if (this._virtualButton == null) {
+          return;
+        }
+        this._latestButton = this._virtualButton;
+        this._pressedTime = 0;
+        return this._virtualButton = null;
+      };
+      _.virtualClick = function(buttonName) {
+        return this._virtualButton = buttonName;
+      };
+    })();
+    (function() {      // * Right mouse pressed
+      // * Определение когда правая (вторая) кнопка мыши зажата и удерживается
       var ALIAS___onMouseUp, ALIAS___onRightButtonDown, ALIAS__clear, ALIAS__update, _;
       //@[DEFINES]
       _ = TouchInput;
@@ -2582,12 +2961,125 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
         return this._kdMousePressed2 === true;
       };
     })();
+    (function() {      //--------------------------------------------------------------------------------
+      // MV MZ Methods Extension =======================================================
+      //--------------------------------------------------------------------------------
+      if (KDCore.isMZ()) {
+        return;
+      }
+      (function() {        //╒═════════════════════════════════════════════════════════════════════════╛
+        // ■ Window_Base.coffee
+        //╒═════════════════════════════════════════════════════════════════════════╛
+        //---------------------------------------------------------------------------
+        var ALIAS__initialize, _;
+        //@[DEFINES]
+        _ = Window_Base.prototype;
+        // * Чтоб можно было Rectangle принимать в конструктор
+        //@[ALIAS]
+        ALIAS__initialize = _.initialize;
+        _.initialize = function(x, y, w, h) {
+          if (x instanceof PIXI.Rectangle) {
+            return ALIAS__initialize.call(this, x.x, x.y, x.width, x.height);
+          } else {
+            return ALIAS__initialize.call(this, ...arguments);
+          }
+        };
+      })();
+      (function() {        // ■ END Window_Base.coffee
+        //---------------------------------------------------------------------------
+
+        //╒═════════════════════════════════════════════════════════════════════════╛
+        // ■ Spriteset_Map.coffee
+        //╒═════════════════════════════════════════════════════════════════════════╛
+        //---------------------------------------------------------------------------
+        var _;
+        
+        //@[DEFINES]
+        _ = Spriteset_Map.prototype;
+        _.findTargetSprite = function(target) {
+          return this._characterSprites.find(function(sprite) {
+            return sprite.checkCharacter(target);
+          });
+        };
+      })();
+      (function() {        // ■ END Spriteset_Map.coffee
+        //---------------------------------------------------------------------------
+
+        //╒═════════════════════════════════════════════════════════════════════════╛
+        // ■ Sprite_Character.coffee
+        //╒═════════════════════════════════════════════════════════════════════════╛
+        //---------------------------------------------------------------------------
+        var _;
+        
+        //@[DEFINES]
+        _ = Sprite_Character.prototype;
+        _.checkCharacter = function(character) {
+          return this._character === character;
+        };
+      })();
+    })();
   })();
 }
 
 // ■ END KDCore.coffee
 //---------------------------------------------------------------------------
 //? КОНЕЦ KDCORE
+// ■ END Sprite_Character.coffee
+//---------------------------------------------------------------------------
+
+// Generated by CoffeeScript 2.5.1
+//╒═════════════════════════════════════════════════════════════════════════╛
+// ■ AATimer.coffee
+//╒═════════════════════════════════════════════════════════════════════════╛
+//---------------------------------------------------------------------------
+// * Таймер для навыков, хранит время в кадрах (frames)
+var AATimer;
+
+AATimer = class AATimer {
+  constructor(maxValue1 = 0, value1 = 0) {
+    this.maxValue = maxValue1;
+    this.value = value1;
+  }
+
+  update() {
+    if (!this.isReady()) {
+      return this.value++;
+    }
+  }
+
+  isReady() {
+    return this.value >= this.maxValue;
+  }
+
+  start(maxValue) {
+    this.reset();
+    return this.maxValue = Math.abs(Math.round(maxValue));
+  }
+
+  reset() {
+    return this.value = 0;
+  }
+
+  getSeconds() {
+    return AATimer.ConvertFramesToSeconds(this.value);
+  }
+
+  getMaxSeconds() {
+    return AATimer.ConvertFramesToSeconds(this.maxValue);
+  }
+
+  getSecondsLeft() {
+    return this.getMaxSeconds() - this.getSeconds();
+  }
+
+  static ConvertFramesToSeconds(value) {
+    return (value / 60.0).toFixed(1);
+  }
+
+};
+
+// ■ END AATimer.coffee
+//---------------------------------------------------------------------------
 
 // Generated by CoffeeScript 2.5.1
 // * Класс который может плавно изменять какой-либо параметр
@@ -2681,7 +3173,7 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       return this;
     }
 
-    // * Снова повторить, но поменять местами to и from
+    // * Снова повторить, но поменять местами to и from (работает только с repeat >= 2)
     reverse() {
       this._isReverse = true;
       return this;
@@ -3012,7 +3504,11 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
     this.callCloseHandler();
     return this.close();
   };
-  (function() {    // * DRAGGING
+  (function() {    //TODO: Систему защиты от перетаскивания нескольких окон + Map Inventory учитывать
+    // * Создать что-то типо KDCore.dragableElement - глобальный и присваивать в него
+    // * Если есть,то не начинать Drag, если нет, то можно
+
+    // * DRAGGING
     // -----------------------------------------------------------------------
     _._updateDragging = function() {
       if (!this.isDraggable()) {
@@ -3022,6 +3518,13 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       // * Только если мышка не в окне и не двигали ранее, то не проверяем
       if (this._mouseIn === false && this._dragging === false) {
         return;
+      }
+      // * Если существует объект который сейчас dragging
+      if ($gameTemp.pkdDraggableInstance != null) {
+        // * Если этот объект не этот объект, то выходим из метода
+        if ($gameTemp.pkdDraggableInstance !== this) {
+          return;
+        }
       }
       if (TouchInput.isLongPressed()) {
         if (this._dragging === false) {
@@ -3042,6 +3545,8 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       this.opacity = 200;
       this._deltaXY = this.getDeltaXY();
       this._dragging = true;
+      // * Устанавливаем глобальную ссылку на объект перемещения
+      $gameTemp.pkdDraggableInstance = this;
     };
     //TODO из пойнт
     _.getDeltaXY = function() {
@@ -3064,6 +3569,10 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       if (this._dragging === true) {
         this._dragging = false;
         this.opacity = 255;
+        // * Освобождаем глобальную ссылку
+        if ($gameTemp.pkdDraggableInstance === this) {
+          $gameTemp.pkdDraggableInstance = null;
+        }
         if (this._dragEndHandler != null) {
           this._dragEndHandler();
         }
@@ -4377,7 +4886,7 @@ AA.Utils.Parser = function() {};
   //TODO: Пока простой способ
   _.convertParameterValue = function(paramValue) {
     if (isFinite(paramValue)) {
-      return parseInt(paramValue);
+      return Number(paramValue);
     } else {
       return paramValue;
     }
@@ -4386,7 +4895,12 @@ AA.Utils.Parser = function() {};
   // * Извлекает из строки (линии) имя параметра и его значение
   _.extractABSParameter = function(line) {
     var match, name, value;
-    match = line.match(/<*(\w+)\s*:\s*([\w\d]+)>*/i);
+    // * Для параметров одиночных < >
+    if (line.match(/<.*>/i)) {
+      match = line.match(/<(\w+)\s*:\s*(.+)>/i); // * Для параметров в группе (без < > )
+    } else {
+      match = line.match(/(\w+)\s*:\s*(.+)/i);
+    }
     if (match != null) {
       name = match[1];
       value = _.convertParameterValue(match[2]);
@@ -4411,6 +4925,36 @@ AA.Utils.Parser = function() {};
   // * Shortcut для проверки ABS событий
   _.getABSEnemyId = function(line) {
     return _.extractCertainABSParameter('ABS', line);
+  };
+  // *  Извлечь линии (строки) АБС параметров из группы в Note
+  _.parseNoteGroup = function(tag, note) {
+    var e, eTag, endLineIndex, i, index, len, line, notes, result, sTag, startLineIndex;
+    try {
+      result = [];
+      sTag = "<" + tag;
+      eTag = "</" + tag + ">";
+      notes = note.split(/[\r\n]+/);
+      startLineIndex = -1;
+      endLineIndex = -1;
+      for (index = i = 0, len = notes.length; i < len; index = ++i) {
+        line = notes[index];
+        if (line.contains(sTag)) {
+          startLineIndex = index + 1; // * Себя не включает начальный таг
+        }
+        if (startLineIndex >= 0 && line.contains(eTag)) {
+          endLineIndex = index;
+          break;
+        }
+      }
+      if (startLineIndex > -1 && endLineIndex > -1) {
+        result = notes.slice(startLineIndex, endLineIndex);
+      }
+    } catch (error) {
+      e = error;
+      AA.w(e);
+      return [];
+    }
+    return result;
   };
 })();
 
@@ -4555,4 +5099,4 @@ AA.Utils.Parser = function() {};
 // ■ END Sprite_TilingFrame.coffee
 //---------------------------------------------------------------------------
 
-//Plugin Alpha_@Core automatic build by PKD PluginBuilder 1.9.2 17.02.2021
+//Plugin Alpha_@Core automatic build by PKD PluginBuilder 1.9.2 05.10.2021

@@ -17,12 +17,15 @@ do ->
             return ALIAS__isFormationEnabled.call(@, ...arguments)
     
     
-    #TODO: Временно отключил команду сохранения в сетевой игре
     #@[ALIAS]
     ALIAS__isSaveEnabled = _.isSaveEnabled
     _.isSaveEnabled = ->
         if ANNetwork.isConnected()
-            return false
+            # * Если параметр включён и клиент является ХОСТОМ
+            if ANET.PP.isSaveLoadAllowed() and ANNetwork.isMasterClient()
+                return true
+            else
+                return false
         else
             return ALIAS__isSaveEnabled.call(@, ...arguments)
         

@@ -7,6 +7,15 @@ do ->
     #@[DEFINES]
     _ = Scene_Battle::
 
+    # * В сетевом режиме автосхранения отключены
+    #@[ALIAS]
+    ALIAS__shouldAutosave = _.shouldAutosave
+    _.shouldAutosave = ->
+        if ANNetwork.isConnected()
+            return false
+        else
+            return ALIAS__shouldAutosave.call(@)
+
     #@[ALIAS, STORED]
     _.ALIAS__NET_start = _.start
     _.start = ->

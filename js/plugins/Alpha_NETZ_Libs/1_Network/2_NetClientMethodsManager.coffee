@@ -114,6 +114,26 @@ do ->
         catch e
             console.warn("event_game_switch", e)
 
+    _.event_game_saveDataRequest = (content) ->
+        try
+            $gameTemp.nUniqueSaveID = content.uniqueSaveID
+            #TODO: Тут желательно ждать положительный результат, но пока сразу отправим флаг
+            # * Сохранение выполненно
+            DataManager.saveGame(content.savefileId)
+            ANGameManager.sendSaveDataCompleteFlag()
+        catch e
+            console.warn("event_game_saveDataRequest", e)
+
+    _.event_game_saveDataComplete = (content) ->
+        try
+            # * Если данный клиент не запускал сохранение, то игнор
+            return unless $gameTemp.nSaveData?
+            savedActorId = content
+            console.log(savedActorId)
+            $gameTemp.nSaveData.onAnswer(savedActorId, true)
+        catch e
+            console.warn("event_game_saveDataComplete", e)
+
     _.event_map_playerMove = (content) ->
         try
             ANPlayersManager.onPlayerMove(content.id, content.data)

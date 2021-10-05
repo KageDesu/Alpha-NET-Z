@@ -17,6 +17,15 @@ do ->
             $gameParty.nRefreshNetworkActors()
         return
         
+    # * В сетевом режиме автосхранения отключены
+    #@[ALIAS]
+    ALIAS__shouldAutosave = _.shouldAutosave
+    _.shouldAutosave = ->
+        if ANNetwork.isConnected()
+            return false
+        else
+            return ALIAS__shouldAutosave.call(@)
+
     #@[ALIAS]
     #ALIAS__update = _.update
     #_.update = ->

@@ -5,35 +5,62 @@ do ->
             super("ANETZ")
             @_prepareParameters()
     
+
+        #? CONNECTION -----------------------------------------------------------
         # * Настройки соединения
         serverIp: -> @_ip
         serverPort: -> @_port
 
+        #? MULTIPLAYER GROUP -----------------------------------------------------------
+
+        #Wait Map Transfer?
         isOnlySameMapMode: -> @getParam("onlySameMap", true)
 
-        # * Набор персонажей Actors для сетевой игры
-        #?VERSION
-        actorsForNetwork: -> @getParam("actorsForNetwork", [1, 2, 3, 4])
-
-        # * Можно ли выбирать персонажа себе
-        isActorSelectionAllowed: -> @getParam("isActorSelectionAllowed", true)
-
-        # * Можно ли начать сетевую игру одному
-        isSingleActorNetworkGameAllowed: -> @getParam("isSinglePlayerStartAllowed", true)
-
+        # New Game Allowed?
         # * Доступна ли обычная локальная Новая игра
         isSinglePlayerAllowed: -> @getParam("singlePlayerAllowed", true)
 
+        #Rooms Filter?
+        isRoomFilterON: -> ANET.isPro() && @getParam("roomFilter", false)
+
+        #Save and Load Allowed?
+        # * Сохранение и загрузка сетевой игры
+        isSaveLoadAllowed: -> @getParam("saveLoadGame", false)
+
+        #TODO: Параметр
+        isSaveOnlyInMenu: -> true
+
+        #? PLAYER SETTINGS GROUP -----------------------------------------------------------
+
+        # * Набор персонажей Actors для сетевой игры
+        #?VERSION
+        #Actors
+        actorsForNetwork: -> @getParam("actorsForNetwork", [1, 2, 3, 4])
+
+        # * Можно ли выбирать персонажа себе
+        #Actor selection?
+        isActorSelectionAllowed: -> @getParam("isActorSelectionAllowed", true)
+
+        # * Можно ли начать сетевую игру одному
+        #One player start?
+        isSingleActorNetworkGameAllowed: -> @getParam("isSinglePlayerStartAllowed", true)
+
+        # * Отображение имени игрока заместо имени персонажа
+        # * 0 - Не показывать, 1 - Name, 2 - Nickname
+        #?DINAMIC
+        #Player Name for Actor
+        playerActorNameType: -> 0
+
+        #On Player Disconnect CE
         getPlayerLeaveGameCommonEventId: -> @getParam("playerLeaveGameCommonEvent", 0)
+
+        #? OTHER -----------------------------------------------------------
 
         globalVariablesIds: -> @_globalVars
 
         globalSwitchesIds: -> @_globalSwitches
 
-        # * Отображение имени игрока заместо имени персонажа
-        # * 0 - Не показывать, 1 - Name, 2 - Nickname
-        #?DINAMIC
-        playerActorNameType: -> 0
+        #? NOT IN HEADER YET -------------------------------------
 
         # * Можно ли просматривать статус других игроков
         isOtherPlayersMenuStatusAllowed: -> true
@@ -49,8 +76,6 @@ do ->
 
         # * Время обновления данных в битве (влияет на производительность)
         battleDataRefreshRate: -> 60
-
-        isRoomFilterON: -> ANET.isPro() && @getParam("roomFilter", false)
 
     ANET.link ParamsManager
     return

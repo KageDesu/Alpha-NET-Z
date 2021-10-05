@@ -1,5 +1,5 @@
 //=============================================================================
-// main.js v1.2.1
+// main.js v1.3.3
 //=============================================================================
 
 const scriptUrls = [
@@ -42,6 +42,8 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/BattleManager_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/BattleManager_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/ConfigManager_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/DataManager_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/DataManager_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Action_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_ActionResult_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_ActionResult_N.js"
@@ -86,6 +88,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETCharactersGroup.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NetMessages.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/ParamsManager.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/PlayersDataPool.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/PlayersWaitPool.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/PluginCommands.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Base_@.js"
@@ -94,6 +97,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Battle_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Boot_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Equip_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Load_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Map_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Map_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Menu_N.js"
@@ -104,6 +108,8 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkRoom.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkRoomsList.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkSettings.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Save_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Save_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Skill_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Status_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Title_@.js"
@@ -130,6 +136,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomCommands.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomPlayersList.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomsList.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_SavefileList_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_Selectable_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_Selectable_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_TitleCommand_@.js"

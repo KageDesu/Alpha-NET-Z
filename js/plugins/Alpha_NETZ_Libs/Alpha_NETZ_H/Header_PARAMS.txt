@@ -36,6 +36,15 @@
 @default false
 @desc [PRO] If filter is ON, you can see only this (same) game rooms in lobby
 
+@param saveLoadGame:b
+@parent gameModeSettingsGroup
+@type boolean
+@text Save and Load Allowed?
+@on YES
+@off NO
+@default false
+@desc Can player (host only) save and load network game?
+
 @param playersSettingsGroup
 @text Players Settings
 

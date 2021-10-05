@@ -1,5 +1,5 @@
 //=============================================================================
-// rmmz_sprites.js v1.2.1
+// rmmz_sprites.js v1.3.3
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -1218,7 +1218,6 @@ Sprite_Animation.prototype.initMembers = function() {
     this._flashColor = [0, 0, 0, 0];
     this._flashDuration = 0;
     this._viewportSize = 4096;
-    this._originalViewport = null;
     this.z = 8;
 };
 
@@ -1362,7 +1361,6 @@ Sprite_Animation.prototype.setRotation = function(x, y, z) {
 Sprite_Animation.prototype._render = function(renderer) {
     if (this._targets.length > 0 && this._handle && this._handle.exists) {
         this.onBeforeRender(renderer);
-        this.saveViewport(renderer);
         this.setProjectionMatrix(renderer);
         this.setCameraMatrix(renderer);
         this.setViewport(renderer);
@@ -1432,16 +1430,8 @@ Sprite_Animation.prototype.targetSpritePosition = function(sprite) {
     return sprite.worldTransform.apply(point);
 };
 
-Sprite_Animation.prototype.saveViewport = function(renderer) {
-    // [Note] Retrieving the viewport is somewhat heavy.
-    if (!this._originalViewport) {
-        this._originalViewport = renderer.gl.getParameter(renderer.gl.VIEWPORT);
-    }
-};
-
 Sprite_Animation.prototype.resetViewport = function(renderer) {
-    const vp = this._originalViewport;
-    renderer.gl.viewport(vp[0], vp[1], vp[2], vp[3]);
+    renderer.gl.viewport(0, 0, renderer.view.width, renderer.view.height);
 };
 
 Sprite_Animation.prototype.onBeforeRender = function(renderer) {
@@ -2146,6 +2136,10 @@ Sprite_Gauge.prototype.bitmapWidth = function() {
 };
 
 Sprite_Gauge.prototype.bitmapHeight = function() {
+    return 32;
+};
+
+Sprite_Gauge.prototype.textHeight = function() {
     return 24;
 };
 
@@ -2392,7 +2386,7 @@ Sprite_Gauge.prototype.redraw = function() {
 
 Sprite_Gauge.prototype.drawGauge = function() {
     const gaugeX = this.gaugeX();
-    const gaugeY = this.bitmapHeight() - this.gaugeHeight();
+    const gaugeY = this.textHeight() - this.gaugeHeight();
     const gaugewidth = this.bitmapWidth() - gaugeX;
     const gaugeHeight = this.gaugeHeight();
     this.drawGaugeRect(gaugeX, gaugeY, gaugewidth, gaugeHeight);
@@ -2424,7 +2418,7 @@ Sprite_Gauge.prototype.drawLabel = function() {
     const x = this.labelOutlineWidth() / 2;
     const y = this.labelY();
     const width = this.bitmapWidth();
-    const height = this.bitmapHeight();
+    const height = this.textHeight();
     this.setupLabelFont();
     this.bitmap.paintOpacity = this.labelOpacity();
     this.bitmap.drawText(label, x, y, width, height, "left");
@@ -2453,7 +2447,7 @@ Sprite_Gauge.prototype.labelOpacity = function() {
 Sprite_Gauge.prototype.drawValue = function() {
     const currentValue = this.currentValue();
     const width = this.bitmapWidth();
-    const height = this.bitmapHeight();
+    const height = this.textHeight();
     this.setupValueFont();
     this.bitmap.drawText(currentValue, 0, 0, width, height, "right");
 };

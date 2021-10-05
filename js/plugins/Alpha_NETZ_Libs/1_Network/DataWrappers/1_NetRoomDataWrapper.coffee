@@ -27,6 +27,7 @@ do ->
             maxPlayers: 0
             gameMode: 0
             canConnect: true
+            uniqueSaveID: null
         }
 
     _.isRoomFull = (r) ->
@@ -49,6 +50,11 @@ do ->
             # * Если разные движки
             unless _.isMyRPGVersion(r)
                 return false
+            # * Если комната загрузки сетевого сохранения
+            if _.isLoadGameRoom(r)
+                # * То клиент должен иметь файл данного сохранения
+                unless DataManager.nHaveNetworkSaveWithId(r.uniqueSaveID)
+                    return false
             # * Если специальный флаг
             #TODO: Пока не обрабатывается
             #if r.canConnect is false
@@ -63,6 +69,8 @@ do ->
             return KDCore.isMZ()
         else
             return KDCore.isMV()
+
+    _.isLoadGameRoom = (r) -> r.uniqueSaveID?
 
     return
 # ■ END NetRoomDataWrapper.coffee

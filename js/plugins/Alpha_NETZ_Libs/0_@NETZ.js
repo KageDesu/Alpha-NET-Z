@@ -4,7 +4,9 @@ var Imported = Imported || {};
 Imported.Alpha_NETZ = true;
 
 var ANET = {};
-ANET.Version = 50; // 0.5.0
+ANET.Version = 60; // 0.6.0
+
+//TODO: Сменить ревизию
 ANET.ServerRev = 111; // * Необходимая ревизия сервера
 
 // * Данный символ переопределяется в 1_DevSymbol_TEST как dev

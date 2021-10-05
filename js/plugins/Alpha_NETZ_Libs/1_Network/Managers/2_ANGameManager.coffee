@@ -191,6 +191,20 @@ do ->
         ANNetwork.send(NMS.Game("sceneChange", sceneType))
         return
 
+    # * Это запрос от мастер клиента на другие клиенты, что надо выполнить сохранение
+    _.sendSaveDataRequest = (savefileId) ->
+        data = {
+            uniqueSaveID: $gameTemp.nUniqueSaveID,
+            savefileId: savefileId
+        }
+        ANNetwork.send(NMS.Game("saveDataRequest", data))
+        return
+
+    # * Это ответ от клиента, что он выполнил сохранение
+    _.sendSaveDataCompleteFlag = () ->
+        ANNetwork.send(NMS.Game("saveDataComplete", @myActorId()))
+        return
+
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
 

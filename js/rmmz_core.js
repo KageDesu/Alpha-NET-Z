@@ -1,5 +1,5 @@
 //=============================================================================
-// rmmz_core.js v1.2.1
+// rmmz_core.js v1.3.3
 //=============================================================================
 
 //-----------------------------------------------------------------------------
@@ -192,7 +192,7 @@ Utils.RPGMAKER_NAME = "MZ";
  * @type string
  * @constant
  */
-Utils.RPGMAKER_VERSION = "1.2.1";
+Utils.RPGMAKER_VERSION = "1.3.3";
 
 /**
  * Checks whether the current RPG Maker version is greater than or equal to
@@ -369,6 +369,16 @@ Utils.canPlayWebm = function() {
  */
 Utils.encodeURI = function(str) {
     return encodeURIComponent(str).replace(/%2F/g, "/");
+};
+
+/**
+ * Gets the filename that does not include subfolders.
+ *
+ * @param {string} filename - The filename with subfolders.
+ * @returns {string} The filename without subfolders.
+ */
+Utils.extractFileName = function(filename) {
+    return filename.split("/").pop();
 };
 
 /**
@@ -3992,8 +4002,8 @@ Window.prototype._refreshBack = function() {
     tilingSprite.bitmap = this._windowskin;
     tilingSprite.setFrame(0, 96, 96, 96);
     tilingSprite.move(0, 0, w, h);
-    tilingSprite.scale.x = 96 / w;
-    tilingSprite.scale.y = 96 / h;
+    tilingSprite.scale.x = 1 / sprite.scale.x;
+    tilingSprite.scale.y = 1 / sprite.scale.y;
     sprite.setColorTone(this._colorTone);
 };
 

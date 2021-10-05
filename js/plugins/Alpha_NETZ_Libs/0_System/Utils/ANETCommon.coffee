@@ -158,6 +158,10 @@ do ->
             ANET.w e
             return null
 
+    _.generateSaveUniqueId = ->
+        versionId = ANET.VD.getGameVersion()
+        return versionId + "" + Math.randomInt(versionId)
+
     return
 # ■ END ANET Common Utils Methods.coffee
 #---------------------------------------------------------------------------
