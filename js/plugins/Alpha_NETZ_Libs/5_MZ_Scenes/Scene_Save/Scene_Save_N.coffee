@@ -7,12 +7,6 @@ do ->
     #@[DEFINES]
     _ = Scene_Save::
 
-    #?EVENT
-    # * Когда пришёл флаг сохранения данных от другого клиента
-    _.netOn_game_saveDataComplete = ->
-        "COML".p()
-        return
-
     _.nUpdateSavePool = () -> @nSaveDataPool?.update()
 
     _.nCreateTempSaveData = () ->

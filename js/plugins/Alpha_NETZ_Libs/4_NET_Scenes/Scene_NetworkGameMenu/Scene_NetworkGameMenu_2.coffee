@@ -37,8 +37,6 @@ do ->
     _._updateRandomJoin = ->
         return unless @_waitRoomsForRandomJoin
         return unless @roomsList?
-        #TODO: filter добавить статус в иггре ил в лобии для комнаты и количество игроков
-        console.info @roomsList
         @_waitRoomsForRandomJoin = false
         @applyFiltersToRoomList()
         if @roomsList.length == 0

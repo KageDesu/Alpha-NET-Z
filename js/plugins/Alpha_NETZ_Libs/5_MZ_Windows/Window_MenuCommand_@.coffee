@@ -21,11 +21,8 @@ do ->
     ALIAS__isSaveEnabled = _.isSaveEnabled
     _.isSaveEnabled = ->
         if ANNetwork.isConnected()
-            # * Если параметр включён и клиент является ХОСТОМ
-            if ANET.PP.isSaveLoadAllowed() and ANNetwork.isMasterClient()
-                return true
-            else
-                return false
+            # * Если параметр включён
+            return ANET.PP.isSaveLoadAllowed()
         else
             return ALIAS__isSaveEnabled.call(@, ...arguments)
         

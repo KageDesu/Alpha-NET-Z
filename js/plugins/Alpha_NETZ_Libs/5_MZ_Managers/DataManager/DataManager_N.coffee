@@ -11,14 +11,8 @@ do ->
     _.nWriteNetworkSaveFileInfo = (info) ->
         # * Для определения подходящих файлов у других клиентов
         info.nUniqueSaveID = $gameTemp.nUniqueSaveID
-        # * Для списка персонажей
-        #TODO: Может не надо
-        info.nActors = ANGameManager.playersData.map (pl) -> pl.actorId
         # * Для определения своего персонажа
         info.nMyActorId = ANGameManager.myActorId()
-        # * Флаг что данный клиент сделал это сохранение
-        #TODO: Может не надо
-        info.nIsMaster = ANNetwork.isMasterClient()
         return
     
     # * Является ли файл сохранения сетевым (созданным по сети)
