@@ -5,11 +5,14 @@ class Scene_NetworkRoom extends Scene_MenuBase
 
     create: ->
         super()
+        @room = ANNetwork.room
+        console.info(@room)
         @createRoomTitle()
         @createCommands()
         @createPlayersList()
-        if ANET.PP.isActorSelectionAllowed()
+        if ANET.PP.isActorSelectionAllowed() and !@isLoadGame()
             @createActorSelectWindow()
+        @prepareSaveFile() if @isLoadGame()
         @refreshRoom()
         return
 
@@ -26,6 +29,8 @@ class Scene_NetworkRoom extends Scene_MenuBase
         return
 
     isBottomHelpMode: -> false
+
+    isLoadGame: -> ANET.Utils.isLoadGameRoom()
 
     refreshRoom: ->
         @room = ANNetwork.room
@@ -49,12 +54,10 @@ class Scene_NetworkRoom extends Scene_MenuBase
     #?EVENT
     netOn_lobby_startGame: ->
         @_startingGameTransition = true
-        #TODO: Тут надо вызывать метод Scene_Title.commandNewGame
-        # * Сейчас нету _commandWindow, так что временно создадим его чтобы не было ошибки
-        this._commandWindow = {
-            close: () ->
-        }
-        Scene_Title::commandNewGame.call(@)
+        if @isLoadGame()
+            @loadAndStartGame()
+        else
+            @startNewGame()
         return
 
     #?EVENT
@@ -89,6 +92,20 @@ do ->
 
     #@[DEFINES]
     _ = Scene_NetworkRoom::
+
+    _.startNewGame = ->
+        # * Сейчас нету _commandWindow, так что временно создадим его чтобы не было ошибки
+        this._commandWindow = {
+            close: () ->
+        }
+        Scene_Title::commandNewGame.call(@)
+        return
+
+    _.loadAndStartGame = ->
+        # * Задаём флаг, что будем загружать сетевую игру
+        $gameTemp._nRequestLoadNetworkGame = true
+        SceneManager.push(Scene_Load)
+        return
 
     _.createRoomTitle = ->
         @createHelpWindow()
@@ -187,6 +204,28 @@ do ->
         @_playersListWindow = new Window_NetworkRoomPlayersList(new Rectangle(wx, wy, ww, wh))
         @addWindow @_playersListWindow
         @_refreshPlayerList()
+        return
+
+    _.prepareSaveFile = ->
+        info = DataManager.nGetNetworkSaveInfoWithId(@room.uniqueSaveID)
+        unless info?
+            HUIManager.notifyError("Save file data not found!")
+            console.warn("Save file with ID " + @room.uniqueSaveID + " not found!")
+            @popScene.bind(@)
+        else
+            #TODO: На сервере нет проверки на занятость персонажа??? НЕТУ в 112
+            ANPlayersManager.sendBindActorFromLobby(
+                info.nMyActorId, @onBindLoadedActorResult.bind(@)
+                )
+        return
+
+    _.onBindLoadedActorResult = (resultFlag) ->
+        if resultFlag is false
+            SoundManager.playBuzzer()
+            HUIManager.notifyError("Can't load Actor data or Actor already used by another player")
+            @popScene.bind(@)
+        else
+            @refreshRoom()
         return
 
     return

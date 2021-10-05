@@ -162,6 +162,12 @@ do ->
         versionId = ANET.VD.getGameVersion()
         return versionId + "" + Math.randomInt(versionId)
 
+    # * Текущая комната - загрузка сохранённой игры?
+    _.isLoadGameRoom = ->
+        return false unless ANNetwork.isConnected()
+        return false unless ANNetwork.room?
+        return NetRoomDataWrapper.isLoadGameRoom(ANNetwork.room)
+
     return
 # ■ END ANET Common Utils Methods.coffee
 #---------------------------------------------------------------------------

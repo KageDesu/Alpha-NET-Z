@@ -21,6 +21,8 @@ class Window_NetworkRoomPlayersList extends Window_Selectable
 
     isEnabled: (index) -> true
 
+    isLoadGame: -> ANET.Utils.isLoadGameRoom()
+
     playerData: (index) -> ANGameManager.playersData[index]
 
 #╒═════════════════════════════════════════════════════════════════════════╛
@@ -38,7 +40,7 @@ do ->
             text = "\\C[1]" + text
         else if playerData.id == ANNetwork.myId()
             text = "\\C[3]" + text
-        if ANET.PP.isActorSelectionAllowed()
+        if ANET.PP.isActorSelectionAllowed() || @isLoadGame()
             text += @_getActorName(playerData)
         @drawTextEx(text, rect.x, rect.y, rect.width, 'left')
         return

@@ -53,34 +53,10 @@ do ->
         return
 
     _.commandCreateRoomMenu = ->
-        @_lastRoomName = HUIManager.getInputValue()
-        unless String.any(@_lastRoomName)
-            @_lastRoomName = "Room_" + Math.randomInt(1000)
-
-        # * Отправляем данные об текущей игре (клиенте)
-        newRoomData = {
-            name: @_lastRoomName
-            gameInfo: ANNetwork.getNetworkGameInfoData()
-        }
-
-        ANNetwork.get(
-            NMS.Lobby("createRoom", newRoomData),
-            (result) => @_onRoomCreated(result),
-            () =>
-                console.log("Can't create Room, server not response in time")
-                @_commandsWindow.activate()
-        )
-        return
-
-    #?EVENT
-    _._onRoomCreated = (roomData) ->
-        if roomData?
-            ANNetwork.setRoomMaster(roomData)
-            SceneManager.push(Scene_NetworkRoom)
-            #TODO: save in confing manager room name (???)
-        else
-            HUIManager.notifyError("Can't create room with name: " + @_lastRoomName)
-            @_commandsWindow.activate()
+        # * Сохраняем название команты
+        $gameTemp._nLastRoomName = HUIManager.getInputValue()
+        $gameTemp._nIsForwardTransitionToRoomTypeMenu = true
+        SceneManager.push(Scene_NetworkRoomTypeSelect)
         return
 
     _.commandJoinRoomMenu = () ->

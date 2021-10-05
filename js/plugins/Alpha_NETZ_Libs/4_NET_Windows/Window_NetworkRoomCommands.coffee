@@ -5,6 +5,10 @@ class Window_NetworkRoomCommands extends Window_HorzCommand
 
     maxCols: -> 3
 
+    isLoadGame: -> ANET.Utils.isLoadGameRoom()
+
+    isCanSelectActors: -> ANET.PP.isActorSelectionAllowed() and !@isLoadGame()
+
     makeCommandList: ->
         if ANNetwork.isMasterClient()
             @addCommand('Start', 'start', @_isStartEnabled()) #TODO: Третий аргумент : enabled
@@ -13,7 +17,7 @@ class Window_NetworkRoomCommands extends Window_HorzCommand
         else
             @addCommand('Ready', 'ready', false)
             #TODO: Пока отключим, нет функционала
-        if ANET.PP.isActorSelectionAllowed()
+        if @isCanSelectActors()
             @addCommand("Character", 'character', @_isCharSelectEnabled())
         leaveCommandName = if ANNetwork.isMasterClient() then "Close" else "Leave"
         @addCommand(leaveCommandName, 'leave')
@@ -38,7 +42,9 @@ do ->
         unless ANET.PP.isSingleActorNetworkGameAllowed()
             return false if ANGameManager.playersData.length == 1
         # * Надо выбрать персонажа, потом можно начинать игру
-        if ANET.PP.isActorSelectionAllowed()
+        if @isCanSelectActors() || @isLoadGame()
+            #TODO: Разрешить загружаться меньшему количеству игроков??? Опция или НЕТ?
+            # * Сейчас может загрузить игру два игрока, если играло 3 или более например
             return @_isAllPlayersSelectActors()
         else
             return true

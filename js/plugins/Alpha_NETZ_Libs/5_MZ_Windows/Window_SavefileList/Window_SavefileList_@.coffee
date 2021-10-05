@@ -11,8 +11,10 @@ do ->
     ALIAS__isEnabled = _.isEnabled
     _.isEnabled = (savefileId) ->
         # * Нельзя загружать сетевые сохранения из обычного меню загрузки
-        if @_mode != 'save' && DataManager.nIsNetworkSaveFile(savefileId)
+        if @_mode == 'load' && DataManager.nIsNetworkSaveFile(savefileId)
             return false
+        else if @_mode == 'loadNet'
+            return DataManager.nIsNetworkSaveFile(savefileId)
         else
             return ALIAS__isEnabled.call(@, savefileId)
     

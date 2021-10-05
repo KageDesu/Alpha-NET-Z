@@ -81,8 +81,14 @@ do ->
         ANMapManager.sendMapLoaded()
         # * Отправляем начальные данные (позиция игрока)
         ANMapManager.sendInitialMapData()
-        if @_shouldWaitPlayerOnSameMap is true || @networkGameStarted is true
-            @setWait('playersOnMap') # * Ждём игроков
+        # * Если загрузка
+        if ANET.Utils.isLoadGameRoom()
+            # * Ждём игроков (Только при параметре)
+            @setWait('playersOnMap') if @_shouldWaitPlayerOnSameMap is true
+        else
+            # * Ждём игроков (при параметре и если новая игра (чтобы начать события например))
+            if @_shouldWaitPlayerOnSameMap is true || @networkGameStarted is true
+                @setWait('playersOnMap')
         return
 
     _.setWait = (@_waitMode) ->

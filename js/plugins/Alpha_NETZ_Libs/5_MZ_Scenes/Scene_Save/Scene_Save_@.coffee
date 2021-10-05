@@ -14,6 +14,7 @@ do ->
     _.executeSave = (savefileId) ->
         if ANNetwork.isConnected()
             if ANET.PP.isSaveOnlyInMenu()
+                #TODO:
                 #@nRequestClientsStatesForSave(savefileId)
                 @nExecuteNetworkSave(savefileId)
             else

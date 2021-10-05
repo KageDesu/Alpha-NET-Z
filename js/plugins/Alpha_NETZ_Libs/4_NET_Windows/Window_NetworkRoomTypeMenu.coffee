@@ -1,28 +1,28 @@
 #╒═════════════════════════════════════════════════════════════════════════╛
-# ■ Window_NetworkGameMenu.coffee
+# ■ Window_NetworkRoomTypeMenu.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
 
-class Window_NetworkGameMenu extends Window_Command
+class Window_NetworkRoomTypeMenu extends Window_Command
     constructor: (rect) ->
         super(rect)
         @setBackgroundType ANET.VD.getWindowBackgroundType()
 
     makeCommandList: ->
-        @addCommand("Create Room", "createRoom")
-        @addCommand("Join Room", "joinRoom")
-        @addCommand("Join Random Room", "joinRandRoom")
-        @addCommand("Settings", "settings")
+        @addCommand("New Game", "newGame")
+        @addCommand("Load Game", "continue", @isHaveSavedGames())
         return
+
+    isHaveSavedGames: -> true #TODO: првоерка наличия сетевых сохранений
 
 do ->
 
     #@[DEFINES]
-    _ = Window_NetworkGameMenu::
+    _ = Window_NetworkRoomTypeMenu::
 
 
 
     
     return
-# ■ END Window_NetworkGameMenu.coffee
+# ■ END Window_NetworkRoomTypeMenu.coffee
 #---------------------------------------------------------------------------

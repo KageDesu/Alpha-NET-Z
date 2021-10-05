@@ -63,14 +63,16 @@ do ->
     _._drawRoomInfo = (rect, roomData) ->
         rpgVersion = if roomData.rpgVersion is 0 then 'MZ' else 'MV'
         state = if roomData.inGame is true then 'In Game'  else 'In Lobby'
+        loadGame = if NetRoomDataWrapper.isLoadGameRoom(roomData) then '[from Savefile]' else ''
         # * [VER](GAME NAME) RoomName 0\X (inGame|inLobby)
-        roomText = "\\}\\C[1][%1]\\C[3](%2)\\{\\C[0]   %3   \\C[4]%4/%5 \\}\\C[5](%6)".format(
+        roomText = "\\}\\C[1][%1]\\C[3](%2)\\{\\C[0]   %3   \\C[4]%4/%5 \\}\\C[5](%6) \\C[6]%7".format(
             rpgVersion,
             roomData.gameTitle,
             roomData.name,
             roomData.playersIds.length,
             roomData.maxPlayers,
-            state
+            state,
+            loadGame
         )
         @drawTextEx(roomText, rect.x, rect.y, rect.width, 'left')
         return

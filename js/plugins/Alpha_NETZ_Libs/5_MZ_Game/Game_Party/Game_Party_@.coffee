@@ -33,6 +33,28 @@ do ->
             return @networkLeader()
         else
             return ALIAS__leader.call(@)
+    
+    #@[ALIAS]
+    ALIAS__charactersForSavefile = _.charactersForSavefile
+    _.charactersForSavefile = ->
+        if ANNetwork.isConnected()
+            return @members().map (actor) -> [
+                actor.characterName(),
+                actor.characterIndex()
+            ]
+        else
+            return ALIAS__charactersForSavefile.call(@)
+        
+    #@[ALIAS]
+    ALIAS__facesForSavefile = _.facesForSavefile
+    _.facesForSavefile = ->
+        if ANNetwork.isConnected()
+            return @members().map (actor) -> [
+                actor.faceName(),
+                actor.faceIndex()
+            ]
+        else
+            return ALIAS__facesForSavefile.call(@)
         
 
     return

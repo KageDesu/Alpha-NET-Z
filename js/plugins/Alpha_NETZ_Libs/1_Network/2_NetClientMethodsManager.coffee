@@ -117,9 +117,10 @@ do ->
     _.event_game_saveDataRequest = (content) ->
         try
             $gameTemp.nUniqueSaveID = content.uniqueSaveID
-            #TODO: Тут желательно ждать положительный результат, но пока сразу отправим флаг
             # * Сохранение выполненно
+            $gameSystem.onBeforeSave()
             DataManager.saveGame(content.savefileId)
+            #TODO: Тут желательно ждать положительный результат, но пока сразу отправим флаг
             ANGameManager.sendSaveDataCompleteFlag()
         catch e
             console.warn("event_game_saveDataRequest", e)
