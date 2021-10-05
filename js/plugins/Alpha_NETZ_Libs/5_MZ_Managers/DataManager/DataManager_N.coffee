@@ -23,7 +23,7 @@ do ->
         return false
 
     # * Есть ли файл сетевого сохранения с уникальным ID
-    _.nHaveNetworkSaveWithId = (uniqueSaveID) -> @nGetNetworkSaveInfoWithId(uniqueSaveID)?
+    _.nIsHaveNetworkSaveWithId = (uniqueSaveID) -> @nGetNetworkSaveInfoWithId(uniqueSaveID)?
 
     # * Получить данные сетвого сохранения по уникальному ID
     _.nGetNetworkSaveInfoWithId = (uniqueSaveID) ->

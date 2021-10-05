@@ -53,7 +53,7 @@ do ->
             # * Если комната загрузки сетевого сохранения
             if _.isLoadGameRoom(r)
                 # * То клиент должен иметь файл данного сохранения
-                unless DataManager.nHaveNetworkSaveWithId(r.uniqueSaveID)
+                unless DataManager.nIsHaveNetworkSaveWithId(r.uniqueSaveID)
                     return false
             # * Если специальный флаг
             #TODO: Пока не обрабатывается

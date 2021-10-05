@@ -160,7 +160,12 @@ do ->
 
     _.generateSaveUniqueId = ->
         versionId = ANET.VD.getGameVersion()
-        return versionId + "" + Math.randomInt(versionId)
+        savefileId = versionId + "" + Math.randomInt(versionId)
+        # * Вероятность крайне крайне мала, но нельзя чтобы были повторы
+        if DataManager.nIsHaveNetworkSaveWithId(savefileId)
+            return @generateSaveUniqueId()
+        else
+            return savefileId
 
     # * Текущая комната - загрузка сохранённой игры?
     _.isLoadGameRoom = ->
