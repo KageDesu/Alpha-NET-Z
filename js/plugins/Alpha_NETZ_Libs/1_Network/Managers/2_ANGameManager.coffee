@@ -197,6 +197,8 @@ do ->
             sceneType = "menu"
         if SceneManager.isNextScene(Scene_Battle)
             sceneType = "battle"
+        if SceneManager.isNextScene(Scene_NetChatInput)
+            sceneType = "chat"
         ANNetwork.send(NMS.Game("sceneChange", sceneType))
         return
 

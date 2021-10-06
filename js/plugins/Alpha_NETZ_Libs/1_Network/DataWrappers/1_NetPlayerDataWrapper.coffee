@@ -41,12 +41,10 @@ do ->
     _.isOnEvent = (p, eventId) -> p.onEvent == eventId
 
     _.getRequestedNetworkState = (p) ->
-        if p.scene == "menu"
-            return 2
-        if p.scene == "battle"
-            return 5
-        if _.isOnAnyEvent(p)
-            return 1
+        return 2 if p.scene == "menu"
+        return 5 if p.scene == "battle"
+        return 6 if p.scene == "chat"
+        return 1 if _.isOnAnyEvent(p)
         return -1
 
     _.getNetCharacterForPlayer = (p) ->

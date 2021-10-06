@@ -109,6 +109,11 @@ do ->
         @_input = null
         return
 
+    _.focusInput = () ->
+        return unless @_input?
+        document.getElementById("anetInputName")?.focus()
+        return
+
     _.getInputValue = () ->
         return "" unless @_input?
         return document.getElementById("anetInputName")?.value
@@ -183,7 +188,7 @@ do ->
         @_input.classList.add("form__group")
         @_input.classList.add("field")
         htmlCode =
-            "<input type=\"input\" class=\"form__field\" placeholder=\"" + placeholder + "\" name=\"anetInputName\" id='anetInputName' required />
+            "<input type=\"input\" class=\"form__field\" placeholder=\"" + placeholder + "\" autocomplete=\"off\" name=\"anetInputName\" id='anetInputName' required />
             <label for=\"anetInputName\" class=\"form__label\">" + placeholder + "</label>"
         @_input.insertAdjacentHTML('beforeend', htmlCode)
         @_canvasRelativeElements.appendChild(@_input)
