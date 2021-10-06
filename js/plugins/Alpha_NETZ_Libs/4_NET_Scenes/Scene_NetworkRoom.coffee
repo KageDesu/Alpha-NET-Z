@@ -6,7 +6,6 @@ class Scene_NetworkRoom extends Scene_MenuBase
     create: ->
         super()
         @room = ANNetwork.room
-        console.info(@room)
         @createRoomTitle()
         @createCommands()
         @createPlayersList()

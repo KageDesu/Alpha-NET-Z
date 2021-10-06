@@ -42,8 +42,8 @@
 @text Save and Load Allowed?
 @on YES
 @off NO
-@default false
-@desc Can player (host only) save and load network game?
+@default true
+@desc Can player save and load network game?
 
 @param playersSettingsGroup
 @text Players Settings

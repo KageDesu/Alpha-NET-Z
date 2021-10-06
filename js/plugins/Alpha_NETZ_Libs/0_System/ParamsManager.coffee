@@ -25,10 +25,10 @@ do ->
 
         #Save and Load Allowed?
         # * Сохранение и загрузка сетевой игры
-        isSaveLoadAllowed: -> @getParam("saveLoadGame", false)
+        isSaveLoadAllowed: -> @getParam("saveLoadGame", true)
 
         #TODO: Параметр
-        isSaveOnlyInMenu: -> true
+        isSaveOnlyInMenu: -> false
 
         #? PLAYER SETTINGS GROUP -----------------------------------------------------------
 
