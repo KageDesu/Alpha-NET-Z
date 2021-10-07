@@ -14,18 +14,18 @@ do ->
         getSettings: -> @defaultSettings()
 
         defaultSettings: -> {
-            size: { w: 310, h: 18 }
+            size: { w: 306, h: 18 }
             backgroundA: {
-                color: "#000000".toCss()
-                opacity: 120
+                color: "#59a3d9".toCss()
+                opacity: 40
             },
             backgroundB: {
-                color: "#000000".toCss()
-                opacity: 180
+                color: "#59a3d9".toCss()
+                opacity: 70
             }
             textLine: {
                 visible: true
-                size: { w: 406, h: 20 }
+                size: { w: 402, h: 20 }
                 font: { face: null, size: 14, italic: false }
                 margins: { x: 4, y: -3 }
             }

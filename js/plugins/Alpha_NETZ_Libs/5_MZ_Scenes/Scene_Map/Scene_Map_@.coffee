@@ -30,7 +30,8 @@ do ->
     ALIAS__createSpriteset = _.createSpriteset
     _.createSpriteset = ->
         ALIAS__createSpriteset.call(@)
-        return unless ANNetwork.isConnected()
+        #TODO: test
+        #return unless ANNetwork.isConnected()
         @_netUI = new ANET.Spriteset_UI()
         @addChild @_netUI
         return

@@ -7,12 +7,17 @@
 
  // * CHANGELOG ===================
  /*
- * v 2.0 (X.09.2021)
+ * v 2.0 (19.09.2021)
+ * - New: Gamepad support
+ * - New: Addition weapons and equipment's parameters (SP, EX) (PRO)
+ * - New: Addition custom weapons and equipment's descriptions (PRO)
  * - New: Items name color matching Quality System level color
  *      (see new Plugin Parameters)
  * - New: Added show and hide Map Inventory UI script calls
  * - Fixed: Battle Test from RPG Maker Editor not works with Map Inventory Plugin
  * - Fixed: Sticky inventory (chest) windows when dragging
+ * - Added support for: Alpha NET Z multiplayer plugin
+ * - Added support for: Alpha ABS Z active battle system plugin
  * - Some small fixes and changes
  *
  * v 1.9 (11.05.2021)
@@ -188,6 +193,35 @@
  * @type string
  * @default t
  * @desc
+ * 
+ * @param useGamepad:b
+ * @text Is Use Gamepad?
+ * @type boolean
+ * @default false
+ * @desc Activate Map Inventory gamepad controls? (when Gamepad connected)
+ * 
+ * @param gpOpenKey
+ * @parent useGamepad:b
+ * @text Open Inventory Key
+ * @type select
+ * @option A
+ * @option B
+ * @option X
+ * @option Y
+ * @option Start
+ * @option Back
+ * @option LB
+ * @option RB
+ * @option LTrigger
+ * @option RTrigger
+ * @option LStick
+ * @option RStick
+ * @option dLeft
+ * @option dRight
+ * @option dUp
+ * @option dDown
+ * @default Back
+ * @desc Gamepad key to open Map Inventory from Map Scene
  * 
  * @param spacer|inventorySettings @text‏‏‎ ‎@desc ===============================================
  * 
@@ -395,6 +429,13 @@
  * @type boolean
  * @default false
  * @desc If false, when item is equipped you can see only gained stats (without actor ones)
+ * 
+ * @param ExtraDescriptionsForStats:structA
+ * @parent AllowEquipsStats
+ * @text Extra Descriptions
+ * @type struct<LExtraDescData>[]
+ * @default []
+ * @desc Extra description page for weapon or equipment (mouse scroll)
  * 
  * @param spacer|outerItemsSystem @text‏‏‎ ‎@desc ===============================================
  * 
@@ -850,6 +891,46 @@
     * @require 1
     * @desc Sound effect when item been thowed out
 */
+
+/*~struct~LExtraDescData:
+ * @param weaponId:int
+ * @text Weapon
+ * @type weapon
+ * @default 0
+ * @desc The weapon to be described [Only]
+ * 
+ * @param armorId:int
+ * @text Armor
+ * @type armor
+ * @default 0
+ * @desc The armor to be described [Only]
+ * 
+ * @param info:struct
+ * @text Desctiption
+ * @type struct<LExtraDescInfoText>
+ * @default {"font:struct":"{\"face:str\":\"\",\"size:int\":\"11\",\"italic:bool\":\"false\"}","text":"\"\\\\C[4]New Skill:     \\\\I[64]\\\\C[2]Fire II\\n\\n\\\\C[3]+Dragon Slayer\\\\C[0] - Grants you a 4 turn attack buff after hitting a dragon monster.\\n\"","size:struct":"{\"w:int\":\"260\",\"h:int\":\"160\"}"}
+ * @desc Description text
+*/
+
+/*~struct~LExtraDescInfoText:
+ * @param font:struct
+ * @type struct<Font>
+ * @text Font Settings
+ * @default {"face:str":"","size:int":"11","italic:bool":"false"}
+ * @desc Text font settings
+ * 
+ * @param text
+ * @text Text
+ * @type note
+ * @default This is \C[3] some example \C[0] description
+ * @desc Description text, supports escape-characters and auto words wrapping
+ * 
+ * @param size:struct
+ * @text Description Size
+ * @type struct<WH>
+ * @default {"w:int":"260","h:int":"160"}
+ * @desc Description text zone size
+ */
 var Imported = Imported || {};
 Imported.PKD_MapInventory = true;
 
@@ -918,13 +999,13 @@ PKD_MI.getUIMapChestSettings = function () {
 // * LIBRARY WITH MZ AND MZ SUPPORT
 //! {OUTER FILE}
 
-//?rev 13.04.21
+//?rev 18.09.21
 var KDCore;
 
 KDCore = KDCore || {};
 
 // * Двузначные числа нельзя в версии, сравнение идёт по первой цифре поулчается
-KDCore._fileVersion = '2.5';
+KDCore._fileVersion = '2.6';
 
 if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
   // * ПРОПУСКАЕМ ЗАГРУЗКУ, так как уже загруженна более новая
@@ -989,6 +1070,23 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
     };
     Array.prototype.isEmpty = function() {
       return this.length === 0;
+    };
+    // * Ищет элемент, у которого поле ID == id
+    Array.prototype.getById = function(id) {
+      return this.getByField('id', id);
+    };
+    // * Ищет элемент, у которого поле FIELD (имя поля) == value
+    Array.prototype.getByField = function(field, value) {
+      var e;
+      try {
+        return this.find(function(item) {
+          return item[field] === value;
+        });
+      } catch (error1) {
+        e = error1;
+        console.warn(e);
+        return null;
+      }
     };
     // * Number Extension
     //------------------------------------------------------------------------------
@@ -1134,8 +1232,6 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
     };
     // * Input Extension
     //------------------------------------------------------------------------------
-
-    //TODO: Gamepad support
     Input.KeyMapperPKD = {};
 //Numbers
     for (i = l = 48; l <= 57; i = ++l) {
@@ -1185,6 +1281,272 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       //?NEW
       TouchInput.toPoint = function() {
         return new KDCore.Point(TouchInput.x, TouchInput.y);
+      };
+    })();
+    (function() {      // * Input Extension: KDGamepad
+      //------------------------------------------------------------------------------
+      // * Поддержка расширенного управления через геймпад (свой модуль)
+      var ALIAS___updateGamepadState, _;
+      //@[DEFINES]
+      _ = Input;
+      // * Активировать работу модуля KDGamepad
+      _.activateExtendedKDGamepad = function() {
+        return _._kdIsGamepadExtended = true;
+      };
+      //@[ALIAS]
+      ALIAS___updateGamepadState = _._updateGamepadState;
+      _._updateGamepadState = function(gamepad) {
+        if (Input._kdIsGamepadExtended === true) {
+          KDGamepad.update();
+        }
+        if ((typeof $gameTemp !== "undefined" && $gameTemp !== null ? $gameTemp.__kdgpStopDefaultGamepad : void 0) === true) {
+          return;
+        }
+        // * Режим перемещения без DPad
+        // * В оригинале игрок также ходит по DPad клавишам, что может быть не удобно
+        // * например при работе с инвентарём
+        if (KDGamepad.isNoDPadMoving()) {
+          if (KDGamepad.isDPadAny()) {
+            Input.clear();
+            return;
+          }
+        }
+        ALIAS___updateGamepadState.call(this, gamepad);
+      };
+      window.KDGamepad = function() {
+        return new Error("This is static class");
+      };
+      window.addEventListener("gamepadconnected", function(event) {
+        var e;
+        try {
+          return KDGamepad.refresh();
+        } catch (error1) {
+          // * Можно напрямую
+          //unless KDGamepad.isExists()
+          //    if event.gamepad? and event.gamepad.mapping == 'standard'
+          //        KDGamepad.init(event.gamepad)
+          e = error1;
+          KDCore.warning(e);
+          return KDGamepad.stop();
+        }
+      });
+      window.addEventListener("gamepaddisconnected", function(event) {
+        var e;
+        if (!KDGamepad.isExists()) {
+          return;
+        }
+        try {
+          if ((event.gamepad != null) && event.gamepad === KDGamepad.gamepad) {
+            return KDGamepad.stop();
+          }
+        } catch (error1) {
+          e = error1;
+          KDCore.warning(e);
+          return KDGamepad.stop();
+        }
+      });
+      KDGamepad.stopDefaultGamepad = function() {
+        $gameTemp.__kdgpStopDefaultGamepad = true;
+      };
+      KDGamepad.resumeDefaultGamepad = function() {
+        $gameTemp.__kdgpStopDefaultGamepad = null;
+      };
+      // * Ссылка на геймпад
+      KDGamepad.gamepad = null;
+      // * Подключён ли Gamepad ?
+      KDGamepad.isExists = function() {
+        return KDGamepad.gamepad != null;
+      };
+      // * Инициализация состояния кнопок
+      // * Этот метод вызывается автоматически из Refresh или при подключении Gamepad
+      KDGamepad.init = function(gamepad) {
+        KDGamepad.gamepad = gamepad;
+        this._isActive = true;
+        this.buttonNames = [
+          'A', // 0
+          'B', // 1
+          'X', // 2
+          'Y', // 3
+          'LB', // 4
+          'RB', // 5
+          'LTrigger', // 6
+          'RTrigger', // 7
+          'Back', // 8
+          'Start', // 9
+          'LStick', // 10
+          'RStick', // 11
+          'dUp', // 12
+          'dDown', // 13
+          'dLeft', // 14
+          'dRight' // 15
+        ];
+        this.reset();
+      };
+      // * Аналог Input.clear
+      KDGamepad.clear = function() {
+        return KDGamepad.reset();
+      };
+      // * Сбросить состояние кнопок
+      KDGamepad.reset = function() {
+        this.leftStick = {
+          x: 0,
+          y: 0
+        };
+        this.rightStick = {
+          x: 0,
+          y: 0
+        };
+        this.buttons = {};
+        this.buttonsPressed = {};
+        this.prevButtons = {};
+      };
+      
+      // * Остановить учёт геймпада
+      KDGamepad.stop = function() {
+        KDGamepad.reset();
+        KDGamepad.gamepad = null;
+      };
+      // * Функция проверки что нажата кнопка на геймпаде
+      KDGamepad._buttonPressed = function(gamepad, index) {
+        var b, e;
+        try {
+          if (!gamepad || !gamepad.buttons || index >= gamepad.buttons.length) {
+            return false;
+          }
+          b = gamepad.buttons[index];
+          if (b == null) {
+            return false;
+          }
+          if (typeof b === 'object') {
+            // * Можно упростить
+            return b.pressed;
+          }
+          return b === 1.0;
+        } catch (error1) {
+          e = error1;
+          KDCore.warning(e);
+          return false;
+        }
+      };
+      // * Каждый кадр (обновление состояний)
+      KDGamepad.update = function() {
+        var e, gp, isDown, len, name, q, ref;
+        if (!KDGamepad.isActive()) {
+          return;
+        }
+        KDGamepad.refresh();
+        if (!KDGamepad.isExists()) {
+          return;
+        }
+        try {
+          gp = KDGamepad.gamepad;
+          ref = this.buttonNames;
+          // * Проверка состояний кнопок
+          for (i = q = 0, len = ref.length; q < len; i = ++q) {
+            name = ref[i];
+            this.buttons[name] = false;
+            isDown = KDGamepad._buttonPressed(gp, i);
+            if (isDown === true) {
+              this.prevButtons[name] = true;
+            } else {
+              // * Срабатываение только при нажал - отпустил
+              if (this.prevButtons[name] === true) {
+                this.buttons[name] = true;
+                this.prevButtons[name] = false;
+              }
+            }
+          }
+          // * Проверка стиков
+          this.leftStick.x = gp.axes[0];
+          this.leftStick.y = gp.axes[1];
+          this.rightStick.x = gp.axes[2];
+          this.rightStick.y = gp.axes[3];
+        } catch (error1) {
+          e = error1;
+          KDCore.warning(e);
+          KDGamepad.stop();
+        }
+      };
+      // * Обновить и проверить состояние Gamepad
+      // * Надо каждый раз это вызывать
+      KDGamepad.refresh = function() {
+        var e, gamepads, gp, isGamepadRefreshed, q, ref;
+        try {
+          isGamepadRefreshed = false;
+          if (navigator.getGamepads) {
+            gamepads = navigator.getGamepads();
+          } else if (navigator.webkitGetGamepads) {
+            gamepads = navigator.webkitGetGamepads();
+          }
+          if (gamepads != null) {
+            for (i = q = 0, ref = gamepads.length; (0 <= ref ? q < ref : q > ref); i = 0 <= ref ? ++q : --q) {
+              gp = gamepads[i];
+              if ((gp != null) && gp.mapping === 'standard') {
+                isGamepadRefreshed = true;
+                if (KDGamepad.buttonNames != null) {
+                  KDGamepad.gamepad = gp;
+                } else {
+                  KDGamepad.init(gp);
+                }
+                break;
+              }
+            }
+          }
+          if (!isGamepadRefreshed) {
+            // * Если не был найден не один gamepad - отключаем систему
+            KDGamepad.stop();
+          }
+        } catch (error1) {
+          e = error1;
+          KDCore.warning(e);
+          KDGamepad.stop();
+        }
+      };
+      // * Любое нажатие кнопки
+      KDGamepad.isKeyAny = function(name) {
+        return KDGamepad.isKey(name) || KDGamepad.isKeyPressed(name);
+      };
+      // * Нажата ли кнопка (trigger нажал - отпустил)
+      KDGamepad.isKey = function(name) {
+        if (!KDGamepad.isExists()) {
+          return false;
+        }
+        if (this.buttons == null) {
+          return false;
+        }
+        return this.buttons[name] === true;
+      };
+      // * Нажата ли кнопка (continues зажата)
+      KDGamepad.isKeyPressed = function(name) {
+        if (!KDGamepad.isExists()) {
+          return false;
+        }
+        if (this.buttons == null) {
+          return false;
+        }
+        return this.prevButtons[name] === true;
+      };
+      KDGamepad.isDPadAny = function() {
+        return KDGamepad.isKeyAny("dLeft") || KDGamepad.isKeyAny("dRight") || KDGamepad.isKeyAny("dUp") || KDGamepad.isKeyAny("dDown");
+      };
+      KDGamepad.isActive = function() {
+        return this._isActive === true;
+      };
+      // * Временно отключить обработку KDGamepad
+      KDGamepad.setActive = function(_isActive) {
+        this._isActive = _isActive;
+        if (KDGamepad.isActive()) {
+          KDGamepad.refresh();
+        } else {
+          KDGamepad.stop();
+        }
+      };
+      // * Отключить перемещение игрока на DPad
+      KDGamepad.setNoDPadMovingMode = function(_noDpadMoving) {
+        this._noDpadMoving = _noDpadMoving;
+      };
+      return KDGamepad.isNoDPadMoving = function() {
+        return this._noDpadMoving === true;
       };
     })();
     // * Window_Base Extension
@@ -2026,7 +2388,7 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
     }).call(this);
     // * Utils
     //------------------------------------------------------------------------------
-    KDCore.Utils = {};
+    KDCore.Utils = KDCore.Utils || {};
     (function() {
       var _;
       _ = KDCore.Utils;
@@ -2098,6 +2460,31 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
           console.warn(e);
         }
         return null;
+      };
+      _.getEventCommentValueArray = function(commentCode, list) {
+        var comment, comments, e, item;
+        try {
+          comments = [];
+          if (list && list.length > 1) {
+            i = 0;
+            while (i < list.length) {
+              item = list[i++];
+              if (!item) {
+                continue;
+              }
+              if (item.code === 108) {
+                comment = item.parameters[0];
+                if (comment.contains(commentCode)) {
+                  comments.push(comment);
+                }
+              }
+            }
+          }
+        } catch (error1) {
+          e = error1;
+          console.warn(e);
+        }
+        return comments;
       };
       _.getPositionPointFromJSON = function(jsonSettings) {
         return _.convertPositionPointFromJSON(jsonSettings.position);
@@ -3524,12 +3911,71 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
         return this._kdMousePressed2 === true;
       };
     })();
+    (function() {      //--------------------------------------------------------------------------------
+      // MV MZ Methods Extension =======================================================
+      //--------------------------------------------------------------------------------
+      if (KDCore.isMZ()) {
+        return;
+      }
+      (function() {        //╒═════════════════════════════════════════════════════════════════════════╛
+        // ■ Window_Base.coffee
+        //╒═════════════════════════════════════════════════════════════════════════╛
+        //---------------------------------------------------------------------------
+        var ALIAS__initialize, _;
+        //@[DEFINES]
+        _ = Window_Base.prototype;
+        // * Чтоб можно было Rectangle принимать в конструктор
+        //@[ALIAS]
+        ALIAS__initialize = _.initialize;
+        _.initialize = function(x, y, w, h) {
+          if (x instanceof PIXI.Rectangle) {
+            return ALIAS__initialize.call(this, x.x, x.y, x.width, x.height);
+          } else {
+            return ALIAS__initialize.call(this, ...arguments);
+          }
+        };
+      })();
+      (function() {        // ■ END Window_Base.coffee
+        //---------------------------------------------------------------------------
+
+        //╒═════════════════════════════════════════════════════════════════════════╛
+        // ■ Spriteset_Map.coffee
+        //╒═════════════════════════════════════════════════════════════════════════╛
+        //---------------------------------------------------------------------------
+        var _;
+        
+        //@[DEFINES]
+        _ = Spriteset_Map.prototype;
+        _.findTargetSprite = function(target) {
+          return this._characterSprites.find(function(sprite) {
+            return sprite.checkCharacter(target);
+          });
+        };
+      })();
+      (function() {        // ■ END Spriteset_Map.coffee
+        //---------------------------------------------------------------------------
+
+        //╒═════════════════════════════════════════════════════════════════════════╛
+        // ■ Sprite_Character.coffee
+        //╒═════════════════════════════════════════════════════════════════════════╛
+        //---------------------------------------------------------------------------
+        var _;
+        
+        //@[DEFINES]
+        _ = Sprite_Character.prototype;
+        _.checkCharacter = function(character) {
+          return this._character === character;
+        };
+      })();
+    })();
   })();
 }
 
 // ■ END KDCore.coffee
 //---------------------------------------------------------------------------
 //? КОНЕЦ KDCORE
+// ■ END Sprite_Character.coffee
+//---------------------------------------------------------------------------
 
 // Generated by CoffeeScript 2.5.1
 (function() {
@@ -4321,6 +4767,18 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       return false;
     }
   };
+  _.IsGamepad = function() {
+    return PKD_MI.Parameters.isGamepadSupport() && KDGamepad.isExists();
+  };
+  _.IsABSItem = function(item) {
+    if (item == null) {
+      return false;
+    }
+    if (Imported.Alpha_ABSZ !== true) {
+      return false;
+    }
+    return AA.Utils.isAAObject(item);
+  };
 })();
 
 // ■ END PKD_INV_UI.coffee
@@ -4418,7 +4876,11 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       return 0;
     }
   };
+  //u20
   window.IsOverWeight = function() {
+    if ($gameTemp._miMaxWeightCapacity == null) {
+      return false;
+    }
     return GetCurrentWeight() > GetMaxWeight();
   };
   window.RefreshWeightSystem = function() {
@@ -5193,7 +5655,6 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
   //u20
   _.refreshMaxWeightCapacity = function() {
     var varValue;
-    "ZEZE".p();
     varValue = KDCore.Utils.getVar(PKD_MI.Parameters.get_partyMaxWeighVar());
     varValue += this._collectWeightCapacityFromEquipment();
     varValue += $gamePlayer.getPlayerStaticWeight();
@@ -5326,13 +5787,14 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
   //@[DEFINES]
   _ = Game_Player.prototype;
   
+  //u20
   //@[ALIAS]
   ALIAS__moveByInput = _.moveByInput;
   _.moveByInput = function() {
     var key;
     key = PKD_MI.Parameters.get_InventoryOpenKey();
-    if (Input.isTriggered(key)) {
-      if (PKD_MI.isChestIsOpen()) {
+    if (Input.isTriggered(key) || this.miIsGamepadOpenKeyTriggered()) {
+      if (PKD_MI.isInventoryOpened()) {
         this.onPKDInventoryKey();
       } else {
         if (this.canMove()) {
@@ -5341,6 +5803,14 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       }
     }
     return ALIAS__moveByInput.call(this);
+  };
+  
+  //u20
+  _.miIsGamepadOpenKeyTriggered = function() {
+    if (PKD_MI.IsGamepad()) {
+      return KDGamepad.isKey(PKD_MI.Parameters.gpOpenCloseKey());
+    }
+    return false;
   };
   _.onPKDInventoryKey = function() {
     if (!this.isPKDInventoryAllowed()) {
@@ -5485,10 +5955,12 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
   _.initAAHotCells = function() {
     return this._aaUserHotCellsData = [];
   };
+  //u20
   //*Nullable
   //?UPDX
   _.aaPutItemToHotCell = function(item, cellIndex) {
     var typeId;
+    this.aaGetPlayerHotCellsData(); // * for null avoid
     if (item != null) {
       typeId = KDCore.Utils.getItemTypeId(item);
       this._aaUserHotCellsData[cellIndex] = [item.id, typeId];
@@ -5496,9 +5968,11 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       this._aaUserHotCellsData[cellIndex] = null;
     }
   };
+  //u20
   //?UPDX
   _.addGetItemForHotCell = function(cellIndex) {
     var e, item, itemData;
+    this.aaGetPlayerHotCellsData(); // * for null avoid
     itemData = this._aaUserHotCellsData[cellIndex];
     if (itemData != null) {
       try {
@@ -5579,10 +6053,7 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
   _.drawItemName = function(item, x, y, width) {
     var color, qualityLevel;
     this.__pkdMiRequestedSpecialColor = null;
-    if (!PKD_MI.Parameters.isShowItemNameWithQualityColorInWindows()) {
-      return;
-    }
-    if (item != null) {
+    if (PKD_MI.Parameters.isShowItemNameWithQualityColorInWindows() && (item != null)) {
       qualityLevel = DataManager.getItemQualityLevel(item);
       if (qualityLevel >= 0) {
         color = PKD_MI.GetColorForQuealityLevel(qualityLevel);
@@ -5810,6 +6281,7 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       return this.invSprite.visible === true;
     }
 
+    //u20
     open() {
       if (this.isInventoryActive()) {
         return;
@@ -5819,8 +6291,10 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       this._onGoldTick();
       this.invSprite.visible = true;
       this.invSprite.playStartSE();
+      this._prepareGamepad(); //_upd20
     }
 
+    //u20
     close() {
       var ref;
       if (!this.isInventoryActive()) {
@@ -5833,6 +6307,7 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       this.invSprite.visible = false;
       this.content = null;
       this.invSprite.destroyMain();
+      this._cancelGamepad(); //_upd20
     }
 
     showNextPage() {
@@ -5842,7 +6317,7 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       if (this.isSomeItemFocused()) {
         return;
       }
-      if (this._currentPage === this._maxPages) {
+      if (this._currentPage === (this._maxPages - 1)) {
         return;
       }
       return this._loadPage(this._currentPage + 1);
@@ -6097,8 +6572,11 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       this._updateHelp(); //?{PART}
       if (this.isSomeItemFocused()) {
         this.updateClearFocusClick();
-        return (ref1 = this.partyController) != null ? ref1.update() : void 0;
+        if ((ref1 = this.partyController) != null) {
+          ref1.update();
+        }
       }
+      this._updateGamepadControl();
     }
 
     clickAt(index) {
@@ -6166,13 +6644,22 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       }
     }
 
+    //u20
     _equipFromInv(actor, etypeId, item) {
       var slotId;
       slotId = actor.equipSlots().indexOf(etypeId);
       if (slotId >= 0) {
         if (actor.isEquipChangeOk(slotId)) {
+          if (item == null) {
+            // * Отключаем Notify для ABS Z
+            $gameTemp.aaNotNeedItemPopUpNotify = true;
+          }
           actor.changeEquip(slotId, item);
           SoundManager.playEquip();
+          // * Включаем (если отключали)
+          if ($gameTemp.aaNotNeedItemPopUpNotify === true) {
+            $gameTemp.aaNotNeedItemPopUpNotify = null;
+          }
         } else {
           SoundManager.playBuzzer();
         }
@@ -6240,8 +6727,8 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       if ($gameTemp._pkdMICellMoving === true) { //?line
         return;
       }
-      if ($gameTemp._pkdMIInvMoving != null) {
-        if ($gameTemp._pkdMIInvMoving !== this) {
+      if ($gameTemp.pkdDraggableInstance != null) {
+        if ($gameTemp.pkdDraggableInstance !== this) {
           return;
         }
       }
@@ -6249,7 +6736,7 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
         x = this.invSprite._header;
         pos = TouchInput;
         if (x.isMouseIn()) {
-          $gameTemp._pkdMIInvMoving = this;
+          $gameTemp.pkdDraggableInstance = this;
           this.__pressTimer++;
           if (!(this.__pressTimer > 5)) {
             return;
@@ -6265,8 +6752,8 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
         }
       } else {
         this.__pressTimer = 0;
-        if ($gameTemp._pkdMIInvMoving === this) {
-          $gameTemp._pkdMIInvMoving = null;
+        if ($gameTemp.pkdDraggableInstance === this) {
+          $gameTemp.pkdDraggableInstance = null;
         }
         if (this.__dragOffset != null) {
           this._saveLastDragPos();
@@ -6482,6 +6969,10 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
       constructor() {
         super("MapInventoryDrag");
         this.newParser = new KDCore.ParamLoader("MapInventoryDrag"); //?line
+        if (this.isGamepadSupport()) {
+          Input.activateExtendedKDGamepad();
+        }
+        return;
       }
 
       
@@ -6577,9 +7068,7 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
         return this.newParser.getParam('StaticDescPosXY', null);
       }
 
-      //TODO: Параметры новой системы замков
-
-        //u19
+      //u19
       isCellLockSystemAllowed() {
         return this.newParser.getParam('UseLimitedCellsSystem', false);
       }
@@ -6613,6 +7102,21 @@ if ((KDCore.Version != null) && KDCore.Version > KDCore._fileVersion) {
         //u20
       isShowItemNameWithQualityColorInWindows() {
         return this.newParser.getParam('QualitySystemColorWindows', false);
+      }
+
+      //u20
+      isGamepadSupport() {
+        return this.newParser.getParam('useGamepad', false);
+      }
+
+      //u20
+      gpOpenCloseKey() {
+        return this.newParser.getParam('gpOpenKey', 'Back');
+      }
+
+      //u20
+      getExtraDescriptions() {
+        return this.newParser.getParam('ExtraDescriptionsForStats', []);
       }
 
     };
@@ -7359,13 +7863,12 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
 //---------------------------------------------------------------------------
 (function() {
   var Sprite_MapInventoryActorCell;
-  //?UPD
   Sprite_MapInventoryActorCell = class Sprite_MapInventoryActorCell extends PKD_MI.LIBS.GSprite {
     constructor() {
       super();
       this._init();
       this._create();
-      if (!PKD_MI.Parameters.isCustomSizeCells()) { //?line
+      if (!PKD_MI.Parameters.isCustomSizeCells()) {
         this.move(-11, -11);
       }
       this.opacity = 0;
@@ -7432,6 +7935,12 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
     }
 
     //g.visible = false for g in @gaugeitems
+
+      //u20
+    isDisabled() {
+      return this.disableLayer.visible === true;
+    }
+
     setActor(actor1) {
       var item;
       this.actor = actor1;
@@ -7471,7 +7980,6 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
       return this.gaugeitems = [];
     }
 
-    //?UPD
     drawEquipedIcon(item) {
       var e, equippedOne, etype, extraIcon, i, len, ref;
       try {
@@ -7501,13 +8009,12 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
       }
     }
 
-    //?UPD
     _drawEquipIcon(iconIndex, withBack) {
       var s;
       s = this.settings.partySelectorEquipIcons;
       this.iconSpr = KDCore.Sprite.FromBitmap(20);
       if (withBack === true) {
-        this.iconSpr.drawIcon(0, 0, this.settings.partySelectorEquipIcons.nothingEquippedIcon, 20);
+        this.iconSpr.drawIcon(0, 0, s.nothingEquippedIcon, 20);
       }
       this.iconSpr.drawIcon(0, 0, iconIndex, 20);
       this.iconSpr.move(s.marginX, s.marginY);
@@ -7587,6 +8094,7 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
 //---------------------------------------------------------------------------
 (function() {
   var Sprite_MapInvCell;
+  //?u20
   //?UPD18
   Sprite_MapInvCell = class Sprite_MapInvCell extends KDCore.Sprite {
     constructor(index1, isLockSupportType = false) {
@@ -7599,6 +8107,7 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
       this._isChestItem = false;
       this._pressTimer = 0; //?line
       this.isHotCell = false; //?line
+      this.gpIndex = -1; //u20
       this._create();
     }
 
@@ -7635,25 +8144,17 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
       // * Нужен для размеров
       this.slotBitmap = ImageManager.loadPKDMI("InventorySlot_00");
       this.slotBitmap.addLoadListener(this._createIconSpr.bind(this));
-      this._imgs0 = [this.slotBitmap, ImageManager.loadPKDMI("InventorySlot_01"), ImageManager.loadPKDMI("InventorySlot_00"), ImageManager.loadPKDMI("InventorySlot_00")];
-      //@_imgs1 = [
-      //    ImageManager.loadPKDMI("InventorySlotA_00")
-      //    ImageManager.loadPKDMI("InventorySlotA_01")
-      //    ImageManager.loadPKDMI("InventorySlotA_00")
-      //    ImageManager.loadPKDMI("InventorySlotA_00")
-      //]
-      this._imgs2 = [ImageManager.loadPKDMI("InventorySlotB_00"), ImageManager.loadPKDMI("InventorySlotB_01"), ImageManager.loadPKDMI("InventorySlotB_00"), ImageManager.loadPKDMI("InventorySlotB_00")];
-      return this._imgs3 = [ImageManager.loadPKDMI("InventorySlotC_00"), ImageManager.loadPKDMI("InventorySlotC_01"), ImageManager.loadPKDMI("InventorySlotC_00"), ImageManager.loadPKDMI("InventorySlotC_00")];
+      this._imgs0 = [this.slotBitmap, ImageManager.loadPKDMI("InventorySlot_01"), ImageManager.loadPKDMI("InventorySlot_00"), ImageManager.loadPKDMI("InventorySlot_00")]; // * Default
+      this._imgs2 = [ImageManager.loadPKDMI("InventorySlotB_00"), ImageManager.loadPKDMI("InventorySlotB_01"), ImageManager.loadPKDMI("InventorySlotB_00"), ImageManager.loadPKDMI("InventorySlotB_00")]; // * Equipment state
+      this._imgs3 = [ImageManager.loadPKDMI("InventorySlotC_00"), ImageManager.loadPKDMI("InventorySlotC_01"), ImageManager.loadPKDMI("InventorySlotC_00"), ImageManager.loadPKDMI("InventorySlotC_00")]; // * FOCUS (and gamepad)
     }
 
     _createCell() {
       this._cell = new KDCore.Button();
       this._cell.setButtonImages(...this._imgs0);
-      //index = @getMyIndex()
       return this.add(this._cell);
     }
 
-    //getMyIndex: -> @i * 5 + @j
     _createIconSpr() {
       if (this.customCellParams != null) {
         this._iconSpr = this._createCustomIconSpr();
@@ -7713,12 +8214,12 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
     _createCountText() {
       this._textSpr = KDCore.Sprite.FromBitmap(this.settings.cellItemCountText.textBoxWidth, this.settings.cellItemCountText.textBoxHeight);
       this.applyTextSettingsByExtraSettings(this._textSpr, this.settings.cellItemCountText);
-      return this.add(this._textSpr);
+      this.add(this._textSpr);
     }
 
+    //?UPD18
+    //?u20
     //@drawCount 4
-
-      //?UPD18
     setItem(item1) {
       this.item = item1;
       if ((this.item != null) && !this.isLocked()) {
@@ -7726,9 +8227,12 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
         this.drawQualityLevel(DataManager.getItemQualityLevel(this.item));
         this.drawCount($gameParty.numItems(this.item));
         this.refreshSpecialState();
-        return this.registerClick();
+        this.registerClick();
       } else {
-        return this.clear();
+        this.clear();
+      }
+      if (PKD_MI.IsGamepad()) {
+        this.refreshGPState();
       }
     }
 
@@ -7760,17 +8264,36 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
       if (this.isLocked()) {
         this.disableItem();
       }
-      //allowedOccasion = 2 # * MENU SCREEN
-      //allowedOccasion = 1 if PKD_MI.isMap() # * BATTLE SCREEN
-      //@disableItem() if @item.occasion != allowedOccasion
-      //@disableItem() if PKD_MI.isMap() and !@item.meta.ABS?
       notAllowedOccasion = 1; // * BATTLE SCREEN
       if (this.item.occasion === notAllowedOccasion) {
         this.disableItem();
       }
       if (this.isEnabled()) {
-        //@_checkItemOnPanel()
         return this._checkUsable();
+      }
+    }
+
+    setGPIndex(_gx, _gy) {
+      this._gx = _gx;
+      this._gy = _gy;
+    }
+
+    //u20
+    refreshGPState() {
+      var c, params, r;
+      if (this._gx == null) {
+        return;
+      }
+      if (this._gy == null) {
+        return;
+      }
+      params = PKD_MI.Parameters.getCustomSizeCellsParameters();
+      r = params.rowsPerPage;
+      c = params.columnsPerPage;
+      //TODO: Тут возможно надо r
+      this.gpIndex = this._gy * c + this._gx;
+      if (this.gpIndex === this.index) {
+        this._applyItemSpecialStateGP();
       }
     }
 
@@ -7778,19 +8301,10 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
       return this._fader.visible = true;
     }
 
-    _checkItemOnPanel() {}
-
-    //index = $gameParty.leader().skillIndexOnUI(@item.id, true)
-    //index = -1
-    //if index >= 0
-    //@_applyItemSpecialState(index + 1)
-    _applyItemSpecialState(index) {
-      this._inSpecialState = true;
-      this._cell.setButtonImages(...this._imgs1);
-      this._specialSpr.bitmap = ImageManager.loadPKDMI('InventorySlotA');
-      this._specialSprText.clear();
-      this._specialSprText.drawTextFull(index.toString(), this.settings.cellItemSpecialText.position);
-      return this._specialSpr.visible = true;
+    //u20
+    _applyItemSpecialStateGP() {
+      this._inSpecialStateGP = true;
+      this.drawFocusFrame(); // * same as focused
     }
 
     _refreshEquipmentState() {
@@ -7839,7 +8353,6 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
           return results;
         }
       } catch (error) {
-        //@_checkFavState() if DataManager.isWeapon(@item) * NOT NEED, from AA
         e = error;
         return PKD_MI.warning(e);
       }
@@ -7863,28 +8376,6 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
       this._specialSpr.visible = true;
     }
 
-    _checkFavState() {
-      var symbol;
-      //symbol = $gameParty.leader().getFavWeapSymbol(@item)
-      symbol = null;
-      if (symbol == null) {
-        return;
-      }
-      this._isFavWeapon = true;
-      symbol = symbol.toUpperCase();
-      if (this._inSpecialState === true) {
-        symbol = this.settings.cellEquipmentSymbol + "|" + symbol;
-      }
-      return this._applyEquipmenFavSpecialState(symbol);
-    }
-
-    _applyEquipmenFavSpecialState(symbol) {
-      this._applyEquipmentSpecialCellState();
-      this._specialSprText.clear();
-      this._specialSprText.drawTextFull(symbol, this.settings.cellItemSpecialText.position);
-    }
-
-    //@drawCount($gameParty.numItems(@item))
     registerClick() {
       var index;
       //if @isEnabled()
@@ -7908,15 +8399,17 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
       this._clearSpeacialState();
       this.drawCount(0);
       this.drawIcon(0);
-      return this.drawQualityLevel(-1);
+      this.drawQualityLevel(-1);
     }
 
+    //u20
     _clearSpeacialState() {
-      if (this._inSpecialState === true) {
+      if (this._inSpecialState === true || this._inSpecialStateGP === true) {
         this._cell.setButtonImages(...this._imgs0);
         this._specialSpr.visible = false;
       }
-      return this._inSpecialState = false;
+      this._inSpecialState = false;
+      this._inSpecialStateGP = false;
     }
 
     drawCount(count) {
@@ -7964,8 +8457,9 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
       this._rareSpr.bitmap = ImageManager.loadPKDMI('QualityLevel_' + level);
     }
 
+    //u20
     isHovered() {
-      return this._cell.isMouseInButton();
+      return this._cell.isMouseInButton() || this.gpIndex === this.index;
     }
 
     isEnabled() {
@@ -7993,8 +8487,13 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
       return this._inSpecialState === true && this._isEquipedItem === true;
     }
 
+    
+      //u20
     setChestItem(item) {
       var iCount;
+      if (PKD_MI.IsGamepad()) {
+        this.refreshGPState();
+      }
       if (item == null) {
         return;
       }
@@ -8010,9 +8509,9 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
         this.drawCount(iCount);
         this.drawQualityLevel(DataManager.getItemQualityLevel(this.item));
         this.registerClickForChest();
-        return this._isChestItem = true;
+        this._isChestItem = true;
       } else {
-        return this.clear();
+        this.clear();
       }
     }
 
@@ -8791,39 +9290,15 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
       return this.content.addChild(this._textQLevelSpr);
     }
 
-    _createStats() {
-      if (!PKD_MI.Parameters.get_AllowEquipStats()) {
-        return;
-      }
-      this._stats = PKD_MI.FromImgI(this.basicSettings.EquipmentStats.statsBackImage);
-      this._stats.move(this.basicSettings.EquipmentStats.position);
-      this._stats.visible = false;
-      return this.content.addChild(this._stats);
-    }
-
     delay() {
       return this.settings.showDelay;
     }
 
-    showItemStats() {
-      if (this._stats == null) {
-        return;
-      }
-      if (!this._isStatsAllowed) {
-        return;
-      }
-      if (this._stats.visible === true) {
-        this._description.visible = true;
-        this._stats.visible = false;
-      } else {
-        this._description.visible = false;
-        this._stats.visible = true;
-      }
-    }
-
+    //u20
     setup(cell) {
       this.cell = cell;
       this._isStatsAllowed = false;
+      this._statsIndex = 0;
       if (this.cell == null) {
         return;
       }
@@ -8839,35 +9314,9 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
         this.drawQLevel();
       }
       if (PKD_MI.Parameters.get_AllowEquipStats()) {
-        this.setupStats();
-        return this.showStatsHelp();
+        this.setupStats(); //?upd20
+        this.showStatsHelp(); //?upd20
       }
-    }
-
-    setupStats() {
-      var item;
-      item = this.cell.item;
-      if (DataManager.isItem(item)) {
-        return this._isStatsAllowed = false;
-      } else {
-        this._createStatesParamsValues();
-        return this._isStatsAllowed = true;
-      }
-    }
-
-    showStatsHelp() {
-      var actionHelpSpr, helpIcon, s;
-      if (!this._isStatsAllowed) {
-        return;
-      }
-      s = this.basicSettings.EquipmentStats;
-      actionHelpSpr = KDCore.Sprite.FromTextSettings(s.statsHelpText);
-      //actionHelpSpr.fillAll()
-      actionHelpSpr.drawTextWithSettings(s.helpIconText);
-      this.content.addChild(actionHelpSpr);
-      helpIcon = PKD_MI.FromImgI("inventoryScrollHelp");
-      helpIcon.move(KDCore.Utils.jsonPos(s.helpIconPosition));
-      return this.content.addChild(helpIcon);
     }
 
     drawCost() {
@@ -9041,14 +9490,18 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
       return PKD_MI.getUIMapChestSettings().helpWindow.helpTakeItemText;
     }
 
+    //u20
     _drawActionHelpText(text) {
       var actionHelpSpr, helpIcon;
       if ((text != null) && text !== "") {
         actionHelpSpr = KDCore.Sprite.FromTextSettings(this.settings.clickHelpText);
-        //actionHelpSpr.fillAll()
         actionHelpSpr.drawTextWithSettings(text);
         this.content.addChild(actionHelpSpr);
-        helpIcon = PKD_MI.FromImgI("inventoryClickHelp");
+        if (PKD_MI.IsGamepad()) {
+          helpIcon = PKD_MI.FromImgI("inventoryClickHelpGP");
+        } else {
+          helpIcon = PKD_MI.FromImgI("inventoryClickHelp");
+        }
         helpIcon.move(KDCore.Utils.jsonPos(this.settings.helpIconPosition));
         return this.content.addChild(helpIcon);
       }
@@ -9146,42 +9599,7 @@ PKD_MI.Parameters = new PKD_MI.LIBS.Parameters();
         this._corner.scale.x = -1;
         this._corner.scale.y = -1;
       }
-      return this._corner.move(KDCore.Utils.jsonPos(pos));
-    }
-
-    _createStatesParamsValues() {
-      var s, sp;
-      s = this.basicSettings.EquipmentStats.stats;
-      if (s.atk.visible === true) {
-        sp = new PKD_MI.LIBS.Sprite_MapInventoryStatText("atk", this.cell);
-        sp.move(s.atk.position);
-        this._stats.addChild(sp);
-      }
-      if (s.def.visible === true) {
-        sp = new PKD_MI.LIBS.Sprite_MapInventoryStatText("def", this.cell);
-        sp.move(s.def.position);
-        this._stats.addChild(sp);
-      }
-      if (s.agi.visible === true) {
-        sp = new PKD_MI.LIBS.Sprite_MapInventoryStatText("agi", this.cell);
-        sp.move(s.agi.position);
-        this._stats.addChild(sp);
-      }
-      if (s.mat.visible === true) {
-        sp = new PKD_MI.LIBS.Sprite_MapInventoryStatText("mat", this.cell);
-        sp.move(s.mat.position);
-        this._stats.addChild(sp);
-      }
-      if (s.mdf.visible === true) {
-        sp = new PKD_MI.LIBS.Sprite_MapInventoryStatText("mdf", this.cell);
-        sp.move(s.mdf.position);
-        this._stats.addChild(sp);
-      }
-      if (s.luk.visible === true) {
-        sp = new PKD_MI.LIBS.Sprite_MapInventoryStatText("luk", this.cell);
-        sp.move(s.luk.position);
-        return this._stats.addChild(sp);
-      }
+      this._corner.move(KDCore.Utils.jsonPos(pos));
     }
 
   };
@@ -9700,6 +10118,7 @@ Spriteset_InvUI = class Spriteset_InvUI extends Sprite {
     $gameTemp._lastInvCategory = catId;
     return this.inventory.loadItemsInCategory(catId);
   };
+  //u20
   _._checkAvailableCategory = function(catId) {
     var avail, nextCatId;
     if (this._availCats == null) {
@@ -9725,7 +10144,7 @@ Spriteset_InvUI = class Spriteset_InvUI extends Sprite {
         return catId;
       } else {
         nextCatId = catId + 1;
-        if (nextCatId === 4) {
+        if (nextCatId >= 4) {
           nextCatId = 0;
         }
         return this._checkAvailableCategory(nextCatId);
@@ -10000,6 +10419,60 @@ PKD_MI.isPro = function() {
 };
 
 // Generated by CoffeeScript 2.5.1
+//TODO: В Alpha_CORE
+var Window_ExtendedTextLine;
+
+Window_ExtendedTextLine = class Window_ExtendedTextLine extends Window_Base {
+  constructor(rect, fontSize, fontFace) {
+    super(rect);
+    this.fontSize = fontSize;
+    this.fontFace = fontFace;
+    this.createContents();
+    this.setBackgroundType(2);
+  }
+
+  updatePadding() {
+    return this.padding = 0;
+  }
+
+  itemPadding() {
+    return 0;
+  }
+
+  drawTextFull(text) {
+    this.contents.clear();
+    return this.drawTextEx(text, 0, 0);
+  }
+
+  // * Дорабатываем метод Move, чтобы работал как и у Sprite (два параметра)
+  move(val1, val2, height) {
+    if (val1 instanceof Array) {
+      this.x = val1[0];
+      this.y = val1[1];
+    } else if (val1.x != null) {
+      this.x = val1.x;
+      this.y = val1.y;
+    } else if (height == null) {
+      this.x = val1;
+      this.y = val2;
+    } else {
+      super.move(...arguments);
+    }
+  }
+
+  resetFontSettings() {
+    super.resetFontSettings();
+    if (String.any(this.fontFace)) {
+      this.contents.fontFace = this.fontFace;
+    }
+    if (this.fontSize > 0) {
+      this.contents.fontSize = this.fontSize;
+    }
+  }
+
+};
+
+// Generated by CoffeeScript 2.5.1
 //╒═════════════════════════════════════════════════════════════════════════╛
 // ■ MapChestController.coffee
 //╒═════════════════════════════════════════════════════════════════════════╛
@@ -10022,6 +10495,7 @@ PKD_MI.isPro = function() {
       return $gameTemp.__visualChestGoldCell = null;
     }
 
+    //u20
     updateWhenOpen() {
       var key, ref, ref1;
       this.refreshTitle.update();
@@ -10037,7 +10511,10 @@ PKD_MI.isPro = function() {
       if ((ref = this._autoCloseThread) != null) {
         ref.update();
       }
-      return (ref1 = $gameTemp.__visualChestGoldCell) != null ? ref1.drawCount($gameTemp.__visualChestGoldCount) : void 0;
+      if ((ref1 = $gameTemp.__visualChestGoldCell) != null) {
+        ref1.drawCount($gameTemp.__visualChestGoldCount);
+      }
+      this._updateGamepadControl();
     }
 
     _onTitleTick() {
@@ -10139,8 +10616,6 @@ PKD_MI.isPro = function() {
         return;
       }
       try {
-        //$gameParty.gainItem(itemData[0], itemData[1])
-        //$gameTemp.__aaItemsForChest.splice(index, 1)
         if (PKD_MI.isGoldItem(itemData[0])) {
           return this._onGainGoldItem(index);
         } else {
@@ -10271,6 +10746,46 @@ PKD_MI.isPro = function() {
       return PKD_MI.closeChest();
     }
 
+    //u20
+    _onGPPrevCategory() {} // * EMPTY
+
+    _onGPNextCategory() {} // * EMPTY
+
+    
+      //u20
+    _onGPRefreshAfterChangeIndex() {
+      return this.loadItemsInCategory(4);
+    }
+
+    //u20
+    _onGPKeyIsOk() {
+      var cell;
+      if (this.inSliderMode()) {
+        this.onSliderOkClick();
+      } else {
+        if (this.isSomeItemFocused()) {
+
+        } else {
+          // * NOTHING
+          cell = this._getGPSelectedCell();
+          if (cell == null) {
+            return;
+          }
+          PKD_MI.onChestCellClick(cell.index);
+        }
+      }
+    }
+
+    //u20
+    _onGPKeyClose() {
+      return PKD_MI.closeChest();
+    }
+
+    //u20
+    _onGPExtraKey() {
+      return PKD_MI.takeAllFromChest();
+    }
+
   };
   PKD_MI.register(MapChestController);
 })();
@@ -10294,6 +10809,9 @@ PKD_MI.isPro = function() {
       this._itemDescShowTimer.update();
     }
     hovered = this.content.getHoveredCell();
+    if (PKD_MI.IsGamepad() && !this.isInventoryWindowInFocus()) {
+      hovered = null;
+    }
     haveExtraInfo = this._isCellHaveExtraInfo(hovered);
     if ((hovered != null) && (hovered.item != null) && haveExtraInfo === false) {
       this._hideExtraInfo();
@@ -10310,9 +10828,12 @@ PKD_MI.isPro = function() {
       return this._updateEquipStatShow();
     }
   };
+  //u20
   _._updateEquipStatShow = function() {
-    if (TouchInput.wheelY >= 20 || TouchInput.wheelY <= -20) {
+    if (TouchInput.wheelY >= 20) {
       this._itemDescWindow.showItemStats();
+    } else if (TouchInput.wheelY <= -20) {
+      this._itemDescWindow.showItemStats(true);
     }
   };
   _._showHelp = function(cell) {
@@ -10387,9 +10908,42 @@ PKD_MI.isPro = function() {
   var _;
   //@[DEFINES]
   _ = PKD_MI.LIBS.MapInvController.prototype;
-  //?UPD
+  //?u20
+  _._aaOnABSItemAction = function(item) {
+    var e;
+    try {
+      if (item != null) {
+        //TODO: refresh inventory after skill USE (in ABS)
+        $gamePlayer.aaTryPerformSkill(item.idA);
+      }
+      return setTimeout((function() {
+        var e;
+        try {
+          return PKD_MI.refreshInventory();
+        } catch (error) {
+          e = error;
+        }
+      }), 100);
+    } catch (error) {
+      e = error;
+      return console.warn(e);
+    }
+  };
+  //?UPDX
+  //?u20
   _._onActionOnGameItem = function(cell) {
     var item;
+    //TODO: Можно вынести как расширение, а не каждый раз проверять
+    if (PKD_MI.IsABSItem(cell.item)) {
+      // * ABS предмет (Alpha ABS Z)
+      if (AA.isABSActive()) {
+        // * Если АБС активна то используем как АБС предмет (не нужен выбор группы)
+        this._aaOnABSItemAction(cell.item); // * Выход из метода
+        return;
+      }
+    }
+    
+    //TODO: Это надо удалять ???
     if (cell._inSpecialState === true) {
 
     } else {
@@ -10425,7 +10979,6 @@ PKD_MI.isPro = function() {
   _.clickAtFocusItem = function(index) {
     return this.clearFocus();
   };
-  //?UPD
   _.clearFocus = function() {
     var ref, ref1;
     if ((ref = this.partyController) != null) {
@@ -10437,7 +10990,7 @@ PKD_MI.isPro = function() {
     this.sliderController = null;
     this.content.clearFocus();
     this.loadItemsInCategory(this._loadedCatIndex);
-    return $gameTemp._pkdMICellFocused = false; //?line
+    return $gameTemp._pkdMICellFocused = false;
   };
   _.updateClearFocusClick = function() {
     if (TouchInput.isTriggered()) {
@@ -10665,6 +11218,305 @@ PKD_MI.isPro = function() {
 //---------------------------------------------------------------------------
 (function() {
   var _;
+  //?UPD20 all
+
+  //@[DEFINES]
+  _ = PKD_MI.LIBS.MapInvController.prototype;
+  _._updateGamepadControl = function() {
+    if (!this.isInventoryActive()) {
+      return;
+    }
+    if (!PKD_MI.IsGamepad()) {
+      return;
+    }
+    // * Данное окно в фокусе
+    if (!this.isInventoryWindowInFocus()) {
+      return;
+    }
+    if (KDGamepad.isKey("B")) {
+      if (this.isSomeItemFocused() || this.inSliderMode()) {
+        this.clearFocus();
+      } else {
+        this._onGPKeyClose();
+        KDGamepad.clear(); // * Not for another window
+      }
+      return;
+    } else if (KDGamepad.isKey("A")) {
+      this._onGPKeyIsOk();
+      return;
+    } else if (KDGamepad.isKey("Y")) {
+      this._onGPExtraKey();
+    } else if (KDGamepad.isKey("X")) {
+      if (this._itemDescWindow != null) {
+        this._itemDescWindow.showItemStats();
+      }
+    } else if (KDGamepad.isKey("Start")) {
+      this._onGPChangeFocus();
+      KDGamepad.clear(); // * Not for another window
+    } else if (KDGamepad.isKey("dUp")) {
+      if (this.inSliderMode()) {
+        this._gpMoveSlider(2); // * MAX VALUE
+      } else if (this.isSomeItemFocused()) {
+        this._gpSelectParty(3); // * up
+      } else {
+        this._gpInvIndexY -= 1;
+        if (this._gpInvIndexY < 0) {
+          this._gpInvIndexY = this._gpColumns - 1;
+        }
+        this._onGPKeyIsPressed();
+      }
+    } else if (KDGamepad.isKey("dDown")) {
+      if (this.inSliderMode()) {
+        this._gpMoveSlider(0); // * MIN VALUE
+      } else if (this.isSomeItemFocused()) {
+        this._gpSelectParty(2); // * down
+      } else {
+        this._gpInvIndexY += 1;
+        if (this._gpInvIndexY >= this._gpColumns) {
+          this._gpInvIndexY = 0;
+        }
+        this._onGPKeyIsPressed();
+      }
+    } else if (KDGamepad.isKey("dLeft")) {
+      if (this.inSliderMode()) {
+        this._gpMoveSlider(-1);
+      } else if (this.isSomeItemFocused()) {
+        this._gpSelectParty(0); // * left
+      } else {
+        this._gpInvIndexX -= 1;
+        if (this._gpInvIndexX < 0) {
+          this._gpInvIndexX = this._gpRows - 1;
+        }
+        this._onGPKeyIsPressed();
+      }
+    } else if (KDGamepad.isKey("dRight")) {
+      if (this.inSliderMode()) {
+        this._gpMoveSlider(1);
+      } else if (this.isSomeItemFocused()) {
+        this._gpSelectParty(1); // * right
+      } else {
+        this._gpInvIndexX += 1;
+        if (this._gpInvIndexX >= this._gpRows) {
+          this._gpInvIndexX = 0;
+        }
+        this._onGPKeyIsPressed();
+      }
+    } else if (KDGamepad.isKey("LB")) {
+      this._onGPPrevCategory();
+    } else if (KDGamepad.isKey("RB")) {
+      this._onGPNextCategory();
+    } else if (KDGamepad.isKey("LTrigger")) {
+      this.showPrevPage();
+    } else if (KDGamepad.isKey("RTrigger")) {
+      this.showNextPage();
+    }
+  };
+  _._onGPPrevCategory = function() {
+    var index;
+    this._gpInvIndexY = 0;
+    this._gpInvIndexX = 0;
+    if (this._loadedCatIndex <= 0) {
+      index = 3;
+    } else {
+      index = this._loadedCatIndex - 1;
+    }
+    PKD_MI.eUI.openCategory(index);
+    return this._onGPKeyIsPressed();
+  };
+  _._onGPNextCategory = function() {
+    this._gpInvIndexY = 0;
+    this._gpInvIndexX = 0;
+    PKD_MI.eUI.openCategory(this._loadedCatIndex + 1);
+    return this._onGPKeyIsPressed();
+  };
+  _._onGPKeyIsPressed = function() {
+    var cell, i, len, ref;
+    ref = this._getAllCells();
+    for (i = 0, len = ref.length; i < len; i++) {
+      cell = ref[i];
+      if (cell != null) {
+        cell.setGPIndex(this._gpInvIndexX, this._gpInvIndexY);
+      }
+    }
+    this._onGPRefreshAfterChangeIndex();
+  };
+  _._onGPRefreshAfterChangeIndex = function() {
+    return PKD_MI.refreshInventory();
+  };
+  _._onGPKeyClose = function() {
+    return PKD_MI.closeInventory();
+  };
+  _._onGPExtraKey = function() {}; // * NOTHING (Y)
+  _._onGPChangeFocus = function() {
+    if ($gameTemp._miFocusMainController == null) {
+      return;
+    }
+    if ($gameTemp._miFocusMainController.length > 1) {
+      $gameTemp._miFocusMainController[1]._requestWindowFocus();
+    }
+  };
+  _._onGPKeyIsOk = function() {
+    var cell;
+    if (this.inSliderMode()) {
+      this.onSliderOkClick();
+    } else {
+      if (this.isSomeItemFocused()) {
+
+      } else {
+        // * NOTHING
+        cell = this._getGPSelectedCell();
+        if (cell == null) {
+          return;
+        }
+        PKD_MI.onInvCellClick(cell.index);
+      }
+    }
+  };
+  //TODO: Визуально слайдер не двигается (но это потом)
+  _._gpMoveSlider = function(value) {
+    var newValue;
+    switch (value) {
+      case 0:
+        this.content.refreshSlider(1, true);
+        break;
+      case 2:
+        this.content.refreshSlider(this.getMaxValueForSlider(), true);
+        break;
+      case 1:
+        value = this.content.getSliderValue();
+        newValue = value + 1;
+        if (newValue <= this.getMaxValueForSlider()) {
+          this.content.refreshSlider(newValue, true);
+        }
+        break;
+      case -1:
+        value = this.content.getSliderValue();
+        newValue = value - 1;
+        if (newValue >= 1) {
+          this.content.refreshSlider(newValue, true);
+        }
+    }
+  };
+  _._gpSelectParty = function(index) {
+    var actor, actorSpr;
+    actorSpr = this.partyController._actors[index];
+    if (actorSpr == null) {
+      SoundManager.playBuzzer();
+    } else {
+      if (actorSpr.isDisabled()) {
+        SoundManager.playBuzzer();
+      } else {
+        actor = actorSpr.actor;
+        if (actor != null) {
+          PKD_MI.onInvPartyCellClick(actor);
+        }
+      }
+    }
+  };
+  _._prepareGamepad = function() {
+    var params;
+    if (!PKD_MI.IsGamepad()) {
+      return;
+    }
+    params = PKD_MI.Parameters.getCustomSizeCellsParameters();
+    this._gpColumns = params.columnsPerPage;
+    this._gpRows = params.rowsPerPage;
+    this._gpInvIndexX = 0;
+    this._gpInvIndexY = 0;
+    if ($gameTemp._miFocusMainController == null) {
+      $gameTemp._miFocusMainController = [];
+    }
+    if ($gameTemp._miFocusMainController.length === 0) {
+      $gameTemp._miFocusMainController = [this];
+    } else {
+      $gameTemp._miFocusMainController.unshift(this);
+      $gameTemp._miFocusMainController[1]._clearGPFocus();
+    }
+    // * always
+    //KDGamepad.setNoDPadMovingMode(true)
+    KDGamepad.stopDefaultGamepad();
+    if (this.isInventoryWindowInFocus()) {
+      // * Выбрать ячейку сразу
+      setTimeout((() => {
+        var e;
+        try {
+          return this._onGPFocus();
+        } catch (error) {
+          e = error;
+          return console.warn(e);
+        }
+      }), 100);
+    }
+  };
+  _._cancelGamepad = function() {
+    if (!PKD_MI.IsGamepad()) {
+      return;
+    }
+    // * Если Gamepad был подключён пока инвентарь открыт и затем закрыт
+    if ($gameTemp._miFocusMainController == null) {
+      KDGamepad.resumeDefaultGamepad();
+      return;
+    }
+    $gameTemp._miFocusMainController.delete(this);
+    // * if last window closed
+    if ($gameTemp._miFocusMainController.length === 0) {
+      //KDGamepad.setNoDPadMovingMode(false)
+      KDGamepad.resumeDefaultGamepad();
+    } else {
+      $gameTemp._miFocusMainController[0]._onGPFocus();
+    }
+  };
+  _.isInventoryWindowInFocus = function() {
+    if ($gameTemp._miFocusMainController != null) {
+      return $gameTemp._miFocusMainController[0] === this;
+    }
+    return false;
+  };
+  _._requestWindowFocus = function() {
+    var temp;
+    if ($gameTemp._miFocusMainController == null) {
+      return;
+    }
+    if ($gameTemp._miFocusMainController[0] != null) {
+      temp = $gameTemp._miFocusMainController[0];
+      $gameTemp._miFocusMainController[0] = this;
+      $gameTemp._miFocusMainController[1] = temp;
+      this._onGPFocus();
+      temp._clearGPFocus();
+    }
+  };
+  _._onGPFocus = function() {
+    this._gpInvIndexX = 0;
+    this._gpInvIndexY = 0;
+    this._onGPKeyIsPressed();
+  };
+  _._clearGPFocus = function() {
+    this._gpInvIndexX = -1;
+    this._gpInvIndexY = -1;
+    this._onGPKeyIsPressed();
+  };
+  // * Получить все спрайты ячеек
+  _._getAllCells = function() {
+    return this.invSprite._content._cells;
+  };
+  // * Получить выбранную через геймпад ячейку
+  _._getGPSelectedCell = function() {
+    return this._getAllCells().find(function(c) {
+      return c.gpIndex === c.index;
+    });
+  };
+})();
+
+// ■ END MapInvController.coffee
+//---------------------------------------------------------------------------
+
+// Generated by CoffeeScript 2.5.1
+//╒═════════════════════════════════════════════════════════════════════════╛
+// ■ MapInvController.coffee
+//╒═════════════════════════════════════════════════════════════════════════╛
+//---------------------------------------------------------------------------
+(function() {
+  var _;
   //@[DEFINES]
   _ = PKD_MI.LIBS.MapInvController.prototype;
   _.onSliderOkClick = function() {
@@ -10675,6 +11527,7 @@ PKD_MI.isPro = function() {
     this._onStoreItemFinal(this._tempSliderItem, this.content.getSliderValue());
     return this._tempSliderItem = null;
   };
+  //u20
   _.onSliderValueChanged = function(percent) {
     var isAllowed, max, value;
     max = this.getMaxValueForSlider();
@@ -10682,7 +11535,7 @@ PKD_MI.isPro = function() {
     if (value <= 0) {
       value = 1;
     }
-    if (value >= max) {
+    if (value > max) {
       value = max;
     }
     // * Из инвентаря всегда можно убрать
@@ -11026,7 +11879,71 @@ PKD_MI.isPro = function() {
       return PKD_MI.closeUserChest();
     }
 
+    //u20 all down
+    //======================
+
+      //u20
+    _onGPPrevCategory() {
+      var index;
+      this._gpInvIndexY = 0;
+      this._gpInvIndexX = 0;
+      if (this._loadedCatIndex <= 0) {
+        index = 2;
+      } else {
+        index = this._loadedCatIndex - 1;
+      }
+      PKD_MI.eUI.openUserChestCategory(index);
+      return this._onGPKeyIsPressed();
+    }
+
+    _onGPNextCategory() {
+      var nextValue;
+      this._gpInvIndexY = 0;
+      this._gpInvIndexX = 0;
+      nextValue = this._loadedCatIndex + 1;
+      if (nextValue > 2) {
+        nextValue = 0;
+      }
+      PKD_MI.eUI.openUserChestCategory(nextValue);
+      return this._onGPKeyIsPressed();
+    }
+
+    //u20
+    _onGPRefreshAfterChangeIndex() {
+      return this.loadItemsInCategory(this._loadedCatIndex);
+    }
+
+    //u20
+    _onGPKeyIsOk() {
+      var cell;
+      if (this.inSliderMode()) {
+        this.onSliderOkClick();
+      } else {
+        if (this.isSomeItemFocused()) {
+
+        } else {
+          // * NOTHING
+          cell = this._getGPSelectedCell();
+          if (cell == null) {
+            return;
+          }
+          PKD_MI.onChestCellClick(cell.index);
+        }
+      }
+    }
+
+    //u20
+    _onGPKeyClose() {
+      return PKD_MI.closeUserChest();
+    }
+
+    //u20
+    _onGPExtraKey() {
+      return PKD_MI.takeAllFromChest();
+    }
+
   };
+  //=======================
   PKD_MI.register(MapUserChestController);
 })();
 
@@ -11287,7 +12204,6 @@ PKD_MI.isPro = function() {
   var _;
   //@[DEFINES]
   _ = PKD_MI.LIBS.Sprite_MapInvCell.prototype;
-  //?UPD
   _.setFocusItem = function(item1, count) {
     this.item = item1;
     this.drawIconExt();
@@ -11317,7 +12233,28 @@ PKD_MI.isPro = function() {
   };
   //?UPDX
   _._onCheckUsableTick = function() {
-    var canUse, e, i, j, k, len, ref;
+    var canUse, e, i, itemUsable, j, k, len, ref, usable;
+    if (PKD_MI.IsABSItem(this.item)) {
+      if (AA.isABSActive()) {
+        //TODO: Это может влиять на производительность
+        usable = $gameParty.leader().getUsableAASkills();
+        itemUsable = usable.getByField("idA", this.item.idA);
+        if (itemUsable != null) {
+          this.enableItem();
+        } else {
+          this.disableItem();
+        }
+        return;
+      } else {
+        // * Если АБС не активирован и есть флаг (не использовать вне АБС) - то нельзя
+        if (this.item.AASkill.hideOutsideABS === 1) {
+          this.disableItem();
+          return;
+        }
+      }
+    }
+    //else - как обычный предмет (не АБС предмет)
+
     //"CHECK USABLE FOR ITEM".p(@item.name)
     if (this.item.occasion === 1) { // * battle screen
       this.disableItem();
@@ -11544,6 +12481,517 @@ PKD_MI.isPro = function() {
 })();
 
 // ■ END PKD_MI_LIBS.Sprite_MapInvCell.coffee
+//---------------------------------------------------------------------------
+
+// Generated by CoffeeScript 2.5.1
+//╒═════════════════════════════════════════════════════════════════════════╛
+// ■ Sprite_MapInvHelp.coffee
+//╒═════════════════════════════════════════════════════════════════════════╛
+//---------------------------------------------------------------------------
+(function() {
+  var _;
+  //u20 ALL THIS
+
+  //@[DEFINES]
+  _ = PKD_MI.LIBS.Sprite_MapInvHelp.prototype;
+  //TODO: Из параметров? Пользователь сам определяет какие (название) и позиции
+  // * Сейчас сделано что все доступны, но выводятся только отредактированные
+  _.getStatsBTable = function() {
+    return [
+      {
+        "statText": "Hit Rate",
+        "dataId": 0, // * HIT
+        "traitId": 22, // * XParam
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "Evasion Rate",
+        "dataId": 1,
+        "traitId": 22,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "Crit. Rate",
+        "dataId": 2,
+        "traitId": 22,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "Crit. Evasion",
+        "dataId": 3,
+        "traitId": 22,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "Magic Evasion",
+        "dataId": 4,
+        "traitId": 22,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "Magic Reflect.",
+        "dataId": 5,
+        "traitId": 22,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "Counter Attack",
+        "dataId": 6,
+        "traitId": 22,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "HP Regen",
+        "dataId": 7,
+        "traitId": 22,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "MP Regen",
+        "dataId": 8,
+        "traitId": 22,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "TP Regen",
+        "dataId": 9,
+        "traitId": 22,
+        "position": [0,
+      0]
+      },
+      {
+        // * SPARAMS
+        "statText": "Target Rate",
+        "dataId": 0,
+        "traitId": 23,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "Guard Effect",
+        "dataId": 1,
+        "traitId": 23,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "Recovery Effect",
+        "dataId": 2,
+        "traitId": 23,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "Pharmacology",
+        "dataId": 3,
+        "traitId": 23,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "MP Cost Rate",
+        "dataId": 4,
+        "traitId": 23,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "TP Charge Rate",
+        "dataId": 5,
+        "traitId": 23,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "Physical Damage",
+        "dataId": 6,
+        "traitId": 23,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "Magic Damage",
+        "dataId": 7,
+        "traitId": 23,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "Floor Damage",
+        "dataId": 8,
+        "traitId": 23,
+        "position": [0,
+      0]
+      },
+      {
+        "statText": "Experience",
+        "dataId": 9,
+        "traitId": 23,
+        "position": [0,
+      0]
+      }
+    ];
+  };
+  _.getStatsExtraC = function() {
+    var e, info, text;
+    info = this._getExtraDescForCurrentItem();
+    if (info == null) {
+      return null;
+    }
+    try {
+      text = JsonEx.parse(info.text);
+    } catch (error) {
+      e = error;
+      text = info.text;
+    }
+    return text;
+  };
+  //"\\C[4]New Skill:     \\I[64]\\C[2]Fire II\n\n\\C[3]+Dragon Slayer\\C[0] - Grants you a 4 turn attack buff after hitting a dragon monster."
+  _.getXSStatValueByStat = function(statObj) {
+    var dataId, e, i, item, len, ref, t, traitId;
+    try {
+      if (statObj == null) {
+        return 0;
+      }
+      dataId = statObj.dataId;
+      traitId = statObj.traitId;
+      if (this.cell == null) {
+        return 0;
+      }
+      item = this.cell.item;
+      if (item == null) {
+        return 0;
+      }
+      ref = item.traits;
+      for (i = 0, len = ref.length; i < len; i++) {
+        t = ref[i];
+        if ((t != null) && t.code === traitId && t.dataId === dataId) {
+          return t.value;
+        }
+      }
+      // * Если нет, возвращаем стандартные параметры, чтобы фильтр не пропустил
+      if (traitId === Game_BattlerBase.TRAIT_XPARAM) {
+        return 0;
+      } else {
+        return 1;
+      }
+    } catch (error) {
+      e = error;
+      console.warn(e);
+      return 0;
+    }
+  };
+  // * Убираем статы с default знаением
+  // * Сейчас работает фильтр, так как нет параметров плагина
+  _.filterStatsBTable = function(table) {
+    var i, len, statObj, table2, value;
+    table2 = [];
+    for (i = 0, len = table.length; i < len; i++) {
+      statObj = table[i];
+      value = this.getXSStatValueByStat(statObj);
+      if (statObj.traitId === Game_BattlerBase.TRAIT_XPARAM) {
+        if (value !== 0) {
+          // * 0% пропускаем
+          table2.push(statObj);
+        }
+      } else {
+        if (value !== 1) {
+          // * SPARAM, 100% пропускаем
+          table2.push(statObj);
+        }
+      }
+    }
+    return table2;
+  };
+  _._createEqStatsB = function() {
+    var i, index, len, t, table;
+    table = this.getStatsBTable();
+    table = this.filterStatsBTable(table);
+    if (table.length === 0) {
+      return;
+    }
+    if (table.length > 8) {
+      table = table.slice(0, 8);
+    }
+    //TODO: background image?
+    this._statsB = new Sprite();
+    for (index = i = 0, len = table.length; i < len; index = ++i) {
+      t = table[index];
+      this._createXSStateText(t, index);
+    }
+    // * register
+    this._statsB.visible = false;
+    this._statsBase.addChild(this._statsB);
+    this._statsAll.push(this._statsB);
+  };
+  _._getStatXLineParameters = function() {
+    return {
+      width: 140,
+      height: 30,
+      fontSize: 11,
+      fontFace: null
+    };
+  };
+  _._getStatXLinePositionByIndex = function(index) {
+    return [[2, 0], [2, 20], [2, 40], [2, 60], [138, 0], [138, 20], [138, 40], [138, 60]][index];
+  };
+  _._getStatXColorCode = function(isUp) {
+    if (isUp == null) {
+      return "";
+    }
+    if (isUp === true) {
+      return "\\C[3]"; // * GREEN
+    } else {
+      return "\\C[2]"; // * RED
+    }
+  };
+  _._getStatSTitleColor = function() {
+    return "\\C[6]";
+  };
+  _._createXSStateText = function(statObj, index) {
+    var colorCode, p, pos, sign, text, textLineItem, value, valueIsUp;
+    p = this._getStatXLineParameters();
+    textLineItem = new Window_ExtendedTextLine(new Rectangle(0, 0, p.width, p.height), p.fontSize, p.fontFace);
+    pos = this._getStatXLinePositionByIndex(index);
+    this._statsB.addChild(textLineItem);
+    textLineItem.move(pos);
+    //TODO: pattern support
+    // $NAME $SIGN $VALUE % - pattern
+    value = this.getXSStatValueByStat(statObj);
+    value *= 100; // * from .0 to percents
+    value = Math.round(value);
+    sign = " ";
+    valueIsUp = null;
+    if (statObj.traitId === Game_BattlerBase.TRAIT_XPARAM) {
+      // * Ноля может и не быть (если фильтр)
+      valueIsUp = value > 0;
+      if (valueIsUp === true) {
+        sign = " +";
+      } else if (valueIsUp === false) {
+        sign = " -";
+      }
+    } else {
+      valueIsUp = value > 100;
+    }
+    colorCode = this._getStatXColorCode(valueIsUp);
+    if (statObj.traitId === Game_BattlerBase.TRAIT_XPARAM) {
+
+    } else {
+      // * CONVERT TO < 100 values
+      // * NOTHING
+      value = value - 100;
+      if (value > 0) {
+        sign = " +";
+      }
+    }
+    text = this._getStatSTitleColor() + statObj.statText + colorCode + sign + value + " %";
+    textLineItem.drawTextFull(text);
+  };
+  _._getExtraDescForCurrentItem = function() {
+    var e, fieldName, i, item, len, params;
+    if (this.cell.item == null) {
+      return null;
+    }
+    params = PKD_MI.Parameters.getExtraDescriptions();
+    fieldName = "weaponId";
+    if (DataManager.isArmor(this.cell.item)) {
+      fieldName = "armorId";
+    }
+    try {
+      for (i = 0, len = params.length; i < len; i++) {
+        item = params[i];
+        if (item[fieldName] === this.cell.item.id) {
+          return item.info;
+        }
+      }
+    } catch (error) {
+      e = error;
+      console.warn(e);
+    }
+    return null;
+  };
+  _._getStatExtraNoteZoneParameters = function() {
+    var info;
+    info = this._getExtraDescForCurrentItem();
+    if (info == null) {
+      return {
+        width: 260,
+        height: 160,
+        fontSize: 11,
+        fontFace: null
+      };
+    } else {
+      return {
+        width: eval(info.size.w),
+        height: eval(info.size.h),
+        fontSize: info.font.size,
+        fontFace: info.font.face
+      };
+    }
+  };
+  _._createEqExtraC = function() {
+    var p, text, textZone;
+    text = this.getStatsExtraC();
+    if (!String.any(text)) {
+      return;
+    }
+    this._statsC = new Sprite();
+    //TODO: Это надо брать из параметров плагина
+    p = this._getStatExtraNoteZoneParameters();
+    textZone = new Window_ExtendedTextLine(new Rectangle(0, 0, p.width, p.height), p.fontSize, p.fontFace);
+    this._statsC.addChild(textZone);
+    // * register
+    this._statsC.visible = false;
+    this._statsBase.addChild(this._statsC);
+    this._statsAll.push(this._statsC);
+    textZone.drawTextExWithWordWrap(text, 0, 0);
+  };
+})();
+
+// ■ END Sprite_MapInvHelp.coffee
+//---------------------------------------------------------------------------
+
+// Generated by CoffeeScript 2.5.1
+//╒═════════════════════════════════════════════════════════════════════════╛
+// ■ Sprite_MapInvHelp.coffee
+//╒═════════════════════════════════════════════════════════════════════════╛
+//---------------------------------------------------------------------------
+(function() {
+  var _;
+  //u20 ALL THIS
+
+  //@[DEFINES]
+  _ = PKD_MI.LIBS.Sprite_MapInvHelp.prototype;
+  // * When Create window
+  _._createStats = function() {
+    this._statsAll = [];
+    this._statsAll.push(this._description); // * По умолчанию всегда
+    if (!PKD_MI.Parameters.get_AllowEquipStats()) {
+      return;
+    }
+    this._statsBase = new Sprite(); // * container
+    this._statsBase.move(this.basicSettings.EquipmentStats.position);
+    this.content.addChild(this._statsBase);
+  };
+  // * Equip stats (basic)
+  _._createEqStatsA = function() {
+    this._stats = PKD_MI.FromImgI(this.basicSettings.EquipmentStats.statsBackImage);
+    this._stats.visible = false;
+    this._statsBase.addChild(this._stats);
+    this._statsAll.push(this._stats);
+  };
+  // * When press button to show
+  _.showItemStats = function(isUp) {
+    var i, len, ref, s;
+    if (this._stats == null) {
+      return;
+    }
+    if (!this._isStatsAllowed) {
+      return;
+    }
+    ref = this._statsAll;
+    for (i = 0, len = ref.length; i < len; i++) {
+      s = ref[i];
+      s.visible = false;
+    }
+    if (isUp === true) {
+      this._statsIndex--;
+    } else {
+      this._statsIndex++;
+    }
+    if (this._statsIndex >= this._statsAll.length) {
+      this._statsIndex = 0;
+    } else {
+      if (this._statsIndex < 0) {
+        this._statsIndex = this._statsAll.length - 1;
+      }
+    }
+    this._statsAll[this._statsIndex].visible = true;
+  };
+  
+  // * When setup ITEM
+  _.setupStats = function() {
+    var item;
+    item = this.cell.item;
+    if (DataManager.isItem(item)) {
+      return this._isStatsAllowed = false;
+    } else {
+      this._createAllStatesInfo();
+      return this._isStatsAllowed = true;
+    }
+  };
+  // * Show (draw) help icon
+  _.showStatsHelp = function() {
+    var actionHelpSpr, helpIcon, s;
+    if (!this._isStatsAllowed) {
+      return;
+    }
+    s = this.basicSettings.EquipmentStats;
+    actionHelpSpr = KDCore.Sprite.FromTextSettings(s.statsHelpText);
+    actionHelpSpr.drawTextWithSettings(s.helpIconText);
+    this.content.addChild(actionHelpSpr);
+    if (PKD_MI.IsGamepad()) {
+      helpIcon = PKD_MI.FromImgI("inventoryScrollHelpGP");
+    } else {
+      helpIcon = PKD_MI.FromImgI("inventoryScrollHelp");
+    }
+    helpIcon.move(KDCore.Utils.jsonPos(s.helpIconPosition));
+    return this.content.addChild(helpIcon);
+  };
+  _._createAllStatesInfo = function() {
+    this._createEqStatsA();
+    if (PKD_MI.isPro()) {
+      this._createEqStatsB(); //?PART
+      this._createEqExtraC(); //?PART
+    }
+    this._createStatesParamsValues();
+  };
+  _._createStatesParamsValues = function() {
+    var s, sp;
+    s = this.basicSettings.EquipmentStats.stats;
+    if (s.atk.visible === true) {
+      sp = new PKD_MI.LIBS.Sprite_MapInventoryStatText("atk", this.cell);
+      sp.move(s.atk.position);
+      this._stats.addChild(sp);
+    }
+    if (s.def.visible === true) {
+      sp = new PKD_MI.LIBS.Sprite_MapInventoryStatText("def", this.cell);
+      sp.move(s.def.position);
+      this._stats.addChild(sp);
+    }
+    if (s.agi.visible === true) {
+      sp = new PKD_MI.LIBS.Sprite_MapInventoryStatText("agi", this.cell);
+      sp.move(s.agi.position);
+      this._stats.addChild(sp);
+    }
+    if (s.mat.visible === true) {
+      sp = new PKD_MI.LIBS.Sprite_MapInventoryStatText("mat", this.cell);
+      sp.move(s.mat.position);
+      this._stats.addChild(sp);
+    }
+    if (s.mdf.visible === true) {
+      sp = new PKD_MI.LIBS.Sprite_MapInventoryStatText("mdf", this.cell);
+      sp.move(s.mdf.position);
+      this._stats.addChild(sp);
+    }
+    if (s.luk.visible === true) {
+      sp = new PKD_MI.LIBS.Sprite_MapInventoryStatText("luk", this.cell);
+      sp.move(s.luk.position);
+      return this._stats.addChild(sp);
+    }
+  };
+})();
+
+// ■ END Sprite_MapInvHelp.coffee
 //---------------------------------------------------------------------------
 
 // Generated by CoffeeScript 2.5.1
@@ -12248,4 +13696,4 @@ PKD_MI.isPro = function() {
   return true;
 };
 
-//Plugin PKD_MapInventory automatic build by PKD PluginBuilder 1.9.2 09.09.2021
+//Plugin PKD_MapInventory automatic build by PKD PluginBuilder 1.9.2 19.09.2021

@@ -59,7 +59,19 @@ do ->
         @addChild @layer
 
     _._createElements = ->
-        
+        @_createInGameChat() if ANET.PP.isGameChatAllowed()
+
+    # * Создаём окно чата
+    _._createInGameChat = ->
+        #TODO: from parameters
+        @chatWindow = new FWindow_InGameChat(@, 312, 192)
+        #TODO: test?
+        setTimeout (=>
+                @chatWindow.open()
+            ), 200
+        window._test = @chatWindow
+        @_addElementToUI @chatWindow
+        return
 
     # * Добавить элемент на обычный слой
     _._addElementToUI = (sprite) -> @layer.addChild sprite

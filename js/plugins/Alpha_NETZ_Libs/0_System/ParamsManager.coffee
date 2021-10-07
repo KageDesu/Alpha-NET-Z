@@ -30,6 +30,9 @@ do ->
         #TODO: Параметр
         isSaveOnlyInMenu: -> false
 
+        #TODO: NOT IN HEADER, PRO ONLY
+        isGameChatAllowed: -> true
+
         #? PLAYER SETTINGS GROUP -----------------------------------------------------------
 
         # * Набор персонажей Actors для сетевой игры

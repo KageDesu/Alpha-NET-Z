@@ -14,7 +14,8 @@ do ->
 
     _.setUI = (@uiSet) ->
 
-    _.isValid = -> @uiSet? and ANNetwork.isConnected()
+        #TODO: temp
+    _.isValid = -> @uiSet? #and ANNetwork.isConnected()
 
     # * Когда появляется окно с сообщением
     _.onGameMessageStart = ->
@@ -47,12 +48,58 @@ do ->
 
     # -----------------------------------------------------------------------
 
-    # * Показать сцену ввода сообщения в чат
-    _.showChatInput = ->
-        return unless @isValid()
-        return unless ANET.isPro()
-        SceneManager.push(Scene_NetChatInput)
-        return
+    # * Чат
+    # -----------------------------------------------------------------------
+    do ->
+
+        _.chat = -> @uiSet.chatWindow
+
+        # * Есть ли чат (создан ли), так как опциональный и нету в Basic
+        _.isChatValid = -> @isValid() and @chat()?
+
+        # * Открыто ли окно чата
+        _.isChatOpen = -> @isChatValid() and @chat().isActive()
+
+        # * Показать сцену ввода сообщения в чат
+        _.showChatInput = ->
+            return unless @isValid()
+            SceneManager.push(Scene_NetChatInput)
+            return
+
+        # * Показать сцену ввода сообщения в чат (с учётом событий и сообщений)
+        _.showChatInputSafe = ->
+            return unless @isChatValid()
+            @showChatInput() if @isCanChatInput()
+
+        _.showChat = ->
+            return unless @isChatValid()
+            @chat().open() unless @isChatOpen()
+            return
+
+        _.closeChat = ->
+            return unless @isChatValid()
+            @chat().close() if @isChatOpen()
+            return
+        
+        #TODO: implement uAPI methods for system messages
+        #? message: {
+        #   channelId
+        #   actorId
+        #   text
+        #}
+        # * Добавить сообщение в чат (можно вызывать на любой сцене)
+        _.addMessageToChat = (message) ->
+            return unless @isChatValid()
+            @chat().addMessageToChat(message) if message?
+            return
+
+
+        # * Может ли игрок начать вводить текст в чат (другая сцена будет открыта)
+        _.isCanChatInput = -> !($gameMessage.isBusy() || $gameMap.isEventRunning())
+        
+
+    # -----------------------------------------------------------------------
+
 
     return
 # ■ END ANET.UI.coffee
