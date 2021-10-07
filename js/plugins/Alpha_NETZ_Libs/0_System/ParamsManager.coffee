@@ -30,8 +30,11 @@ do ->
         #TODO: Параметр
         isSaveOnlyInMenu: -> false
 
-        #TODO: NOT IN HEADER, PRO ONLY
-        isGameChatAllowed: -> true
+        isGameChatAllowed: ->
+            if ANET.isPro()
+                return @getParam("inGameChat", false)
+            else
+                return false
 
         #? PLAYER SETTINGS GROUP -----------------------------------------------------------
 

@@ -130,10 +130,16 @@ do ->
             # * Если данный клиент не запускал сохранение, то игнор
             return unless $gameTemp.nSaveData?
             savedActorId = content
-            console.log(savedActorId)
+            #console.log(savedActorId)
             $gameTemp.nSaveData.onAnswer(savedActorId, true)
         catch e
             console.warn("event_game_saveDataComplete", e)
+
+    _.event_game_chatMessage = (content) ->
+        try
+            ANET.UI.addMessageToChat(content)
+        catch e
+            console.warn("event_game_chatMessage", e)
 
     _.event_map_playerMove = (content) ->
         try

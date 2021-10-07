@@ -45,6 +45,16 @@
 @default true
 @desc Can player save and load network game?
 
+@param inGameChat:b
+@parent gameModeSettingsGroup
+@type boolean
+@text In-Game Chat?
+@on YES
+@off NO
+@default false
+@desc [PRO] In-Game chat on Map Scene?
+
+
 @param playersSettingsGroup
 @text Players Settings
 

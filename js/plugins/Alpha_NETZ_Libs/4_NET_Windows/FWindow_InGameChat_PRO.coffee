@@ -24,12 +24,13 @@ class FWindow_InGameChat extends AA.FloatingWindow
     #}
     addMessageToChat: (message) -> @_addMessageToChat(message, true)
 
-    addTestMessage: () ->
-        @addMessageToChat({
-            channelId: 0,
-            actorId: Math.randomInt(3) + 1,
-            text: "Test message " + Math.randomInt(11114)
-        })
+    open: () ->
+        super()
+        $gamePlayer._nChatIsClosed = false
+
+    close: () ->
+        super()
+        $gamePlayer._nChatIsClosed = true
 
     update: ->
         super()
@@ -94,10 +95,13 @@ do ->
             if i == @params.maxMessages
                 @_removeLine(@_lines[i])
                 break
-        # * Добавляем в историю только новые сообщения (а не из истории)
-        $gameTemp._nChatHistory.unshift(message) if isNew is true
-        # * Очищаем историю, чтобы память не занимала
-        $gameTemp._nChatHistory.slice(0, @params.maxMessages)
+        
+        if isNew is true
+            # * Добавляем в историю только новые сообщения (а не из истории)
+            $gameTemp._nChatHistory.push(message)
+            # * Очищаем историю, чтобы память не занимала
+            if $gameTemp._nChatHistory.length > @params.maxMessages
+                $gameTemp._nChatHistory.shift()
         return
 
     _._removeLine = (line) ->

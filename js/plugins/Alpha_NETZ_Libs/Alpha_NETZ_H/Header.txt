@@ -1,5 +1,5 @@
 /*:
- * @plugindesc (v.0.5)%TYPE% Multiplayer for RPG Maker
+ * @plugindesc (v.0.6)%TYPE% Multiplayer for RPG Maker
  * @author Pheonix KageDesu
  * @target %TARGET%
  * @url https://kdworkshop.net/plugins/alpha-net-z/

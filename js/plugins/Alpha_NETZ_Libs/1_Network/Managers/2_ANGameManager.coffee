@@ -224,6 +224,20 @@ do ->
         ANNetwork.send(NMS.Game("saveDataComplete", @myActorId()))
         return
 
+    _.sendChatMessage = (channelId, message) ->
+        data = {
+            channelId: channelId,
+            actorId: @myActorId(),
+            text: message
+        }
+        # * Своё сообщение добавляется по callback, но локально
+        #TODO: Можно убрать локальное добавление и сделать рассылку от сервера всем
+        ANNetwork.callback(NMS.Game("chatMessage", data), () ->
+            ANET.UI.addMessageToChat(data)
+        )
+        return
+
+
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================
 

@@ -45,8 +45,14 @@ do ->
     _ = Scene_NetChatInput::
 
     _._sendMessageToServer = (msg) ->
-        channelId = @buttonsGroup.getSelectedIndex()
-        console.log("Send message from chat: " + msg)
+        try
+            channelId = @buttonsGroup.getSelectedIndex()
+            console.log("Send message from chat: " + msg)
+            if ANNetwork.isConnected()
+                ANGameManager.sendChatMessage(channelId, msg)
+        catch e
+            AA.w(e)
+        return
 
     _._showNameInput = ->
         HUIManager.showInput("Enter your message...")

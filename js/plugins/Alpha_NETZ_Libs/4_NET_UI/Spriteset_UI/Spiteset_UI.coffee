@@ -65,11 +65,6 @@ do ->
     _._createInGameChat = ->
         #TODO: from parameters
         @chatWindow = new FWindow_InGameChat(@, 312, 192)
-        #TODO: test?
-        setTimeout (=>
-                @chatWindow.open()
-            ), 200
-        window._test = @chatWindow
         @_addElementToUI @chatWindow
         return
 

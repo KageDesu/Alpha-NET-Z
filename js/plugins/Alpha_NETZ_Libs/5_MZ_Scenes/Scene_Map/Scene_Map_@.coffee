@@ -14,6 +14,8 @@ do ->
         if ANNetwork.isConnected()
             ANGameManager.onMapLoaded()
             $gameParty.nRefreshNetworkActors()
+        # * Открыть (или нет) чат
+        ANET.UI.openChatAfterMapLoaded()
         return
         
     # * В сетевом режиме автосхранения отключены
@@ -30,8 +32,7 @@ do ->
     ALIAS__createSpriteset = _.createSpriteset
     _.createSpriteset = ->
         ALIAS__createSpriteset.call(@)
-        #TODO: test
-        #return unless ANNetwork.isConnected()
+        return unless ANNetwork.isConnected()
         @_netUI = new ANET.Spriteset_UI()
         @addChild @_netUI
         return

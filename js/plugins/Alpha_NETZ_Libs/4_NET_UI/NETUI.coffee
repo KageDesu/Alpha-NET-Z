@@ -14,8 +14,7 @@ do ->
 
     _.setUI = (@uiSet) ->
 
-        #TODO: temp
-    _.isValid = -> @uiSet? #and ANNetwork.isConnected()
+    _.isValid = -> @uiSet? and ANNetwork.isConnected()
 
     # * Когда появляется окно с сообщением
     _.onGameMessageStart = ->
@@ -90,13 +89,24 @@ do ->
         # * Добавить сообщение в чат (можно вызывать на любой сцене)
         _.addMessageToChat = (message) ->
             return unless @isChatValid()
-            @chat().addMessageToChat(message) if message?
+            return unless message?
+            # * Если на карте, то добавляем прямо в чат
+            if KDCore.Utils.isSceneMap()
+                @chat().addMessageToChat(message)
+            else
+                # * Иначе в историю
+                $gameTemp._nChatHistory.push(message)
             return
 
 
         # * Может ли игрок начать вводить текст в чат (другая сцена будет открыта)
         _.isCanChatInput = -> !($gameMessage.isBusy() || $gameMap.isEventRunning())
         
+        # * Открыть (или не надо) чат при переходе на сцену карты
+        _.openChatAfterMapLoaded = ->
+            return unless @isChatValid()
+            @showChat() unless $gamePlayer._nChatIsClosed
+
 
     # -----------------------------------------------------------------------
 

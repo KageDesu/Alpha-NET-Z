@@ -65,7 +65,9 @@ do ->
                 return false
 
         # * Сдвинуть эту строчку выше
-        moveUp: -> @y -= @params.size.h
+        moveUp: ->
+            @y -= @params.size.h
+            return
 
         # * Анимированное появление сообщения (справа "едет")
         animate: ->

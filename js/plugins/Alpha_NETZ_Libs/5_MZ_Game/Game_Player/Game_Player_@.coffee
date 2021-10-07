@@ -44,30 +44,9 @@ do ->
     ALIAS__update = _.update
     _.update = (sceneActive) ->
         ALIAS__update.call(@, sceneActive)
-        @updateNetwork() if ANNetwork.isConnected()
-        #TODO: for test (потом засунуть в isConnected)
-        @nUpdatePlayerInputForNetwork() if sceneActive is true
-
-    #TODO: temp in this file, should be in _N
-    _.nUpdatePlayerInputForNetwork = ->
-        @nUpdateChatInput() if ANET.PP.isGameChatAllowed() #TODO: DYNAMIC?
-
-    _.nUpdateChatInput = ->
-        #TODO: from parameters
-        openChatButton = 't'
-        sayInChatButton = 't'
-        if Input.isTriggered(openChatButton)
-            if ANET.UI.isChatOpen()
-                # * Если кнопка открыть чат и кнопка сказать в чат одинаковые
-                if openChatButton == sayInChatButton
-                    ANET.UI.showChatInputSafe() # * то не закрываем, а сцена ввода текста
-                    Input.clear()
-                else # * иначе закрываем
-                    ANET.UI.closeChat()
-            else
-                ANET.UI.showChat()
-        else if Input.isTriggered(sayInChatButton)
-            ANET.UI.showChatInputSafe() if ANET.UI.isChatOpen()
+        if ANNetwork.isConnected()
+            @updateNetwork()
+            @nUpdatePlayerInputForNetwork() if sceneActive is true
         return
 
     return
