@@ -61,7 +61,15 @@ do ->
         if data?
             return data
         else
-            ANET.w("Player data for " + id + " not finded!")
+            ANET.w("Player data for " + id + " not found!")
+        return null
+
+    _.getPlayerDataByActorId = (actorId) ->
+        data = @playersData.find (p) -> p.actorId == actorId
+        if data?
+            return data
+        else
+            ANET.w("Player data for Actor with ID " + actorId + " not found!")
         return null
 
     _.setupNewNetworkGame = ->

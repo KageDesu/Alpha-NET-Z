@@ -83,11 +83,11 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Variables_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Game_Variables_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Input_@.js"
-,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/KDButtonsGroup.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/nAPI.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETCharacter.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETCharactersGroup.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NetMessages.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/NETUI.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/ParamsManager.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/PlayersDataPool.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/PlayersWaitPool.js"
@@ -120,10 +120,12 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Title_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/SceneManager_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/SceneManager_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spiteset_UI.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Actor_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Character_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Character_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_Gauge_@_MZ.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_NetChatTextLine.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Sprite_PlayerNetworkStatus.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Battle_N.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Spriteset_Map_@.js"
@@ -135,6 +137,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuCommand_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuStatus_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_MenuStatus_N.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_Message_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkActorsList.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkGameMenu.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Window_NetworkRoomCommands.js"
@@ -282,6 +285,20 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -58,7 +58,7 @@ do ->
 
     #TODO: Customizable
     _._createGroupButtons = ->
-        @buttonsGroup = new KDButtonsGroup(
+        @buttonsGroup = new AA.Sprite_ButtonsGroup(
             [
                 {
                     image: "nzButton_ChatGroup_All", position: [0, 0]
@@ -77,6 +77,17 @@ do ->
         @_okButton.x = Graphics.boxWidth / 2 - @_okButton.width / 2
         @_okButton.y = Graphics.boxHeight / 2 - @_okButton.height / 2
         @addWindow(@_okButton)
+
+        #TEST
+
+        a = new ANET.Sprite_NetChatTextLine()
+        a.x = 10
+        a.y = 100
+        window._test = a
+        a.drawChatMessage(0, 1, "Message")
+        @addChild a
+
+        return
 
     return
 # ■ END Scene_NetChatInput.coffee

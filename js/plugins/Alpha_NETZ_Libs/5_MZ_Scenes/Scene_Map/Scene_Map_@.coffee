@@ -2,7 +2,6 @@
 # ■ Scene_Map.coffee
 #╒═════════════════════════════════════════════════════════════════════════╛
 #---------------------------------------------------------------------------
-#TODO: Может просто не подключать эти методы? Если не сетевой режим
 do ->
 
     #@[DEFINES]
@@ -27,9 +26,31 @@ do ->
             return ALIAS__shouldAutosave.call(@)
 
     #@[ALIAS]
-    #ALIAS__update = _.update
-    #_.update = ->
-    #    ALIAS__update.call(@)
+    # * Создаём интерфейс
+    ALIAS__createSpriteset = _.createSpriteset
+    _.createSpriteset = ->
+        ALIAS__createSpriteset.call(@)
+        return unless ANNetwork.isConnected()
+        @_netUI = new ANET.Spriteset_UI()
+        @addChild @_netUI
+        return
+
+    # * Запрет движения при нажатии на UI элементы
+    #@[ALIAS]
+    ALIAS__onMapTouch = _.onMapTouch
+    _.onMapTouch = ->
+        if ANNetwork.isConnected()
+            return if ANET.UI.isUITouched()
+        ALIAS__onMapTouch.call(@)
+        return
+
+    # * Закрываем интерфейс
+    #@[ALIAS]
+    ALIAS__stop = _.stop
+    _.stop = ->
+        ALIAS__stop.call(@)
+        ANET.UI.terminate()
+        return
 
     return
 # ■ END Scene_Map.coffee
