@@ -184,7 +184,8 @@ do ->
     _.startGame = ->
         "READY TO START GAME".p()
         ANMapManager.sendInitialMapData()
-        @showStartGameChatMessage()
+        unless ANET.Utils.isLoadGameRoom()
+            @showStartGameChatMessage()
         return
 
     # * Приветственное сообщение (системное) в чат

@@ -74,7 +74,11 @@ do ->
                 }
             ], $gameTemp._nChatLastChannelId, null
         )
-        @buttonsGroup.move(4, @buttonY())
+        if KDCore.isMZ()
+            y = @buttonY()
+        else
+            y = 6
+        @buttonsGroup.move(4, y)
         @addChild @buttonsGroup
         return
 

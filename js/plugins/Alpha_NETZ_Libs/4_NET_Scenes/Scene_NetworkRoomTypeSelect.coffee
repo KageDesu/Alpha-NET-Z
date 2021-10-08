@@ -42,8 +42,11 @@ do ->
 
     _._createRoomTypeSelectMenu = ->
         ww = 400
-        # * Хоть команды 2, используется 4, чтобы сразу под курсором была команда
-        wh = @calcWindowHeight(4, true)
+        if KDCore.isMV()
+            wh = @calcWindowHeight(2, true)
+        else
+            # * Хоть команды 2, используется 4, чтобы сразу под курсором была команда
+            wh = @calcWindowHeight(4, true)
         wx = (Graphics.boxWidth - ww) / 2
         wy = (Graphics.boxHeight - wh) / 2
         rect = new Rectangle(wx, wy, ww, wh)
