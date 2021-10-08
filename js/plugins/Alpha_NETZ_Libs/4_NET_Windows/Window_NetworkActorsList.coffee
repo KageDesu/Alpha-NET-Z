@@ -66,15 +66,23 @@ do ->
         @drawText(a.name, rect.x + 120, rect.y + 4, 168)
     
     _._drawActorClass = (rect, a) ->
-        className = $dataClasses[a.classId].name
-        if KDCore.isMV()
-            @changeTextColor(@crisisColor())
-        else
-            @changeTextColor(ColorManager.crisisColor())
-        @contents.fontSize -= 8
-        @drawText(className, rect.x + 132, rect.y + 44, 168)
-        @contents.fontSize += 8
-        @resetTextColor()
+        try
+            aClass = $dataClasses[a.classId]
+            if aClass?
+                className = aClass.name
+            else
+                className = ""
+            if KDCore.isMV()
+                @changeTextColor(@crisisColor())
+            else
+                @changeTextColor(ColorManager.crisisColor())
+            @contents.fontSize -= 8
+            @drawText(className, rect.x + 132, rect.y + 44, 168)
+            @contents.fontSize += 8
+            @resetTextColor()
+        catch e
+            AA.warning e
+        return
 
     _._drawNetworkStatus = (rect) ->
         if KDCore.isMV()

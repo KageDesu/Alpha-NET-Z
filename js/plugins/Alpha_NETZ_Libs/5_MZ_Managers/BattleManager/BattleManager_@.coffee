@@ -18,8 +18,8 @@ do ->
 
     #@[ALIAS]
     ALIAS__endBattle = _.endBattle
-    _.endBattle = () ->
-        ALIAS__endBattle.call(@, ...arguments)
+    _.endBattle = (result) ->
+        ALIAS__endBattle.call(@, result)
         # * Убрать флаг сетевой битвы
         @nSetNetworkBattle(null) if ANNetwork.isConnected()
         return

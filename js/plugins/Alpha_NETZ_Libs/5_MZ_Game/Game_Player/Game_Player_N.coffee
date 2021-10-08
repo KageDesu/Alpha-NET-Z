@@ -20,9 +20,9 @@ do ->
         @nUpdateChatInput() if ANET.PP.isGameChatAllowed() #TODO: DYNAMIC?
 
     _.nUpdateChatInput = ->
-        #TODO: from parameters
-        openChatButton = 't'
-        sayInChatButton = 't'
+        #TODO: Можно оптимизировать, в initMembers
+        openChatButton = ANET.PP.getChatOpenCloseKey()
+        sayInChatButton = ANET.PP.getChatSayKey()
         if Input.isTriggered(openChatButton)
             if ANET.UI.isChatOpen()
                 # * Если кнопка открыть чат и кнопка сказать в чат одинаковые

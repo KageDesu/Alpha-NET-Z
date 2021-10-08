@@ -40,9 +40,13 @@ do ->
         #? CHAT SUBGROUP -----------------------------------------------------------
         #TODO: Параметр
         #TODO: param Open chat if closed and new message is arrived
+        #TODO: format strings
         #TODO: visual settings
-        #TODO: keys (open, say)
-        getChatStartMessage: -> "\\}Welcome to Alpha NET Z, \\C[1]'T'\\C[6] to chat"
+
+        #Start Message
+        getChatStartMessage: -> @getParam("chatStartMessage", "")
+        getChatOpenCloseKey: -> @getParam("chatOpenCloseKey", "t")
+        getChatSayKey: ->  @getParam("chatSayKey", "t")
 
         #? PLAYER SETTINGS GROUP -----------------------------------------------------------
 

@@ -13,9 +13,10 @@ do ->
     ALIAS__actor = _.actor
     _.actor = (actorId) ->
         # * Возвращять текущего персонажа для выборки в событии
-        # * Выборка LOCAL ACTOR работает только если указан Actor с ID = 1
+        # * Выборка LOCAL ACTOR работает только если указан Actor с ID = 1 (ОТМЕНА!)
         #TODO: Может это и не надо, но сделал для меньших проблем, так как метод опасно переопределять
-        if ANNetwork.isConnected() && $gameTemp._nLocalActorMode is true && actorId == 1
+        #TODO: Временно убрал выборку только 1 актора
+        if ANNetwork.isConnected() && $gameTemp._nLocalActorMode is true #&& actorId == 1
             if $gameTemp._nNetworkActorPickRequest is true
                 $gameTemp._nNetworkActorPickRequest = false
                 return ALIAS__actor.call(@, actorId)

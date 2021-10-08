@@ -52,8 +52,25 @@
 @on YES
 @off NO
 @default false
-@desc [PRO] In-Game chat on Map Scene?
+@desc [PRO] In-Game chat on Map Scene? (More chat settings will be in next update...)
 
+@param chatStartMessage
+@parent inGameChat:b
+@text Start Message
+@default \}Welcome to Alpha NET Z, \C[1]'T'\C[6] to chat
+@desc Message when New Game started. Leave empty if not need any start message.
+
+@param chatOpenCloseKey
+@parent inGameChat:b
+@text Chat Key
+@default t
+@desc Key to open (close) chat window in game.
+
+@param chatSayKey
+@parent inGameChat:b
+@text Say Key
+@default t
+@desc Key to open input message scene. Only when chat visible. Can be same with Chat Key.
 
 @param playersSettingsGroup
 @text Players Settings

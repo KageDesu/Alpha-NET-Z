@@ -240,7 +240,11 @@ do ->
         # * Эта команда обязательно должны быть ниже этой @battleData = result
         # * После регистрации на сетевую битву, устанавливается Troop
         # * из сервера, чтобы у всех одинаковый был
+        # * Чтобы не сбросился callback результата битвы, переносим его
+        # * Так как initMembers получается второй раз вызывается
+        _evCallback = BattleManager._eventCallback
         BattleManager.setup(...result.options)
+        BattleManager.setEventCallback(_evCallback) if _evCallback?
         "SETUP".p(result.options)
         console.info result
         @_registerToExistsSharedBattle() unless @isBattleMaster()
