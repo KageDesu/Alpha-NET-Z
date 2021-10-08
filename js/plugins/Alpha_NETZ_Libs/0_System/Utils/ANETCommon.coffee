@@ -173,6 +173,15 @@ do ->
         return false unless ANNetwork.room?
         return NetRoomDataWrapper.isLoadGameRoom(ANNetwork.room)
 
+    # * Построить Chat Message
+    _.buildChatMessage = (channelId, actorId, message) -> {
+            channelId: channelId,
+            actorId: actorId,
+            text: message
+            mapId: $gameMap.mapId()
+        }
+
+
     return
 # ■ END ANET Common Utils Methods.coffee
 #---------------------------------------------------------------------------

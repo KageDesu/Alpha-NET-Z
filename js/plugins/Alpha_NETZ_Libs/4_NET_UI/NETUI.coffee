@@ -85,6 +85,7 @@ do ->
         #   channelId
         #   actorId
         #   text
+        #   mapId
         #}
         # * Добавить сообщение в чат (можно вызывать на любой сцене)
         _.addMessageToChat = (message) ->

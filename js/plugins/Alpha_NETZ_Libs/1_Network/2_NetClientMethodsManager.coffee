@@ -137,7 +137,13 @@ do ->
 
     _.event_game_chatMessage = (content) ->
         try
-            ANET.UI.addMessageToChat(content)
+            mapId = content.mapId
+            channelId = content.channelId
+            if channelId > 0 # * MAP
+                if mapId? and mapId == $gameMap.mapId()
+                    ANET.UI.addMessageToChat(content)
+            else
+                ANET.UI.addMessageToChat(content)
         catch e
             console.warn("event_game_chatMessage", e)
 

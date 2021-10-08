@@ -122,6 +122,53 @@ do ->
 
     # -----------------------------------------------------------------------
 
+    # * CHAT
+    # -----------------------------------------------------------------------
+    do ->
+
+        _.writeInChat = (message, isGlobal = false) ->
+            try
+                if isGlobal is true and ANNetwork.isConnected()
+                    ANGameManager.sendRawChatMessage(0, 0, message)
+                else
+                    ANET.UI.addMessageToChat(ANET.Utils.buildChatMessage(0, 0, message))
+            catch e
+                KDCore.warning e
+            return
+
+        _.closeChatWindow = ->
+            try
+                ANET.UI.closeChat()
+            catch e
+                KDCore.warning e
+            return
+
+        _.openChatWindow = ->
+            try
+                ANET.UI.showChat()
+            catch e
+                KDCore.warning e
+            return
+
+        _.moveChatWindow = (x = 0, y = 0) ->
+            try
+                $gamePlayer._nLastChatWindowPosition = {
+                    x: x, y: y
+                }
+                ANET.UI.chat()._moveToStartPosition() if @isChatWindowOpened()
+            catch e
+                KDCore.warning e
+                $gamePlayer._nLastChatWindowPosition = { x: 0, y: 0 }
+            return
+
+        _.isChatWindowOpened = ->
+            try
+                return ANET.UI.isChatOpen()
+            catch e
+                KDCore.warning e
+                return false
+
+    # -----------------------------------------------------------------------
 
     return
 # ■ END IMPLEMENTATION.coffee

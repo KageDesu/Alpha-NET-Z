@@ -49,7 +49,7 @@ do ->
             channelId = @buttonsGroup.getSelectedIndex()
             console.log("Send message from chat: " + msg)
             if ANNetwork.isConnected()
-                ANGameManager.sendChatMessage(channelId, msg)
+                ANGameManager.sendMyChatMessage(channelId, msg)
         catch e
             AA.w(e)
         return

@@ -30,11 +30,19 @@ do ->
         #TODO: Параметр
         isSaveOnlyInMenu: -> false
 
+        #In-Game Chat?
         isGameChatAllowed: ->
             if ANET.isPro()
                 return @getParam("inGameChat", false)
             else
                 return false
+
+        #? CHAT SUBGROUP -----------------------------------------------------------
+        #TODO: Параметр
+        #TODO: param Open chat if closed and new message is arrived
+        #TODO: visual settings
+        #TODO: keys (open, say)
+        getChatStartMessage: -> "\\}Welcome to Alpha NET Z, \\C[1]'T'\\C[6] to chat"
 
         #? PLAYER SETTINGS GROUP -----------------------------------------------------------
 

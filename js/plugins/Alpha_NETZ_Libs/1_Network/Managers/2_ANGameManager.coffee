@@ -184,6 +184,15 @@ do ->
     _.startGame = ->
         "READY TO START GAME".p()
         ANMapManager.sendInitialMapData()
+        @showStartGameChatMessage()
+        return
+
+    # * Приветственное сообщение (системное) в чат
+    _.showStartGameChatMessage = ->
+        return unless ANET.PP.isGameChatAllowed()
+        message = ANET.PP.getChatStartMessage()
+        return unless String.any(message)
+        ANET.UI.addMessageToChat(ANET.Utils.buildChatMessage(0, 0, message))
         return
 
     # * Когда игрок покидает игру (disconnect)
@@ -224,19 +233,17 @@ do ->
         ANNetwork.send(NMS.Game("saveDataComplete", @myActorId()))
         return
 
-    _.sendChatMessage = (channelId, message) ->
-        data = {
-            channelId: channelId,
-            actorId: @myActorId(),
-            text: message
-        }
-        # * Своё сообщение добавляется по callback, но локально
-        #TODO: Можно убрать локальное добавление и сделать рассылку от сервера всем
+    # * Отправить сообщение в чат от текущего клиента
+    _.sendMyChatMessage = (channelId, message) ->
+        @sendRawChatMessage(channelId, @myActorId(), message)
+        return
+
+    _.sendRawChatMessage = (channelId, actorId, message) ->
+        data = ANET.Utils.buildChatMessage(channelId, actorId, message)
         ANNetwork.callback(NMS.Game("chatMessage", data), () ->
             ANET.UI.addMessageToChat(data)
         )
         return
-
 
     #? CALLBACKS ОТ ЗАПРОСОВ НА СЕРВЕР
     # * ===============================================================

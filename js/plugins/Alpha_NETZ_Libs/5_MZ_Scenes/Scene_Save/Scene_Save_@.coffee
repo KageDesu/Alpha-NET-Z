@@ -9,6 +9,29 @@ do ->
 
     #TODO: В MV по другому скорее всего, не помню этот метод
 
+    # * В MV нету метода executeSave, создадим его для совместимости
+    if KDCore.isMV()
+        #?[NEW, from MZ]
+        _.executeSave = (savefileId) ->
+            $gameSystem.onBeforeSave()
+            if DataManager.saveGame(savefileId)
+                @onSaveSuccess()
+            else
+                @onSaveFailure()
+            return
+
+        # * Переопределим стандартный метод (только в МВ)
+        # * Теперь в сетевом режиме он будет использовать новый метод executeSave
+        #@[ALIAS]
+        ALIAS__onSavefileOk = _.onSavefileOk
+        _.onSavefileOk = ->
+            if ANNetwork.isConnected()
+                Scene_File::onSavefileOk.call(@)
+                @executeSave(@savefileId())
+            else
+                ALIAS__onSavefileOk.call(@)
+            return
+
     #@[ALIAS, STORED]
     _.nALIAS__executeSave_43243 = _.executeSave
     _.executeSave = (savefileId) ->

@@ -8,7 +8,6 @@ class FWindow_InGameChat extends AA.FloatingWindow
     #TODO: From plugin parameters!!!
     getSettings: -> @defaultSettings()
 
-    #TODO: param Open chat if close and new message is arrived
 
     defaultSettings: -> {
         position: { x: 1, y: "Graphics.height - 193" }
@@ -116,6 +115,8 @@ do ->
     #$[OVER]
     _._afterOpen = ->
         @_checkMousePositionAfterOpen()
+        @_moveToStartPosition()
+        return
 
     # * Доп. проверка нахождения курсора мышки при открытии окна
     _._checkMousePositionAfterOpen = ->

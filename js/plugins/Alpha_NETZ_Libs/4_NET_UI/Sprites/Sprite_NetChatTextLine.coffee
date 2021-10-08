@@ -25,7 +25,7 @@ do ->
             }
             textLine: {
                 visible: true
-                size: { w: 402, h: 20 }
+                size: { w: 520, h: 20 }
                 font: { face: null, size: 14, italic: false }
                 margins: { x: 4, y: -3 }
             }
@@ -35,6 +35,7 @@ do ->
             # 3 - Message
             textFormat: "\\}\\}\\C[3][%1] \\{\\{\\C[2]%2 \\C[0]%3"
             textFormatForPlayer: "\\}\\}\\C[3][%1]\\C[1][ME]\\{\\{ \\C[0]%3"
+            textFormatForSystem: "\\}\\}\\C[3][%1]\\{\\{ \\C[6]%3"
             animationSpeedInPx: 18
         }
 
@@ -50,7 +51,10 @@ do ->
             if @isMyActorMessage(actorId)
                 textFormat = @params.textFormatForPlayer
             else
-                textFormat = @params.textFormat
+                if actorId <= 0
+                    textFormat = @params.textFormatForSystem
+                else
+                    textFormat = @params.textFormat
             channelIdText = @_convertChannelIdToText(channelId) #1
             actorName = @_getActorName(actorId) #2
             playerName = @_getPlayerName(actorId) #4
@@ -127,9 +131,12 @@ do ->
         return "ALL" if channelId <= 0
         return "MAP"
 
-    _._getActorName = (actorId) -> $dataActors[actorId]?.name
+    _._getActorName = (actorId) ->
+        return "" if actorId <= 0
+        return $dataActors[actorId]?.name
 
     _._getPlayerName = (actorId) ->
+        return "" if actorId <= 0
         if ANNetwork.isConnected()
             return ANGameManager.getPlayerDataByActorId(actorId)?.name
         else
