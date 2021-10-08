@@ -10,7 +10,7 @@ class Scene_NetChatInput extends Scene_MenuBase
             $gameTemp._nChatLastChannelId = 0
         @_showNameInput()
         @_createGroupButtons()
-        @_createOkButton()
+        @_createOkButton() if KDCore.isMZ()
         # * Делаем фокус ввода
         setTimeout (->
             HUIManager.focusInput()

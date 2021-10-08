@@ -101,7 +101,10 @@ do ->
 
     _._createGamesToLoadList = ->
         ww = Graphics.boxWidth - 100
-        wh = @mainAreaHeight()
+        if KDCore.isMZ()
+            wh = @mainAreaHeight()
+        else
+            wh = Graphics.height - 20
         wx = (Graphics.boxWidth - ww) / 2
         wy = (Graphics.boxHeight - wh) / 2
         rect = new Rectangle(wx, wy, ww, wh)
@@ -109,15 +112,22 @@ do ->
         @_listWindow.setHandler("ok", @onLoadFileSelected.bind(@))
         @_listWindow.setHandler("cancel", @onLoadFileSelectCancel.bind(@))
         @_listWindow.setMode("loadNet", false)
-        @_listWindow.selectSavefile(0)
+        if KDCore.isMZ()
+            @_listWindow.selectSavefile(0)
+        else
+            @_listWindow.select(0)
         @_listWindow.refresh()
         @_listWindow.hide()
         @addWindow(@_listWindow)
         return
 
     _.onLoadFileSelected = ->
-        info = DataManager.savefileInfo(@_listWindow.savefileId())
-        if info? and info.nUniqueSaveID?
+        if KDCore.isMZ()
+            savefileId = @_listWindow.savefileId()
+        else
+            savefileId = @_listWindow.index() + 1
+        if DataManager.nIsNetworkSaveFile(savefileId)
+            info = DataManager.nGetInfoForSavefileId(savefileId)
             @_createNewRoom(info.nUniqueSaveID)
         else
             SoundManager.playBuzzer()

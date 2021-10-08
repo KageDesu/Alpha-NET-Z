@@ -3380,10 +3380,11 @@ AATimer = class AATimer {
       this.visible = false;
       this._initFloatingSystem();
       this._loadWindowFrame();
-      this._createContent();
       return;
     }
 
+    // * Тут ничего не создавать, не двигать, так как
+    // * конент создаётся Async, см. метод _createCustomElements
     isActive() {
       return this.visible === true;
     }
@@ -3400,8 +3401,8 @@ AATimer = class AATimer {
       return this._headerSpr.visible === true && this.isOpen();
     }
 
-    setCloseHandler() {
-      return this._closeHandler;
+    setCloseHandler(_closeHandler) {
+      this._closeHandler = _closeHandler;
     }
 
     callCloseHandler() {
@@ -3410,12 +3411,12 @@ AATimer = class AATimer {
       }
     }
 
-    setDraggingHandler() {
-      return this._dragHandler;
+    setDraggingHandler(_dragHandler) {
+      this._dragHandler = _dragHandler;
     }
 
-    setDragEndHandler() {
-      return this._dragEndHandler;
+    setDragEndHandler(_dragEndHandler) {
+      this._dragEndHandler = _dragEndHandler;
     }
 
     hideHeader() {} //TODO:
@@ -3504,11 +3505,7 @@ AATimer = class AATimer {
     this.callCloseHandler();
     return this.close();
   };
-  (function() {    //TODO: Систему защиты от перетаскивания нескольких окон + Map Inventory учитывать
-    // * Создать что-то типо KDCore.dragableElement - глобальный и присваивать в него
-    // * Если есть,то не начинать Drag, если нет, то можно
-
-    // * DRAGGING
+  (function() {    // * DRAGGING
     // -----------------------------------------------------------------------
     _._updateDragging = function() {
       if (!this.isDraggable()) {
@@ -3569,13 +3566,16 @@ AATimer = class AATimer {
       if (this._dragging === true) {
         this._dragging = false;
         this.opacity = 255;
-        // * Освобождаем глобальную ссылку
-        if ($gameTemp.pkdDraggableInstance === this) {
-          $gameTemp.pkdDraggableInstance = null;
-        }
+        this._clearDraggableGlocalInstance();
         if (this._dragEndHandler != null) {
           this._dragEndHandler();
         }
+      }
+    };
+    // * Освобождаем глобальную ссылку
+    _._clearDraggableGlocalInstance = function() {
+      if ($gameTemp.pkdDraggableInstance === this) {
+        return $gameTemp.pkdDraggableInstance = null;
       }
     };
     _._isMouseInHeader = function() {
@@ -3625,6 +3625,7 @@ AATimer = class AATimer {
       this._loadHeader();
       this._createCloseButton();
       this._moveToStartPosition();
+      this._createCustomElements();
     };
     // * Слои нужны, так как изображения загружаються асинхронно
     _._createLayers = function() {
@@ -3656,7 +3657,7 @@ AATimer = class AATimer {
     };
     // * Наследники создают свои элементы в этом методе
     // * Есть специальный метод addContent()
-    _._createContent = function() {}; // * EMPTY
+    _._createCustomElements = function() {}; // * EMPTY
   })();
   (function() {    // -----------------------------------------------------------------------
 
@@ -3664,6 +3665,7 @@ AATimer = class AATimer {
     // -----------------------------------------------------------------------
     
     // * Определение если мышка в области окна
+    //TODO: Есть проблема при открытии окна сразу под курсором
     _._registerMouseInOut = function() {
       if (!this.isOpen()) {
         return;
@@ -3723,6 +3725,7 @@ AATimer = class AATimer {
     _._close = function() {
       this.visible = false;
       this.removeFromParent();
+      this._clearDraggableGlocalInstance();
       $gameTemp._floatingWindows.delete(this);
       this._onMouseOut();
       return this._destroyMouseCheckThread();
@@ -4681,12 +4684,12 @@ AATimer = class AATimer {
       return {
         visible: true,
         size: {
-          w: 60,
+          w: 200,
           h: 20
         },
         font: {
           face: null,
-          size: 18,
+          size: 14,
           italic: false
         },
         margins: {
@@ -5315,6 +5318,17 @@ AA.Utils.Parser = function() {};
       return 0;
     }
 
+    // * Более гибкая настройка размера текста при { }
+    makeFontBigger() {
+      return this.contents.fontSize += 1;
+    }
+
+    makeFontSmaller() {
+      if (this.contents.fontSize > 1) {
+        return this.contents.fontSize -= 1;
+      }
+    }
+
     // * Применение своих шрифта и размера текста
     resetFontSettings() {
       super.resetFontSettings();
@@ -5336,4 +5350,4 @@ AA.Utils.Parser = function() {};
   AA.link(Window_ExtTextLineBase);
 })();
 
-//Plugin Alpha_@Core automatic build by PKD PluginBuilder 1.9.2 07.10.2021
+//Plugin Alpha_@Core automatic build by PKD PluginBuilder 1.9.2 08.10.2021

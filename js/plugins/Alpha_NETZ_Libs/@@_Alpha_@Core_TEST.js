@@ -3665,6 +3665,7 @@ AATimer = class AATimer {
     // -----------------------------------------------------------------------
     
     // * Определение если мышка в области окна
+    //TODO: Есть проблема при открытии окна сразу под курсором
     _._registerMouseInOut = function() {
       if (!this.isOpen()) {
         return;
@@ -5349,4 +5350,4 @@ AA.Utils.Parser = function() {};
   AA.link(Window_ExtTextLineBase);
 })();
 
-//Plugin Alpha_@Core automatic build by PKD PluginBuilder 1.9.2 07.10.2021
+//Plugin Alpha_@Core automatic build by PKD PluginBuilder 1.9.2 08.10.2021

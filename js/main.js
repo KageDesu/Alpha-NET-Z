@@ -111,7 +111,7 @@ const scriptUrls = [
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkGameMenu_2.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkRoom.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkRoomsList.js"
-,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkRoomTypeSelect_@.js"
+,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkRoomTypeSelect.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_NetworkSettings.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Save_@.js"
 ,"js/plugins/Alpha_NETZ_Libs/_CFCompiled/Scene_Save_N.js"
@@ -286,6 +286,14 @@ const main = new Main();
 main.run();
 
 //-----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
 
 
 

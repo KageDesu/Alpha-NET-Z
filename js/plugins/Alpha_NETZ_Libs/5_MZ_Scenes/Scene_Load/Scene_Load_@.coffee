@@ -12,7 +12,12 @@ do ->
     _.initialize = ->
         ALIAS__initialize.call(@)
         if ANNetwork.isConnected() and $gameTemp._nRequestLoadNetworkGame is true
-            @nLoadNetworkGameFromSavefile()
+            if KDCore.isMZ()
+                @nLoadNetworkGameFromSavefile()
+            else # * В MV в одном потоке, не переключает сцену сразу после инициализации
+                setTimeout (=>
+                        @nLoadNetworkGameFromSavefile()
+                    ), 1
         return
 
     #@[ALIAS]
