@@ -4,7 +4,7 @@
 **(09.10.2021)**
 
 #### New features
-- [In-Game Chat](https://github.com/KageDesu/Alpha-NET-Z/wiki/Shared-Events) `[PRO only]`
+- [In-Game Chat](https://github.com/KageDesu/Alpha-NET-Z/wiki/In-Game-Chat) `[PRO only]`
 - Save and Load network game support
 
 #### New plugin parameters:
