@@ -1,5 +1,25 @@
 ## Changelog
 
+### Version 0.6
+**(09.10.2021)**
+
+#### New features
+- [In-Game Chat](https://github.com/KageDesu/Alpha-NET-Z/wiki/Shared-Events) `[PRO only]`
+- Save and Load network game support
+
+#### New plugin parameters:
+- `Save and Load Allowed?`
+- `In-Game Chat?`  
+
+#### Bugs fixes:
+- Critical bug in RPG Maker MV singleplayer battle (game crush)  
+- Battle result condition not works after battle end (Win, Loose, Escape)
+
+#### Plugins support:
+- Added `Map Inventory` plugin support  
+
+---
+
 ### Version 0.5
 **(25.05.2021)**
 
@@ -15,6 +35,7 @@
 - Added `Mobile Controls` plugin support (diagonal movement)  
 - Added `VPlayer` plugin support
 
+---
 
 ### Version 0.4
 **(17.04.2021)**
