@@ -5,7 +5,7 @@
 
 #### New features
 - [In-Game Chat](https://github.com/KageDesu/Alpha-NET-Z/wiki/In-Game-Chat) `[PRO only]`
-- Save and Load network game support
+- [Save and Load](https://github.com/KageDesu/Alpha-NET-Z/wiki/Save-and-Load-Game) network game support
 
 #### New plugin parameters:
 - `Save and Load Allowed?`
