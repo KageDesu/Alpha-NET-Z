@@ -1,6 +1,6 @@
 ## Changelog
 
-### Version 0.77
+### Version 0.7
 **(15.01.2022)**
 
 #### New features
