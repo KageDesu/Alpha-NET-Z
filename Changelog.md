@@ -1,5 +1,40 @@
 ## Changelog
 
+### Version 0.77
+**(15.01.2022)**
+
+#### New features
+- Connection via [HTTPS]() `[PRO only]`
+- [In-Game Player Menu]() `[PRO only]`
+- [In-Game Trade]() `[PRO only]`
+
+#### Improvements:
+- Now you can start enter text by click (touch) chat window  
+
+#### New plugin parameters:
+- `Trade Settings`
+- `In-Game Player Menu?`  
+- `Is show network icons?`
+
+#### Bugs fixes:
+- Diagonal movement not synced over network for events
+- Using item on another player (not in my party) from menu
+- Added `OK` button in text input scene for char `[RPG Maker MV]`  
+
+#### New [nAPI script](https://github.com/KageDesu/Alpha-NET-Z/wiki/Script-calls-User-API) calls:  
+- `startNetworkGameScene`
+- `getPlayerInfo`
+- `getPlayerCharacter`
+- `callPlayerMenuAction`
+
+#### Plugins support:
+- Added `Alpha ABS Z` plugin support  
+
+#### Other:
+- Plugin now have one .js file for RPG Maker MV and MZ  
+
+---
+
 ### Version 0.6
 **(09.10.2021)**
 
