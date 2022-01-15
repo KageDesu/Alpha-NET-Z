@@ -4,7 +4,7 @@
 **(15.01.2022)**
 
 #### New features
-- Connection via [HTTPS](https://github.com/KageDesu/Alpha-NET-Z/wiki/Connection-and-Rooms) `[PRO only]`
+- Connection via HTTPS `[PRO only]`
 - [In-Game Player Menu](https://github.com/KageDesu/Alpha-NET-Z/wiki/In-Game-Player-Menu) `[PRO only]`
 - [In-Game Trade](https://github.com/KageDesu/Alpha-NET-Z/wiki/In-Game-Trade-System) `[PRO only]`
 
