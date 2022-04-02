@@ -1,9 +1,40 @@
 ## Changelog
 
+### Version 0.7.5
+**(01.04.2022)**
+
+#### New features:
+ - Join already started game (see plugin parameter `Join to Game Allowed?`)
+
+#### Improvements:
+ - Added plugin parameter (see `Localization` ) for localizate Alpha NET Z plugin text  
+ - The maximum number of players no longer depends on the set of characters (`Actors` parameter). Maybe less, but not more.  
+ - Added autofocus for player name input field [RPG Maker MV]
+
+#### New plugin parameters:
+- `Join Random Room Option`
+- `Input Max Length`
+- `Localization`
+- `Players per Room`
+- `Join to Loaded Game?`
+
+#### Bugs fixes:
+- Party disbanding after shared battle  
+- Autorun events with any option from `Start Option` (except all) - freezes game for other players  
+
+#### Plugins support:
+- Improved compatibility with `YEP_BattleCore` and `VisuStella BattleCore` - characters in side-view battle no more stay still when acting  
+
+#### Other:
+- Alpha NET Z plugin .js file NOT require Alpha_@Core.js and Socket.js anymore  
+- Added Russian localization \ добавлен Русский язык    
+
+---
+
 ### Version 0.7
 **(15.01.2022)**
 
-#### New features
+#### New features:
 - Connection via HTTPS `[PRO only]`
 - [In-Game Player Menu](https://github.com/KageDesu/Alpha-NET-Z/wiki/In-Game-Player-Menu) `[PRO only]`
 - [In-Game Trade](https://github.com/KageDesu/Alpha-NET-Z/wiki/In-Game-Trade-System) `[PRO only]`
