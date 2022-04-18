@@ -1,5 +1,18 @@
 ## Changelog
 
+### Version 0.7.6
+**(18.04.2022)**
+
+#### Bugs fixes:
+- Join already started game not works in RPG Maker **MV**
+- Joining started game without choose character
+- Other small bug fixes
+
+#### Plugins support:
+- Improved compatibility with `VisuStella ItemsEquipCore` - fixed game crush when try select item in Trade menu
+
+---
+
 ### Version 0.7.5
 **(01.04.2022)**
 
