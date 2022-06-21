@@ -1,5 +1,69 @@
 ## Changelog
 
+### Version 0.8
+**(20.06.2022)**
+
+#### New features:
+ - [Lobby Chat](https://github.com/KageDesu/Alpha-NET-Z/wiki/Lobby-chat) (See Plugin Parameter `Lobby Chat`)
+ - [Nameplates](https://github.com/KageDesu/Alpha-NET-Z/wiki/Players-Nameplates)  
+
+#### Improvements:
+ - Added plugin parameters for [In-Game chat](https://github.com/KageDesu/Alpha-NET-Z/wiki/In-Game-Chat) visual configuration  
+ - Added emotions for [In-Game chat](https://github.com/KageDesu/Alpha-NET-Z/wiki/In-Game-Chat)
+ - Now room button `Is Ready` is working (See Plugin Parameter `Is Check Ready?`)
+ - Now Map Encounters is working for all players  on same map (See Plugin Parameter `Is Encounters is Global?`)
+
+#### New plugin parameters:
+- `Use Custom Game ID?`   
+
+#### New [nAPI script](https://github.com/KageDesu/Alpha-NET-Z/wiki/Script-calls-User-API) calls: 
+- `nAPI.ID()`
+- `nAPI.setNameplateStyle(...)`
+- `nAPI.getEventParticipant(...)`
+
+#### Bugs fixes:
+- Using items or skills on antoher player in party from menu not gain any effect
+- Can't click on Room Name input field in RPG Maker MV
+
+#### Other:
+- Optimizations for RPG Maker MZ 1.5+
+
+---
+
+### Version 0.7
+**(15.01.2022)**
+
+#### New features:
+- Connection via HTTPS `[PRO only]`
+- [In-Game Player Menu](https://github.com/KageDesu/Alpha-NET-Z/wiki/In-Game-Player-Menu) `[PRO only]`
+- [In-Game Trade](https://github.com/KageDesu/Alpha-NET-Z/wiki/In-Game-Trade-System) `[PRO only]`
+
+#### Improvements:
+- Now you can start enter text by click (touch) chat window  
+
+#### New plugin parameters:
+- `Trade Settings`
+- `In-Game Player Menu?`  
+- `Is show network icons?`
+
+#### Bugs fixes:
+- Diagonal movement not synced over network for events
+- Using item on another player (not in my party) from menu
+- Added `OK` button in text input scene for char `[RPG Maker MV]`  
+
+#### New [nAPI script](https://github.com/KageDesu/Alpha-NET-Z/wiki/Script-calls-User-API) calls:  
+- `startNetworkGameScene`
+- `getPlayerInfo`
+- `getPlayerCharacter`
+- `callPlayerMenuAction`
+
+#### Plugins support:
+- Added `Alpha ABS Z` plugin support  
+
+#### Other:
+- Plugin now have one .js file for RPG Maker MV and MZ  
+
+
 ### Version 0.7.6
 **(18.04.2022)**
 
